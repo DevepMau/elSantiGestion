@@ -2,20 +2,18 @@ package com.elsantigestion.ui;
 
 import com.elsantigestion.dao.ClienteDAO;
 import com.elsantigestion.model.Cliente;
-import javafx.application.Application;
+
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
-public class ClienteApp extends Application {
+
+public class ClienteView extends VBox {
 
     @SuppressWarnings("unchecked")
-	@Override
-    public void start(Stage stage) {
+    public ClienteView() {
         // Tabla de clientes
         TableView<Cliente> tabla = new TableView<>();
 
@@ -38,11 +36,6 @@ public class ClienteApp extends Application {
         tabla.getItems().addAll(dao.obtenerClientes());
 
         // Layout
-        VBox root = new VBox(tabla);
-        Scene scene = new Scene(root, 800, 400);
-
-        stage.setTitle("Gestión de Clientes");
-        stage.setScene(scene);
-        stage.show();
+        this.getChildren().add(tabla);
     }
 }
