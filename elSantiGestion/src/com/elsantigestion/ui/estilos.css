@@ -1,0 +1,26 @@
+/* Fondo del menú lateral */
+.menu-lateral {
+    -fx-background-color: #333;
+
+    -fx-min-width: 150;
+    -fx-max-width: 150;
+}
+
+/* Estilo general de los botones */
+.menu-boton {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-min-width: 150;
+    -fx-min-height: 50;
+    -fx-max-height: 50;
+}
+
+/* Efecto hover */
+.menu-boton:hover {
+    -fx-background-color: #FF8533;
+}
+
+.menu-boton:pressed { 
+	-fx-background-color: #FFA366;
+}
