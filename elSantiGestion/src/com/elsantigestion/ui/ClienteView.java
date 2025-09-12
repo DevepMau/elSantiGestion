@@ -5,11 +5,14 @@ import com.elsantigestion.model.Cliente;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 
 
 public class ClienteView extends VBox {
@@ -41,6 +44,43 @@ public class ClienteView extends VBox {
         TableColumn<Cliente, Boolean> colActivo = new TableColumn<>("Activo");
         colActivo.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().isActivo()));
 
+        TableColumn<Cliente, Void> colAcciones = new TableColumn<>("Acciones");
+        Callback<TableColumn<Cliente, Void>, TableCell<Cliente, Void>> cellFactory = param -> {
+            return new TableCell<>() {
+                private final Button btnEditar = new Button("✏️");
+                private final Button btnEliminar = new Button("🗑️");
+
+                {
+                	btnEditar.setOnAction(e -> {
+                	    Cliente cliente = getTableView().getItems().get(getIndex());
+                	    ClienteFormEditar form = new ClienteFormEditar(dao, ClienteView.this::refrescarTabla, cliente);
+                	    form.showAndWait();
+                	});
+
+                    btnEliminar.setOnAction(e -> {
+                        Cliente cliente = getTableView().getItems().get(getIndex());
+                        //dao.eliminarCliente(cliente.getId());
+                        refrescarTabla();
+                    });
+                }
+
+                @Override
+                protected void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        HBox contenedor = new HBox(5, btnEditar, btnEliminar);
+                        contenedor.setPadding(new Insets(2, 0, 2, 0));
+                        setGraphic(contenedor);
+                    }
+                }
+            };
+        };
+
+        colAcciones.setCellFactory(cellFactory);
+        tabla.getColumns().add(colAcciones);
+        
         tabla.getColumns().addAll(colNombre, colTelefono, colEmail, colActivo);
 
         // Cargar datos iniciales
@@ -48,7 +88,7 @@ public class ClienteView extends VBox {
 
         // Acción del botón
         btnNuevo.setOnAction(e -> {
-            ClienteForm form = new ClienteForm(dao, this::refrescarTabla);
+            ClienteFormNuevo form = new ClienteFormNuevo(dao, this::refrescarTabla);
             form.showAndWait();
         });
 

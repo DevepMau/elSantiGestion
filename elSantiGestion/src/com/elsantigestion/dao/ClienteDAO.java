@@ -55,4 +55,40 @@ public class ClienteDAO {
 
         return lista;
     }
+    
+    // Actualizar un cliente existente
+    public void actualizarCliente(Cliente cliente) {
+        String sql = "UPDATE clientes SET nombre = ?, telefono = ?, email = ?, activo = ? WHERE id = ?";
+
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, cliente.getNombre());
+            pstmt.setString(2, cliente.getTelefono());
+            pstmt.setString(3, cliente.getEmail());
+            pstmt.setBoolean(4, cliente.isActivo());
+            pstmt.setInt(5, cliente.getId());
+
+            pstmt.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Eliminar un cliente
+    public void eliminarCliente(int id) {
+        String sql = "DELETE FROM clientes WHERE id = ?";
+
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
 }
