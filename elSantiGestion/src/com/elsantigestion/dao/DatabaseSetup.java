@@ -13,7 +13,8 @@ public class DatabaseSetup {
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "nombre TEXT NOT NULL," +
                     "telefono TEXT," +
-                    "email TEXT" +
+                    "email TEXT," +
+                    "activo INTEGER DEFAULT 1" +
                     ");";
 
             stmt.execute(sqlClientes);
