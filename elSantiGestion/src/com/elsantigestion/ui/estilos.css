@@ -1,8 +1,8 @@
 /* Fondo del menú lateral */
 .menu-lateral {
     -fx-background-color: #333;
-
     -fx-min-width: 150;
+    -fx-pref-width: 150;
     -fx-max-width: 150;
 }
 
@@ -10,9 +10,10 @@
 .menu-boton {
     -fx-background-color: transparent;
     -fx-text-fill: white;
-    -fx-font-size: 15px;
+    -fx-font-size: 15;
     -fx-min-width: 150;
     -fx-min-height: 50;
+    -fx-pref-height: 50;
     -fx-max-height: 50;
 }
 
@@ -21,6 +22,38 @@
     -fx-background-color: #FF8533;
 }
 
-.menu-boton:pressed { 
-	-fx-background-color: #FFA366;
+.menu-boton.activo {
+    -fx-background-color: #FF8533;
+}
+
+.table-view {
+    -fx-border-color: black;
+    -fx-border-width: 1;
+}
+
+.table-row-cell {
+    -fx-pref-height: 30; /* altura de fila */
+}
+
+.table-cell {
+    -fx-font-size: 10pt; /* tamaño letra */
+    -fx-font-family: "Arial";
+    -fx-alignment: CENTER;
+}
+
+.table-boton {
+	-fx-background-color: transparent;
+    -fx-effect: null;
+}
+
+.barra {
+	-fx-background-color: #333;
+	-fx-min-height: 127;
+	-fx-pref-height: 127;
+	-fx-max-height: 127;
+	-fx-effect: innershadow(gaussian, rgba(0,0,0,0.5), 10, 0.1, 5, 0);	
+}
+
+.barra-boton {
+	
 }
