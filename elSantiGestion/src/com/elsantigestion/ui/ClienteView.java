@@ -31,7 +31,13 @@ public class ClienteView extends VBox {
     	
     	dao = new ClienteDAO();
         // Barra de acciones
-        Button btnNuevo = new Button("➕ Nuevo Cliente");
+    	Image añadir = new Image(getClass().getResource("/iconos/anadir.png").toExternalForm());
+    	ImageView iconoAñadir = new ImageView(añadir);
+        Button btnNuevo = new Button();
+        btnNuevo.setGraphic(iconoAñadir);
+        btnNuevo.getStyleClass().add("barra-boton");
+        iconoAñadir.setFitWidth(50);
+    	iconoAñadir.setFitHeight(50);
         HBox barraAcciones = new HBox(10, btnNuevo);
         barraAcciones.setAlignment(Pos.CENTER_RIGHT); // todo el contenido va a la derecha
         barraAcciones.getStyleClass().add("barra");  
