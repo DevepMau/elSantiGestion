@@ -48,9 +48,9 @@
 
 .barra {
 	-fx-background-color: #333;
-	-fx-min-height: 127;
-	-fx-pref-height: 127;
-	-fx-max-height: 127;
+	-fx-min-height: 100;
+	-fx-pref-height: 100;
+	-fx-max-height: 100;
 	-fx-effect: innershadow(gaussian, rgba(0,0,0,0.5), 10, 0.1, 5, 0);	
 }
 

@@ -7,7 +7,9 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -72,8 +74,20 @@ public class ClienteView extends VBox {
 
                     btnEliminar.setOnAction(e -> {
                         Cliente cliente = getTableView().getItems().get(getIndex());
-                        dao.eliminarCliente(cliente.getId());
-                        refrescarTabla();
+                        
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                        alert.setTitle("Confirmar eliminación");
+                        alert.setHeaderText(null);
+                        alert.setContentText("¿Seguro que deseas eliminar al cliente: " + cliente.getNombre() + "?");
+
+                        // Espera la respuesta del usuario
+                        alert.showAndWait().ifPresent(response -> {
+                            if (response == ButtonType.OK) {
+                                dao.eliminarCliente(cliente.getId()); // elimina de la DB
+                                getTableView().getItems().remove(cliente); // elimina de la tabla
+                                refrescarTabla();
+                            }
+                        });
                     });
                 	btnEliminar.setGraphic(iconoBorrar);
                 	btnEliminar.getStyleClass().add("table-boton");
