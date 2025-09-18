@@ -51,7 +51,13 @@ public class ClienteView extends VBox {
 
         TableColumn<Cliente, String> colTelefono = new TableColumn<>("Teléfono");
         colTelefono.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTelefono()));
+        
+        TableColumn<Cliente, String> colLocalidad = new TableColumn<>("Localidad");
+        colLocalidad.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLocalidad()));
 
+        TableColumn<Cliente, String> colDireccion = new TableColumn<>("Direccion");
+        colDireccion.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDireccion()));
+        
         TableColumn<Cliente, String> colEmail = new TableColumn<>("Email");
         colEmail.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEmail()));
         
@@ -70,7 +76,7 @@ public class ClienteView extends VBox {
                 {
                 	btnEditar.setOnAction(e -> {
                 	    Cliente cliente = getTableView().getItems().get(getIndex());
-                	    ClienteFormEditar form = new ClienteFormEditar(dao, ClienteView.this::refrescarTabla, cliente);
+                	    ClienteForm form = new ClienteForm(dao, ClienteView.this::refrescarTabla, cliente);
                 	    form.showAndWait();
                 	});
                 	btnEditar.setGraphic(iconoEditar);
@@ -117,7 +123,7 @@ public class ClienteView extends VBox {
 
         colAcciones.setCellFactory(cellFactory);
 
-        tabla.getColumns().addAll(colNombre, colTelefono, colEmail, colActivo);
+        tabla.getColumns().addAll(colNombre, colTelefono, colLocalidad, colDireccion, colEmail, colActivo);
         
         tabla.getColumns().add(colAcciones);
 
@@ -126,7 +132,7 @@ public class ClienteView extends VBox {
 
         // Acción del botón
         btnNuevo.setOnAction(e -> {
-            ClienteFormNuevo form = new ClienteFormNuevo(dao, this::refrescarTabla);
+            ClienteForm form = new ClienteForm(dao, ClienteView.this::refrescarTabla, null);
             form.showAndWait();
         });
 

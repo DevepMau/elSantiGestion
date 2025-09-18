@@ -13,6 +13,8 @@ public class DatabaseSetup {
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "nombre TEXT NOT NULL," +
                     "telefono TEXT," +
+                    "localidad TEXT," +
+                    "direccion TEXT," +
                     "email TEXT," +
                     "activo INTEGER DEFAULT 1" +
                     ");";

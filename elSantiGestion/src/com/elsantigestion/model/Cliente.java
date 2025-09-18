@@ -5,14 +5,18 @@ public class Cliente {
 	private int id;
 	private String nombre;
 	private String telefono;
+	private String localidad;
+	private String direccion;
 	private String email;
 	private boolean activo;
 	
-	public Cliente(int id, String nombre, String telefono, String email, boolean activo) {
+	public Cliente(int id, String nombre, String telefono, String localidad, String direccion, String email, boolean activo) {
 		
 		this.id = id;
 		this.nombre = nombre;
 		this.telefono = telefono;
+		this.localidad = localidad;
+		this.direccion = direccion;
 		this.email = email;
 		this.activo = activo;
 		
@@ -58,6 +62,22 @@ public class Cliente {
 
 	public void setActivo(boolean activo) {
 		this.activo = activo;
+	}
+
+	public String getLocalidad() {
+		return localidad;
+	}
+
+	public void setLocalidad(String localidad) {
+		this.localidad = localidad;
+	}
+
+	public String getDireccion() {
+		return direccion;
+	}
+
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
 	}
 
 }

@@ -14,12 +14,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 
-public class ClienteFormEditar extends Stage {
+public class ClienteForm extends Stage {
 	
 	private ClienteDAO dao;
     private Runnable onSaveCallback;
 	
-	public ClienteFormEditar(ClienteDAO dao, Runnable onSaveCallback, Cliente clienteExistente) {
+	public ClienteForm(ClienteDAO dao, Runnable onSaveCallback, Cliente clienteExistente) {
 	    this.dao = dao;
 	    this.onSaveCallback = onSaveCallback;
 
@@ -28,12 +28,16 @@ public class ClienteFormEditar extends Stage {
 	    // Campos
 	    TextField txtNombre = new TextField();
 	    TextField txtTelefono = new TextField();
+	    TextField txtLocalidad = new TextField();
+	    TextField txtDireccion = new TextField();
 	    TextField txtEmail = new TextField();
 	    CheckBox chkActivo = new CheckBox("Activo");
 
 	    if (clienteExistente != null) {
 	        txtNombre.setText(clienteExistente.getNombre());
 	        txtTelefono.setText(clienteExistente.getTelefono());
+	        txtLocalidad.setText(clienteExistente.getLocalidad());
+	        txtDireccion.setText(clienteExistente.getDireccion());
 	        txtEmail.setText(clienteExistente.getEmail());
 	        chkActivo.setSelected(clienteExistente.isActivo());
 	    } else {
@@ -49,6 +53,8 @@ public class ClienteFormEditar extends Stage {
 	                0,
 	                txtNombre.getText(),
 	                txtTelefono.getText(),
+	                txtLocalidad.getText(),
+	                txtDireccion.getText(),
 	                txtEmail.getText(),
 	                chkActivo.isSelected()
 	            );
@@ -57,6 +63,8 @@ public class ClienteFormEditar extends Stage {
 	            // Editar cliente
 	            clienteExistente.setNombre(txtNombre.getText());
 	            clienteExistente.setTelefono(txtTelefono.getText());
+	            clienteExistente.setLocalidad(txtLocalidad.getText());
+	            clienteExistente.setDireccion(txtDireccion.getText());
 	            clienteExistente.setEmail(txtEmail.getText());
 	            clienteExistente.setActivo(chkActivo.isSelected());
 	            dao.actualizarCliente(clienteExistente);
@@ -76,8 +84,10 @@ public class ClienteFormEditar extends Stage {
 	    grid.addRow(0, new Label("Nombre:"), txtNombre);
 	    grid.addRow(1, new Label("Teléfono:"), txtTelefono);
 	    grid.addRow(2, new Label("Email:"), txtEmail);
-	    grid.addRow(3, chkActivo);
-	    grid.add(btnGuardar, 1, 4);
+	    grid.addRow(3, new Label("Direccion:"), txtDireccion);
+	    grid.addRow(4, new Label("Localidad:"), txtLocalidad);
+	    grid.addRow(5, chkActivo);
+	    grid.add(btnGuardar, 1, 5);
 
 	    Scene scene = new Scene(grid, 400, 250);
 	    setScene(scene);
