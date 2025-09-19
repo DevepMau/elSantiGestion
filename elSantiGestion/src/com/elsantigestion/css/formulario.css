@@ -1,0 +1,101 @@
+/* Estilo general para el formulario */
+.formulario {
+    -fx-padding: 0;
+    -fx-hgap: 0;
+    -fx-vgap: 20; 
+    -fx-background-color: #333;
+    -fx-border-color: #FF9755;
+
+}
+
+/* Labels */
+.formulario .label {
+    -fx-font-size: 16px;
+    -fx-text-fill: white;
+
+}
+
+/* Campos de texto */
+.formulario .text-field {
+	-fx-font-size: 18px;
+    -fx-pref-width: 400;
+    -fx-min-height: 40;
+    -fx-pref-height: 40;
+    -fx-max-height: 40;
+    -fx-padding: 6 8;
+    -fx-background-color: #fff;
+    -fx-border-color: #bbb;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+/* Cuando el textfield está enfocado */
+.formulario .text-field:focused {
+    -fx-border-color: #FF8533;
+    -fx-border-width: 2;
+}
+
+/* Botones */
+.boton {
+    -fx-background-color: #444;
+    -fx-font-size: 18px;
+    -fx-text-fill: white;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+    -fx-pref-width: 500;
+    -fx-min-height: 75;
+    -fx-pref-height: 75;
+    -fx-max-height: 75;
+}
+
+.boton:hover {
+    -fx-background-color: #777;
+}
+
+.topBar {
+	-fx-background-color: #FF9755; 
+	-fx-min-height: 50;
+	-fx-pref-height: 50;
+	-fx-max-height: 50;
+	-fx-text-fill: white;
+
+}
+
+
+.topBar .button {
+	-fx-background-color: #FF9755;
+	-fx-text-fill: white;
+	-fx-font-size: 18px;
+	-fx-min-height: 50;
+	-fx-pref-height: 50;
+	-fx-max-height: 50;
+	-fx-min-width: 50;
+	-fx-pref-width: 50;
+	-fx-max-width: 50;	
+	-fx-cursor: hand;
+}
+
+.topBar .button:hover {
+	-fx-background-color: #FFB78A;
+}
+
+.topBar .button:pressed {
+	-fx-background-color: #FFE4D6;
+}
+
+.check-box .box {
+    -fx-background-color: white;      /* color del cuadrado */
+    -fx-border-color: #333;           /* borde del cuadrado */
+    -fx-border-radius: 3px;
+    -fx-pref-width: 25px;             /* ancho del cuadrado */
+    -fx-pref-height: 25px;            /* alto del cuadrado */
+}
+
+.check-box:selected .box {
+    -fx-background-color: #4CAF50;    /* fondo cuando está marcado */
+    -fx-border-color: #333;
+}
+
+.check-box .mark {
+    -fx-background-color: white;      /* color del tilde ✔ */
+}
