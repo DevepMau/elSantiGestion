@@ -63,7 +63,7 @@ public class MainApp extends Application {
         }
 
         Scene scene = new Scene(root, 800, 600);
-        scene.getStylesheets().add(getClass().getResource("ui/estilos.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("css/general.css").toExternalForm());
         stage.setTitle("Sistema de Gestión");
         stage.setScene(scene);
         stage.show();
