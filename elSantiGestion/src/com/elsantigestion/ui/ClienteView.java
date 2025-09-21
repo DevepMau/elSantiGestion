@@ -11,6 +11,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -18,7 +20,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.stage.StageStyle;
 import javafx.util.Callback;
 
 
@@ -27,6 +31,8 @@ public class ClienteView extends VBox {
 	private TableView<Cliente> tabla;
     private ClienteDAO dao;
     private final int iconoTamaño = 20;
+    private double xOffset = 0;
+    private double yOffset = 0;
 
     @SuppressWarnings("unchecked")
     public ClienteView() {
@@ -44,6 +50,11 @@ public class ClienteView extends VBox {
         barraAcciones.setAlignment(Pos.CENTER_RIGHT); // todo el contenido va a la derecha
         barraAcciones.getStyleClass().add("barra");  
     	
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        Button btnCerrar = new Button("X");
+        btnCerrar.setOnAction(e -> alert.close());
+        alert.initStyle(StageStyle.UNDECORATED);
+        
         // Tabla de clientes
         tabla = new TableView<>();
         //tabla.getStyleClass().add("table-view");
@@ -116,23 +127,10 @@ public class ClienteView extends VBox {
                 	iconoEditar.setFitWidth(iconoTamaño);
                 	iconoEditar.setFitHeight(iconoTamaño);
 
-                    btnEliminar.setOnAction(e -> {
-                        Cliente cliente = getTableView().getItems().get(getIndex());
-                        
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                        alert.setTitle("Confirmar eliminación");
-                        alert.setHeaderText(null);
-                        alert.setContentText("¿Seguro que deseas eliminar al cliente: " + cliente.getNombre() + "?");
-
-                        // Espera la respuesta del usuario
-                        alert.showAndWait().ifPresent(response -> {
-                            if (response == ButtonType.OK) {
-                                dao.eliminarCliente(cliente.getId()); // elimina de la DB
-                                getTableView().getItems().remove(cliente); // elimina de la tabla
-                                refrescarTabla();
-                            }
-                        });
-                    });
+                	btnEliminar.setOnAction(e -> {
+                	    Cliente cliente = getTableView().getItems().get(getIndex());
+                	    new Alerta("Confirmar accion", cliente, dao, () -> refrescarTabla());
+                	});
                 	btnEliminar.setGraphic(iconoBorrar);
                 	btnEliminar.getStyleClass().add("table-boton");
                 	iconoBorrar.setFitWidth(iconoTamaño);
