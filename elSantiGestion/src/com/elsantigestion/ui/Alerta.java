@@ -8,6 +8,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -53,9 +55,20 @@ public class Alerta {
         Label nombreCliente = new Label(cliente.getNombre());
         nombreCliente.getStyleClass().add("nombreCliente");
         
-        VBox contenido = new VBox(mensaje, nombreCliente);
+        Image warning = new Image(getClass().getResource("/iconos/warning.png").toExternalForm());
+        ImageView iconoWarning = new ImageView(warning);
+        iconoWarning.setFitWidth(50);
+        iconoWarning.setFitHeight(50);
+        
+        HBox advertenciaBox = new HBox(iconoWarning, mensaje);
+        advertenciaBox.setSpacing(20);
+        advertenciaBox.setAlignment(Pos.CENTER_LEFT);
+        advertenciaBox.getStyleClass().add("warning-box");
+        
+        VBox contenido = new VBox(advertenciaBox, nombreCliente);
         contenido.setSpacing(15);
         contenido.setAlignment(Pos.CENTER);
+        
 
         // Botón confirmar
         Button btnConfirmar = new Button("Eliminar");

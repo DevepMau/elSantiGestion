@@ -2,9 +2,9 @@
 	-fx-background-color: #333;
     -fx-border-color: #993026;
     -fx-border-width: 2px;
-    -fx-min-width: 300;
-    -fx-pref-width: 300;
-    -fx-max-width: 300;
+    -fx-min-width: 350;
+    -fx-pref-width: 350;
+    -fx-max-width: 350;
 }
 
 .vbox Label {
@@ -87,3 +87,8 @@
 .barra-superior .button:pressed {
 	-fx-background-color: #FFE4D6;
 }
+
+.warning-box {
+	-fx-padding: 0 20 0 20;
+}
+
