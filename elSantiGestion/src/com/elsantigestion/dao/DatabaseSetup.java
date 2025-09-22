@@ -20,6 +20,17 @@ public class DatabaseSetup {
                     ");";
 
             stmt.execute(sqlClientes);
+            
+            String sqlServicios = "CREATE TABLE IF NOT EXISTS servicios (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "nombre TEXT NOT NULL," +
+                    "detalle TEXT," +
+                    "precio REAL NOT NULL DEFAULT 0," +
+                    "unidad TEXT NOT NULL DEFAULT 'unidad' CHECK (unidad IN ('unidad','m2','hora','paquete','otro'))," +
+                    "activo INTEGER NOT NULL DEFAULT 1" +
+                    ");";
+
+            stmt.execute(sqlServicios);
 
         } catch (Exception e) {
             e.printStackTrace();
