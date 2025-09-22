@@ -13,7 +13,7 @@ public class ServicioDAO {
 	//Agregar un cliente nuevo
 	public void agregarServicio(Servicio servicio) {
 		
-		String sql = "INSERT INTO servicio(nombre, detalle, precio, unidad, activo) VALUES (?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO servicios(nombre, detalle, precio, unidad, activo) VALUES (?, ?, ?, ?, ?)";
 		
 		try (Connection conn = Database.connect();
 			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
