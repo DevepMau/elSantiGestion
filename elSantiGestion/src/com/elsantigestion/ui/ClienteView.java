@@ -2,92 +2,102 @@ package com.elsantigestion.ui;
 
 import com.elsantigestion.dao.ClienteDAO;
 import com.elsantigestion.model.Cliente;
-
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.stage.StageStyle;
-import javafx.util.Callback;
 
 
 public class ClienteView extends VBox {
 	
+private final int iconoTamaño = 50;
+	
 	private TableView<Cliente> tabla;
-    private ClienteDAO dao;
-    private final int iconoTamaño = 20;
-    private double xOffset = 0;
-    private double yOffset = 0;
+	private ClienteDAO dao;
+	private Button btnNuevo;
+	private Button btnModificar;
+	private Button btnEliminar;
+	private Image agregar;
+	private Image modificar;
+	private Image eliminar;
+	private ImageView iconoAgregar;
+	private ImageView iconoModificar;
+	private ImageView iconoEliminar;
+	private Tooltip tooltipNuevo;
+	private Tooltip tooltipModificar;
+	private Tooltip tooltipEliminar;
+	private HBox barraAcciones;
 
-    @SuppressWarnings("unchecked")
     public ClienteView() {
     	
     	dao = new ClienteDAO();
-        // Barra de acciones
-    	Image añadir = new Image(getClass().getResource("/iconos/anadir.png").toExternalForm());
-    	ImageView iconoAñadir = new ImageView(añadir);
-        Button btnNuevo = new Button();
-        btnNuevo.setGraphic(iconoAñadir);
-        btnNuevo.getStyleClass().add("barra-boton");
-        iconoAñadir.setFitWidth(50);
-    	iconoAñadir.setFitHeight(50);
-        HBox barraAcciones = new HBox(10, btnNuevo);
-        barraAcciones.setAlignment(Pos.CENTER_RIGHT); // todo el contenido va a la derecha
-        barraAcciones.getStyleClass().add("barra");  
-    	
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        Button btnCerrar = new Button("X");
-        btnCerrar.setOnAction(e -> alert.close());
-        alert.initStyle(StageStyle.UNDECORATED);
+		tabla = new TableView<>();
+		btnNuevo = new Button();
+		btnModificar = new Button();
+		btnEliminar = new Button();
+		agregar = new Image(getClass().getResource("/iconos/cliente.png").toExternalForm());
+		modificar = new Image(getClass().getResource("/iconos/edit.png").toExternalForm());
+		eliminar = new Image(getClass().getResource("/iconos/delete.png").toExternalForm());
+		iconoAgregar = new ImageView(agregar);
+		iconoModificar = new ImageView(modificar);
+		iconoEliminar = new ImageView(eliminar);
+		tooltipNuevo = new Tooltip("Agregar cliente");
+		tooltipModificar = new Tooltip("Modificar cliente");
+		tooltipEliminar = new Tooltip("Eliminar cliente");
+		barraAcciones = new HBox(2, btnEliminar, btnModificar, btnNuevo);
+		iconoAgregar.setFitWidth(iconoTamaño);
+		iconoAgregar.setFitHeight(iconoTamaño);
+		iconoModificar.setFitWidth(iconoTamaño);
+		iconoModificar.setFitHeight(iconoTamaño);
+		iconoEliminar.setFitWidth(iconoTamaño);
+		iconoEliminar.setFitHeight(iconoTamaño);
+		
+		btnNuevo.getStyleClass().add("barra-boton");
+		btnModificar.getStyleClass().add("barra-boton");
+		btnEliminar.getStyleClass().add("barra-boton");
+		
+		btnNuevo.setGraphic(iconoAgregar);
+		btnModificar.setGraphic(iconoModificar);
+		btnEliminar.setGraphic(iconoEliminar);
+		
+		btnNuevo.setTooltip(tooltipNuevo);
+		btnModificar.setTooltip(tooltipModificar);
+		btnEliminar.setTooltip(tooltipEliminar);
+		
+		barraAcciones.setAlignment(Pos.CENTER_RIGHT);
+		barraAcciones.getStyleClass().add("barra");
         
-        // Tabla de clientes
-        tabla = new TableView<>();
-        //tabla.getStyleClass().add("table-view");
-        tabla.setStyle("-fx-background-color: transparent;");
-
         TableColumn<Cliente, String> colNombre = new TableColumn<>("Nombre");
-        colNombre.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNombre()));
-        colNombre.setId("col-nombre");
-        colNombre.getStyleClass().add("columnaPersonalizada");
-
         TableColumn<Cliente, String> colTelefono = new TableColumn<>("Teléfono");
-        colTelefono.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTelefono()));
-        colTelefono.getStyleClass().add("columnaPersonalizada");
-        
         TableColumn<Cliente, String> colLocalidad = new TableColumn<>("Localidad");
-        colLocalidad.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLocalidad()));
-        colLocalidad.getStyleClass().add("columnaPersonalizada");
-        
         TableColumn<Cliente, String> colDireccion = new TableColumn<>("Direccion");
-        colDireccion.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDireccion()));
-        colDireccion.getStyleClass().add("columnaPersonalizada");
-        
         TableColumn<Cliente, String> colEmail = new TableColumn<>("Email");
-        colEmail.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEmail()));
-        colEmail.getStyleClass().add("columnaPersonalizada");
-        
         TableColumn<Cliente, Boolean> colActivo = new TableColumn<>("Activo");
+        
+        colNombre.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNombre()));
+        colTelefono.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTelefono()));
+        colLocalidad.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLocalidad()));
+        colDireccion.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDireccion()));
+        colEmail.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEmail()));
         colActivo.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().isActivo()));
+        
+        colNombre.getStyleClass().add("columnaPersonalizada");
+        colTelefono.getStyleClass().add("columnaPersonalizada");
+        colLocalidad.getStyleClass().add("columnaPersonalizada");
+        colDireccion.getStyleClass().add("columnaPersonalizada");
+        colEmail.getStyleClass().add("columnaPersonalizada");
         colActivo.getStyleClass().add("columnaPersonalizada");
 
-        // CellFactory para mostrar "Activo"/"Inactivo" con fondo verde/rojo
         colActivo.setCellFactory(col -> new TableCell<Cliente, Boolean>() {
-            @Override
             protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
@@ -105,108 +115,73 @@ public class ClienteView extends VBox {
                 setAlignment(Pos.CENTER);
             }
         });
+
+        tabla.getColumns().add(colNombre);
+        tabla.getColumns().add(colTelefono); 
+        tabla.getColumns().add(colLocalidad); 
+        tabla.getColumns().add(colDireccion); 
+        tabla.getColumns().add(colEmail); 
+        tabla.getColumns().add(colActivo); 
+        tabla.getItems().setAll(dao.obtenerClientes());
+    	tabla.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    	tabla.setPrefWidth(Double.MAX_VALUE);
+    	VBox.setVgrow(tabla, Priority.ALWAYS);
         
-        TableColumn<Cliente, Void> colAcciones = new TableColumn<>("");
-        colAcciones.getStyleClass().add("columnaPersonalizada");
-        Callback<TableColumn<Cliente, Void>, TableCell<Cliente, Void>> cellFactory = param -> {
-            return new TableCell<>() {
-            	Image borrar = new Image(getClass().getResource("/iconos/borrar.png").toExternalForm());
-            	Image editar = new Image(getClass().getResource("/iconos/editar.png").toExternalForm());
-            	ImageView iconoBorrar = new ImageView(borrar);
-            	ImageView iconoEditar = new ImageView(editar);
-                private final Button btnEditar = new Button();
-                private final Button btnEliminar = new Button();
-                {
-                	btnEditar.setOnAction(e -> {
-                	    Cliente cliente = getTableView().getItems().get(getIndex());
-                	    ClienteForm form = new ClienteForm(dao, ClienteView.this::refrescarTabla, cliente);
-                	    form.showAndWait();
-                	});
-                	btnEditar.setGraphic(iconoEditar);
-                	btnEditar.getStyleClass().add("table-boton");
-                	iconoEditar.setFitWidth(iconoTamaño);
-                	iconoEditar.setFitHeight(iconoTamaño);
+    	this.getChildren().addAll(barraAcciones, tabla);
+		this.getStylesheets().add(
+    	        getClass().getResource("/com/elsantigestion/css/tabla.css").toExternalForm()
+    	    );
+		
+		//Botones acciones/////////////////////
+		btnNuevo.setOnAction(e -> {
+			ClienteForm form = new ClienteForm(dao, ClienteView.this::refrescarTabla, null);
+			form.showAndWait();
+		});
+		
+		btnModificar.setOnAction(e -> {
+		    Cliente seleccionado = tabla.getSelectionModel().getSelectedItem();
+		    
+		    if (seleccionado != null) {
+		        ClienteForm form = new ClienteForm(dao, ClienteView.this::refrescarTabla, seleccionado);
+		        form.showAndWait();
+		    } else {
+		    	Alerta.warning("Atención", "Debe seleccionar un cliente para modificar.");
+		    }
+		});
+		
+		btnEliminar.setOnAction(e -> {
+		    Cliente seleccionado = tabla.getSelectionModel().getSelectedItem();
 
-                	btnEliminar.setOnAction(e -> {
-                	    Cliente cliente = getTableView().getItems().get(getIndex());
-                	    new Alerta("Confirmar accion", cliente, dao, () -> refrescarTabla());
-                	});
-                	btnEliminar.setGraphic(iconoBorrar);
-                	btnEliminar.getStyleClass().add("table-boton");
-                	iconoBorrar.setFitWidth(iconoTamaño);
-                	iconoBorrar.setFitHeight(iconoTamaño);
-                	setStyle("-fx-padding: 0 0 0 0;");
-                }
+		    if (seleccionado != null) {
+		        boolean confirmado = Alerta.confirmar(
+		            "Confirmar eliminación",
+		            "¿Está seguro de eliminar el cliente: " + seleccionado.getNombre() + "?"
+		        );
+		        if (confirmado) {
+		            dao.eliminarCliente(seleccionado.getId());
+		            refrescarTabla();
+		        }
+		    } else {
+		        Alerta.warning("Atención", "Debe seleccionar un cliente para eliminar.");
+		    }
+		});
+		
+		///////////////////////////////////////
+		refrescarTabla();
 
-                @Override
-                protected void updateItem(Void item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty) {
-                        setGraphic(null);
-                    } else {
-                        HBox contenedor = new HBox(5, btnEditar, btnEliminar);
-                        contenedor.setPadding(new Insets(0, 0, 0, 0));
-                        contenedor.setAlignment(Pos.CENTER);
-                        setGraphic(contenedor);
-                    }
-                }
-            };
-        };
-
-        colAcciones.setCellFactory(cellFactory);
-
-        tabla.getColumns().addAll(colNombre, colTelefono, colLocalidad, colDireccion, colEmail, colActivo);
-        
-        tabla.getColumns().add(colAcciones);  
-
-        // Cargar datos iniciales
-        refrescarTabla();
-
-        // Acción del botón
-        btnNuevo.setOnAction(e -> {
-            ClienteForm form = new ClienteForm(dao, ClienteView.this::refrescarTabla, null);
-            form.showAndWait();
-        });
-
-        // Layout
-        this.getChildren().addAll(barraAcciones, tabla);
-        
-        tabla.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        VBox.setVgrow(tabla, Priority.ALWAYS);
-        tabla.setPrefWidth(Double.MAX_VALUE);
-
-        // Columnas con mínimo ancho
         colNombre.setMinWidth(150);
         colTelefono.setMinWidth(100);
         colLocalidad.setMinWidth(100);
         colDireccion.setMinWidth(150);
         colEmail.setMinWidth(120);
-        colActivo.setMinWidth(80);
-        colAcciones.setMinWidth(80);
-        //centrarColumna(colActivo);  
+        colActivo.setMinWidth(80); 
 
-        
-        this.getStylesheets().add(
-    	        getClass().getResource("/com/elsantigestion/css/tabla.css").toExternalForm()
-    	    );
-        
     }
         
     private void refrescarTabla() {
     	
     	tabla.getItems().setAll(dao.obtenerClientes());
     	
-    }
-    
-    private <T> void centrarColumna(TableColumn<Cliente, T> columna) {
-        columna.setCellFactory(col -> new TableCell<Cliente, T>() {
-            @Override
-            protected void updateItem(T item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? null : item.toString());
-                setAlignment(Pos.CENTER);
-            }
-        });
     }
         
 }
