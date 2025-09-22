@@ -7,7 +7,6 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -143,16 +142,10 @@ public class ServicioView extends VBox {
 		    Servicio seleccionado = tabla.getSelectionModel().getSelectedItem();
 		    
 		    if (seleccionado != null) {
-		        // Abrir el formulario en modo edición
 		        ServicioForm form = new ServicioForm(dao, ServicioView.this::refrescarTabla, seleccionado);
 		        form.showAndWait();
 		    } else {
-		        // Mostrar un aviso si no hay fila seleccionada
-		        Alert alert = new Alert(Alert.AlertType.WARNING);
-		        alert.setTitle("Atención");
-		        alert.setHeaderText(null);
-		        alert.setContentText("Debe seleccionar un servicio para editar.");
-		        alert.showAndWait();
+		    	Alerta.warning("Atención", "Debe seleccionar un servicio para modificar.");
 		    }
 		});
 		
@@ -164,12 +157,10 @@ public class ServicioView extends VBox {
 		            "Confirmar eliminación",
 		            "¿Está seguro de eliminar el servicio: " + seleccionado.getNombre() + "?"
 		        );
-
 		        if (confirmado) {
 		            dao.eliminarServicio(seleccionado.getId());
 		            refrescarTabla();
 		        }
-
 		    } else {
 		        Alerta.warning("Atención", "Debe seleccionar un servicio para eliminar.");
 		    }
