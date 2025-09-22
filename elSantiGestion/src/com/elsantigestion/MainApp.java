@@ -2,6 +2,7 @@ package com.elsantigestion;
 
 import com.elsantigestion.dao.DatabaseSetup;
 import com.elsantigestion.ui.ClienteView;
+import com.elsantigestion.ui.ServicioView;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -37,12 +38,13 @@ public class MainApp extends Application {
 
         // Botones del menú lateral
         Button btnClientes = new Button("Clientes");
+        Button btnServicios = new Button("Servicios");
         Button btnPedidos = new Button("Pedidos");
         Button btnGastos = new Button("Gastos");
         Button btnCronograma = new Button("Cronograma");
         Button btnReportes = new Button("Reportes");
 
-        Button[] botones = {btnClientes, btnPedidos, btnGastos, btnCronograma, btnReportes};
+        Button[] botones = {btnClientes, btnServicios, btnPedidos, btnGastos, btnCronograma, btnReportes};
 
         // Barra superior
         Button btnCerrar = new Button("X");
@@ -83,7 +85,7 @@ public class MainApp extends Application {
             btn.getStyleClass().add("menu-boton");
         }
 
-        VBox menuLateral = new VBox(10, logoView, btnClientes, btnPedidos, btnGastos, btnCronograma, btnReportes);
+        VBox menuLateral = new VBox(10, logoView, btnClientes, btnServicios, btnPedidos, btnGastos, btnCronograma, btnReportes);
         menuLateral.getStyleClass().add("menu-lateral");
 
         // Panel principal
@@ -102,6 +104,7 @@ public class MainApp extends Application {
 
                 // Cambiar el contenido central
                 if (btn == btnClientes) root.setCenter(new ClienteView());
+                else if (btn == btnServicios) root.setCenter(new ServicioView());
                 else if (btn == btnPedidos) root.setCenter(new javafx.scene.control.Label("Vista de Pedidos"));
                 else if (btn == btnGastos) root.setCenter(new javafx.scene.control.Label("Vista de Gastos"));
                 else if (btn == btnCronograma) root.setCenter(new javafx.scene.control.Label("Vista de Cronograma"));
