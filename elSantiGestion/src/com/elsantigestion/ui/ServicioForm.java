@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -19,7 +20,9 @@ import javafx.stage.StageStyle;
 
 public class ServicioForm extends Stage {
 	
+	@SuppressWarnings("unused")
 	private ServicioDAO dao;
+	@SuppressWarnings("unused")
 	private Runnable onSaveCallBack;
 	private Label titulo;
 	private double xOffset;
@@ -35,7 +38,9 @@ public class ServicioForm extends Stage {
 	private Region spacer;
 	private GridPane grid;
 	private Scene scene;
+	private Label chkText;
 	
+	@SuppressWarnings("exports")
 	public ServicioForm(ServicioDAO dao, Runnable onSaveCallBack, Servicio servicioExistente) {
 		
 		this.dao = dao;
@@ -49,7 +54,8 @@ public class ServicioForm extends Stage {
 		btnCerrar = new Button("X");
 		barraSuperior = new HBox();
 		spacer = new Region();
-		scene = new Scene(grid, 400, 550);
+		chkText = new Label("¿El servicio esta activo?");
+		scene = new Scene(grid, 400, 500);
 		
 		txtNombre = new TextField();
 		txtDetalle = new TextField();
@@ -89,8 +95,21 @@ public class ServicioForm extends Stage {
 		barraSuperior.setOnMouseDragged(event -> {
 			barraSuperior.getScene().getWindow().setX(event.getSceneX() - xOffset);
 			barraSuperior.getScene().getWindow().setY(event.getSceneY() - yOffset);
-		});	
+		});
 		
+		HBox.setMargin(titulo, new Insets(15, 10, 0, 10));
+		HBox.setHgrow(spacer, Priority.ALWAYS);
+		
+		HBox chkBar = new HBox();
+		HBox.setMargin(chkActivo, new Insets(10, 0, 10, 0));
+		
+	    chkBar.setAlignment(Pos.CENTER);
+	    chkBar.getChildren().addAll(chkText ,chkActivo);
+	    chkBar.setSpacing(20); 
+		
+	    chkActivo.getStyleClass().add("check-box");
+	    
+		btnGuardar.getStyleClass().add("boton");
 		btnGuardar.setOnAction(e -> {
 			if(servicioExistente == null) {
 				Servicio nuevo = new Servicio(
@@ -129,8 +148,9 @@ public class ServicioForm extends Stage {
 		grid.addRow(2, txtDetalle);
 		grid.addRow(3, txtPrecio);
 		grid.addRow(4, txtUnidad);
-		grid.add(btnGuardar, 0, 5);
-		GridPane.setMargin(txtNombre, new Insets(40, 20, 0, 20));
+		grid.addRow(5, chkBar);
+		grid.add(btnGuardar, 0, 6);
+		GridPane.setMargin(txtNombre, new Insets(45, 20, 0, 20));
 		GridPane.setMargin(txtDetalle, new Insets(0, 20, 0, 20));
 		GridPane.setMargin(txtPrecio, new Insets(0, 20, 0, 20));
 		GridPane.setMargin(txtUnidad, new Insets(0, 20, 0, 20));
