@@ -106,10 +106,10 @@ public class ServicioView extends VBox {
 				else {
 					if(item) {	
 						setText("Activo");
-						setStyle("-fx-text-fill: red; -fx-padding: 0 0 -1 0;");	
+						setStyle("-fx-text-fill: green; -fx-padding: 0 0 -1 0;");	
 					} else {
 						setText("Inactivo");
-						setStyle("-fx-text-fill: green; -fx-padding: 0 0 -1 0;");
+						setStyle("-fx-text-fill: red; -fx-padding: 0 0 -1 0;");
 					}
 				}
 				setAlignment(Pos.CENTER);
@@ -168,6 +168,12 @@ public class ServicioView extends VBox {
 		
 		///////////////////////////////////////
 		refrescarTabla();
+		
+		colNombre.setMinWidth(150);
+		colDetalle.setMinWidth(250);
+		colPrecio.setMinWidth(60);
+		colUnidad.setMinWidth(60);
+		colActivo.setMinWidth(60);
 	
 	}
 	
