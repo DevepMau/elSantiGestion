@@ -72,7 +72,7 @@ public class ServicioDAO {
 	//Actualizar servicio
 	public void actualizarServicio(Servicio servicio) {
 		
-		String sql = "UPDATE servicios SET nombre = ?, detalle = ?, precio = ?, unidad = ?, activo = ?";
+		String sql = "UPDATE servicios SET nombre = ?, detalle = ?, precio = ?, unidad = ?, activo = ? WHERE id = ?";
 		
 		try (Connection conn = Database.connect();
 			 PreparedStatement pstmt = conn.prepareStatement(sql)){
@@ -82,6 +82,7 @@ public class ServicioDAO {
 			pstmt.setDouble(3, servicio.getPrecio());
 			pstmt.setString(4, servicio.getUnidad());
 			pstmt.setBoolean(5, servicio.isActivo());
+			pstmt.setInt(6, servicio.getId());
 			
 			pstmt.executeUpdate();
 			
