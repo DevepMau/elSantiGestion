@@ -21,12 +21,15 @@ import javafx.stage.StageStyle;
 
 public class ClienteForm extends Stage {
 	
+	@SuppressWarnings("unused")
 	private ClienteDAO dao;
+	@SuppressWarnings("unused")
     private Runnable onSaveCallback;
     private Label titulo;
     private double xOffset = 0;
     private double yOffset = 0;
 	
+    @SuppressWarnings("exports")
 	public ClienteForm(ClienteDAO dao, Runnable onSaveCallback, Cliente clienteExistente) {
 	    this.dao = dao;
 	    this.onSaveCallback = onSaveCallback;

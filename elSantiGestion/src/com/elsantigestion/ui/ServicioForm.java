@@ -40,7 +40,7 @@ public class ServicioForm extends Stage {
 	private Scene scene;
 	private Label chkText;
 	
-	@SuppressWarnings("exports")
+	@SuppressWarnings("exports") 
 	public ServicioForm(ServicioDAO dao, Runnable onSaveCallBack, Servicio servicioExistente) {
 		
 		this.dao = dao;
