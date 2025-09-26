@@ -28,7 +28,7 @@
 }
 
 .menu-boton.activo {
-    -fx-background-color: #FF9755;
+    -fx-background-color: linear-gradient(to bottom, #FF9755, #B35932);
 }
 
 .barra {
@@ -40,7 +40,7 @@
 }
 
 .barra-boton {
-	-fx-background-color: #444;
+	-fx-background-color: linear-gradient(to bottom, #666, #333);
 	-fx-min-height: 100;
 	-fx-pref-height: 100;
 	-fx-max-height: 100;

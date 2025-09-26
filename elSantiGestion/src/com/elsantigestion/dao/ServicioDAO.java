@@ -3,6 +3,7 @@ package com.elsantigestion.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,6 +112,35 @@ public class ServicioDAO {
 			
 		}
 		
+	}
+	
+	public Servicio obtenerServicioPorId(int id) {
+		
+		String sql = "SELECT * FROM servicios WHERE id = ?";
+		
+		try (Connection conn = Database.connect();
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			
+			pstmt.setInt(1, id);
+			ResultSet rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				return new Servicio(
+						rs.getInt("id"),
+						rs.getString("nombre"),
+						rs.getString("detalle"),
+						rs.getDouble("precio"),
+						rs.getString("unidad"),
+						rs.getBoolean("activo")
+				);
+			}
+		
+		} catch(SQLException e) {
+			
+			e.printStackTrace();
+			
+		}
+		return null;
 	}
 
 }
