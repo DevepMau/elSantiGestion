@@ -1,6 +1,6 @@
 package com.elsantigestion.model;
 
-public class Servicio {
+public class Trabajo {
 	
 	private int id;
 	private String nombre;
@@ -9,7 +9,7 @@ public class Servicio {
 	private String unidad;
 	private boolean activo;
 	
-	public Servicio(int id, String nombre, String detalle, double precio, String unidad, boolean activo) {
+	public Trabajo(int id, String nombre, String detalle, double precio, String unidad, boolean activo) {
 		
 		this.id = id;
 		this.nombre = nombre;

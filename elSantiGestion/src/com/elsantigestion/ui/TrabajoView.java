@@ -1,7 +1,7 @@
 package com.elsantigestion.ui;
 
-import com.elsantigestion.dao.ServicioDAO;
-import com.elsantigestion.model.Servicio;
+import com.elsantigestion.dao.TrabajoDAO;
+import com.elsantigestion.model.Trabajo;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -18,12 +18,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-public class ServicioView extends VBox {
+public class TrabajoView extends VBox {
 	
 	private final int iconoTamaño = 50;
 	
-	private TableView<Servicio> tabla;
-	private ServicioDAO dao;
+	private TableView<Trabajo> tabla;
+	private TrabajoDAO dao;
 	private Button btnNuevo;
 	private Button btnModificar;
 	private Button btnEliminar;
@@ -38,9 +38,9 @@ public class ServicioView extends VBox {
 	private Tooltip tooltipEliminar;
 	private HBox barraAcciones;
 	
-	public ServicioView() {
+	public TrabajoView() {
 		
-		dao = new ServicioDAO();
+		dao = new TrabajoDAO();
 		tabla = new TableView<>();
 		btnNuevo = new Button();
 		btnModificar = new Button();
@@ -51,9 +51,9 @@ public class ServicioView extends VBox {
 		iconoAgregar = new ImageView(agregar);
 		iconoModificar = new ImageView(modificar);
 		iconoEliminar = new ImageView(eliminar);
-		tooltipNuevo = new Tooltip("Agregar servicio");
-		tooltipModificar = new Tooltip("Modificar servicio");
-		tooltipEliminar = new Tooltip("Eliminar servicio");
+		tooltipNuevo = new Tooltip("Agregar trabajo");
+		tooltipModificar = new Tooltip("Modificar trabajo");
+		tooltipEliminar = new Tooltip("Eliminar trabajo");
 		barraAcciones = new HBox(2, btnEliminar, btnModificar, btnNuevo);
 		
 		iconoAgregar.setFitWidth(iconoTamaño);
@@ -78,11 +78,11 @@ public class ServicioView extends VBox {
 		barraAcciones.setAlignment(Pos.CENTER_RIGHT);
 		barraAcciones.getStyleClass().add("barra");
 		
-		TableColumn<Servicio, String> colNombre = new TableColumn<>("Nombre");
-		TableColumn<Servicio, String> colDetalle = new TableColumn<>("Detalle");
-		TableColumn<Servicio, Number> colPrecio = new TableColumn<>("Precio");
-		TableColumn<Servicio, String> colUnidad = new TableColumn<>("Unidad");
-		TableColumn<Servicio, Boolean> colActivo = new TableColumn<>("Activo");
+		TableColumn<Trabajo, String> colNombre = new TableColumn<>("Nombre");
+		TableColumn<Trabajo, String> colDetalle = new TableColumn<>("Detalle");
+		TableColumn<Trabajo, Number> colPrecio = new TableColumn<>("Precio");
+		TableColumn<Trabajo, String> colUnidad = new TableColumn<>("Unidad");
+		TableColumn<Trabajo, Boolean> colActivo = new TableColumn<>("Activo");
 		
 		colNombre.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNombre()));
 		colDetalle.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDetalle()));
@@ -96,7 +96,7 @@ public class ServicioView extends VBox {
 		colUnidad.getStyleClass().add("columnaPersonalizada");
 		colActivo.getStyleClass().add("columnaPersonalizada");
 		
-		colActivo.setCellFactory(col -> new TableCell<Servicio, Boolean>() {
+		colActivo.setCellFactory(col -> new TableCell<Trabajo, Boolean>() {
 			protected void updateItem(Boolean item, boolean empty) {
 				super.updateItem(item, empty);
 				if(empty || item == null) {
@@ -121,7 +121,7 @@ public class ServicioView extends VBox {
 		tabla.getColumns().add(colPrecio);
 		tabla.getColumns().add(colUnidad);
 		tabla.getColumns().add(colActivo);
-		tabla.getItems().setAll(dao.obtenerServicios());
+		tabla.getItems().setAll(dao.obtenerTrabajos());
     	tabla.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	tabla.setPrefWidth(Double.MAX_VALUE);
     	VBox.setVgrow(tabla, Priority.ALWAYS);
@@ -134,35 +134,35 @@ public class ServicioView extends VBox {
 		
 		//Botones acciones/////////////////////
 		btnNuevo.setOnAction(e -> {
-			ServicioForm form = new ServicioForm(dao, ServicioView.this::refrescarTabla, null);
+			TrabajoForm form = new TrabajoForm(dao, TrabajoView.this::refrescarTabla, null);
 			form.showAndWait();
 		});
 		
 		btnModificar.setOnAction(e -> {
-		    Servicio seleccionado = tabla.getSelectionModel().getSelectedItem();
+		    Trabajo seleccionado = tabla.getSelectionModel().getSelectedItem();
 		    
 		    if (seleccionado != null) {
-		        ServicioForm form = new ServicioForm(dao, ServicioView.this::refrescarTabla, seleccionado);
+		        TrabajoForm form = new TrabajoForm(dao, TrabajoView.this::refrescarTabla, seleccionado);
 		        form.showAndWait();
 		    } else {
-		    	Alerta.warning("Atención", "Debe seleccionar un servicio para modificar.");
+		    	Alerta.warning("Atención", "Debe seleccionar un trabajo para modificar.");
 		    }
 		});
 		
 		btnEliminar.setOnAction(e -> {
-		    Servicio seleccionado = tabla.getSelectionModel().getSelectedItem();
+		    Trabajo seleccionado = tabla.getSelectionModel().getSelectedItem();
 
 		    if (seleccionado != null) {
 		        boolean confirmado = Alerta.confirmar(
 		            "Confirmar eliminación",
-		            "¿Está seguro de eliminar el servicio: " + seleccionado.getNombre() + "?"
+		            "¿Está seguro de eliminar el trabajo: " + seleccionado.getNombre() + "?"
 		        );
 		        if (confirmado) {
-		            dao.eliminarServicio(seleccionado.getId());
+		            dao.eliminarTrabajo(seleccionado.getId());
 		            refrescarTabla();
 		        }
 		    } else {
-		        Alerta.warning("Atención", "Debe seleccionar un servicio para eliminar.");
+		        Alerta.warning("Atención", "Debe seleccionar un trabajo para eliminar.");
 		    }
 		});
 		
@@ -179,7 +179,7 @@ public class ServicioView extends VBox {
 	
 	private void refrescarTabla() {
     	
-		tabla.getItems().setAll(dao.obtenerServicios());
+		tabla.getItems().setAll(dao.obtenerTrabajos());
     		
     }
 

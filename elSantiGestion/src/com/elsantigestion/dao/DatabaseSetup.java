@@ -21,7 +21,7 @@ public class DatabaseSetup {
 
             stmt.execute(sqlClientes);
             
-            String sqlServicios = "CREATE TABLE IF NOT EXISTS servicios (" +
+            String sqlTrabajos = "CREATE TABLE IF NOT EXISTS trabajos (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "nombre TEXT NOT NULL," +
                     "detalle TEXT," +
@@ -30,7 +30,7 @@ public class DatabaseSetup {
                     "activo INTEGER NOT NULL DEFAULT 1" +
                     ");";
 
-            stmt.execute(sqlServicios);
+            stmt.execute(sqlTrabajos);
 
         } catch (Exception e) {
             e.printStackTrace();

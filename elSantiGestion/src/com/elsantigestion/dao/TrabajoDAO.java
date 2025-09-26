@@ -7,23 +7,23 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.elsantigestion.model.Servicio;
+import com.elsantigestion.model.Trabajo;
 
-public class ServicioDAO {
+public class TrabajoDAO {
 	
-	//Agregar un cliente nuevo
-	public void agregarServicio(Servicio servicio) {
+	//Agregar un trabajo nuevo
+	public void agregarTrabajo(Trabajo trabajo) {
 		
-		String sql = "INSERT INTO servicios(nombre, detalle, precio, unidad, activo) VALUES (?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO trabajos(nombre, detalle, precio, unidad, activo) VALUES (?, ?, ?, ?, ?)";
 		
 		try (Connection conn = Database.connect();
 			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			
-			pstmt.setString(1, servicio.getNombre());
-			pstmt.setString(2, servicio.getDetalle());
-			pstmt.setDouble(3, servicio.getPrecio());
-			pstmt.setString(4, servicio.getUnidad());
-			pstmt.setBoolean(5, servicio.isActivo());
+			pstmt.setString(1, trabajo.getNombre());
+			pstmt.setString(2, trabajo.getDetalle());
+			pstmt.setDouble(3, trabajo.getPrecio());
+			pstmt.setString(4, trabajo.getUnidad());
+			pstmt.setBoolean(5, trabajo.isActivo());
 			
 			pstmt.executeUpdate();
 			
@@ -36,11 +36,11 @@ public class ServicioDAO {
 	}
 	
 	
-	//Obtener todos los servicios.
-	public List<Servicio> obtenerServicios(){
+	//Obtener todos los trabajos.
+	public List<Trabajo> obtenerTrabajos(){
 		
-		List<Servicio> lista = new ArrayList<>();
-		String sql = "SELECT * FROM servicios";
+		List<Trabajo> lista = new ArrayList<>();
+		String sql = "SELECT * FROM trabajos";
 		
 		try (Connection conn = Database.connect();
 			 PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -48,7 +48,7 @@ public class ServicioDAO {
 			
 			while(rs.next()){
 				
-				Servicio s = new Servicio(
+				Trabajo s = new Trabajo(
 						rs.getInt("id"),
 						rs.getString("nombre"),
 						rs.getString("detalle"),
@@ -70,20 +70,20 @@ public class ServicioDAO {
 		
 	}
 	
-	//Actualizar servicio
-	public void actualizarServicio(Servicio servicio) {
+	//Actualizar trabajo
+	public void actualizarTrabajo(Trabajo trabajo) {
 		
-		String sql = "UPDATE servicios SET nombre = ?, detalle = ?, precio = ?, unidad = ?, activo = ? WHERE id = ?";
+		String sql = "UPDATE trabajos SET nombre = ?, detalle = ?, precio = ?, unidad = ?, activo = ? WHERE id = ?";
 		
 		try (Connection conn = Database.connect();
 			 PreparedStatement pstmt = conn.prepareStatement(sql)){
 			
-			pstmt.setString(1, servicio.getNombre());
-			pstmt.setString(2, servicio.getDetalle());
-			pstmt.setDouble(3, servicio.getPrecio());
-			pstmt.setString(4, servicio.getUnidad());
-			pstmt.setBoolean(5, servicio.isActivo());
-			pstmt.setInt(6, servicio.getId());
+			pstmt.setString(1, trabajo.getNombre());
+			pstmt.setString(2, trabajo.getDetalle());
+			pstmt.setDouble(3, trabajo.getPrecio());
+			pstmt.setString(4, trabajo.getUnidad());
+			pstmt.setBoolean(5, trabajo.isActivo());
+			pstmt.setInt(6, trabajo.getId());
 			
 			pstmt.executeUpdate();
 			
@@ -95,10 +95,10 @@ public class ServicioDAO {
 		
 	}
 	
-	//Eliminar servicio
-	public void eliminarServicio(int id) {
+	//Eliminar trabajo
+	public void eliminarTrabajo(int id) {
 		
-		String sql = "DELETE FROM servicios WHERE id = ?";
+		String sql = "DELETE FROM trabajos WHERE id = ?";
 		
 		try (Connection conn = Database.connect();
 			 PreparedStatement pstmt = conn.prepareStatement(sql)){
@@ -114,9 +114,10 @@ public class ServicioDAO {
 		
 	}
 	
-	public Servicio obtenerServicioPorId(int id) {
+	// Obtener trabajo por id
+	public Trabajo obtenerTrabajoPorId(int id) {
 		
-		String sql = "SELECT * FROM servicios WHERE id = ?";
+		String sql = "SELECT * FROM trabajos WHERE id = ?";
 		
 		try (Connection conn = Database.connect();
 			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -125,7 +126,7 @@ public class ServicioDAO {
 			ResultSet rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				return new Servicio(
+				return new Trabajo(
 						rs.getInt("id"),
 						rs.getString("nombre"),
 						rs.getString("detalle"),

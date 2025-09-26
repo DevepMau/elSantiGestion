@@ -1,7 +1,7 @@
 package com.elsantigestion.ui;
 
-import com.elsantigestion.dao.ServicioDAO;
-import com.elsantigestion.model.Servicio;
+import com.elsantigestion.dao.TrabajoDAO;
+import com.elsantigestion.model.Trabajo;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,10 +18,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class ServicioForm extends Stage {
+public class TrabajoForm extends Stage {
 	
 	@SuppressWarnings("unused")
-	private ServicioDAO dao;
+	private TrabajoDAO dao;
 	@SuppressWarnings("unused")
 	private Runnable onSaveCallBack;
 	private Label titulo;
@@ -41,7 +41,7 @@ public class ServicioForm extends Stage {
 	private Label chkText;
 	
 	@SuppressWarnings("exports") 
-	public ServicioForm(ServicioDAO dao, Runnable onSaveCallBack, Servicio servicioExistente) {
+	public TrabajoForm(TrabajoDAO dao, Runnable onSaveCallBack, Trabajo trabajoExistente) {
 		
 		this.dao = dao;
 		this.onSaveCallBack = onSaveCallBack;
@@ -54,7 +54,7 @@ public class ServicioForm extends Stage {
 		btnCerrar = new Button("X");
 		barraSuperior = new HBox();
 		spacer = new Region();
-		chkText = new Label("¿El servicio esta activo?");
+		chkText = new Label("¿El trabajo esta activo?");
 		scene = new Scene(grid, 400, 500);
 		
 		txtNombre = new TextField();
@@ -63,23 +63,23 @@ public class ServicioForm extends Stage {
 		txtUnidad = new TextField();
 		chkActivo = new CheckBox();
 		
-		txtNombre.setPromptText("Ingrese nombre del servicio...");
-		txtDetalle.setPromptText("Ingrese detalle del servicio...");
-		txtPrecio.setPromptText("Ingrese valor del servicio...");
+		txtNombre.setPromptText("Ingrese nombre del trabajo...");
+		txtDetalle.setPromptText("Ingrese detalle del trabajo...");
+		txtPrecio.setPromptText("Ingrese valor del trabajo...");
 		txtUnidad.setPromptText("Ingrese unidad...");
 		
-		if(servicioExistente != null) {
+		if(trabajoExistente != null) {
 			
-			titulo = new Label("Modificar servicio");
-			txtNombre.setText(servicioExistente.getNombre());
-			txtDetalle.setText(servicioExistente.getDetalle());
-			txtPrecio.setText(String.valueOf(servicioExistente.getPrecio()));
-			txtUnidad.setText(servicioExistente.getUnidad());
-			chkActivo.setSelected(servicioExistente.isActivo());
+			titulo = new Label("Modificar trabajo");
+			txtNombre.setText(trabajoExistente.getNombre());
+			txtDetalle.setText(trabajoExistente.getDetalle());
+			txtPrecio.setText(String.valueOf(trabajoExistente.getPrecio()));
+			txtUnidad.setText(trabajoExistente.getUnidad());
+			chkActivo.setSelected(trabajoExistente.isActivo());
 			
 		} else {
 			
-			titulo = new Label("Agregar servicio");
+			titulo = new Label("Agregar trabajo");
 			chkActivo.setSelected(true);
 			
 		}
@@ -111,8 +111,8 @@ public class ServicioForm extends Stage {
 	    
 		btnGuardar.getStyleClass().add("boton");
 		btnGuardar.setOnAction(e -> {
-			if(servicioExistente == null) {
-				Servicio nuevo = new Servicio(
+			if(trabajoExistente == null) {
+				Trabajo nuevo = new Trabajo(
 						0,
 						txtNombre.getText(),
 						txtDetalle.getText(),
@@ -120,15 +120,15 @@ public class ServicioForm extends Stage {
 						txtUnidad.getText(),
 						chkActivo.isSelected()
 						);
-				dao.agregarServicio(nuevo);
+				dao.agregarTrabajo(nuevo);
 			} else {
-				servicioExistente.setNombre(txtNombre.getText());
-				servicioExistente.setDetalle(txtDetalle.getText());
-				servicioExistente.setPrecio(Double.parseDouble(txtPrecio.getText()));
-				servicioExistente.setUnidad(txtUnidad.getText());
-				servicioExistente.setActivo(chkActivo.isSelected());
+				trabajoExistente.setNombre(txtNombre.getText());
+				trabajoExistente.setDetalle(txtDetalle.getText());
+				trabajoExistente.setPrecio(Double.parseDouble(txtPrecio.getText()));
+				trabajoExistente.setUnidad(txtUnidad.getText());
+				trabajoExistente.setActivo(chkActivo.isSelected());
 				
-				dao.actualizarServicio(servicioExistente);
+				dao.actualizarTrabajo(trabajoExistente);
 			}
 			
 			if(onSaveCallBack != null) {
