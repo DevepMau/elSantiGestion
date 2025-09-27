@@ -31,6 +31,30 @@ public class DatabaseSetup {
                     ");";
 
             stmt.execute(sqlTrabajos);
+            
+            String sqlServicioEventual = "CREATE TABLE servicio_eventual (" +
+            	    "id INT PRIMARY KEY," +
+            	    "fecha_creacion DATE NOT NULL," +
+            	    "fecha_programada DATE NOT NULL," +
+            	    "cliente_id INT NOT NULL, "+
+            	    "precio INT NOT NULL," +
+            	    "gastos INT NOT NULL," +
+            	    "monto_final INT NOT NULL," +
+            	    "FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE" +
+            	    ");";
+            
+            stmt.execute(sqlServicioEventual);
+            
+            String sqlServicioEventualtrabajos = "CREATE TABLE IF NOT EXISTS servicio_eventual_trabajos (" +
+            	    "servicio_eventual_id INT NOT NULL," +
+            	    "trabajo_id INT NOT NULL," +
+            	    "cantidad INT NOT NULL DEFAULT 1," +
+            	    "PRIMARY KEY (servicio_eventual_id, trabajo_id)," +
+            	    "FOREIGN KEY (servicio_eventual_id) REFERENCES ServicioEventual(id) ON DELETE CASCADE," +
+            	    "FOREIGN KEY (trabajo_id) REFERENCES trabajos(id) ON DELETE CASCADE" +
+            	    ");";
+            
+            stmt.execute(sqlServicioEventualtrabajos);
 
         } catch (Exception e) {
             e.printStackTrace();
