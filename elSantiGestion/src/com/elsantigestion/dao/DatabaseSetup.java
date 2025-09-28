@@ -32,14 +32,14 @@ public class DatabaseSetup {
 
             stmt.execute(sqlTrabajos);
             
-            String sqlServicioEventual = "CREATE TABLE servicio_eventual (" +
-            	    "id INT PRIMARY KEY," +
+            String sqlServicioEventual = "CREATE TABLE IF NOT EXISTS servicio_eventual (" +
+            	    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            	    "cliente_id INT NOT NULL, "+
             	    "fecha_creacion DATE NOT NULL," +
             	    "fecha_programada DATE NOT NULL," +
-            	    "cliente_id INT NOT NULL, "+
-            	    "precio INT NOT NULL," +
-            	    "gastos INT NOT NULL," +
-            	    "monto_final INT NOT NULL," +
+            	    "precio REAL NOT NULL DEFAULT 0," +
+            	    "gastos REAL NOT NULL DEFAULT 0," +
+            	    "monto_final REAL NOT NULL DEFAULT 0," +
             	    "FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE" +
             	    ");";
             
