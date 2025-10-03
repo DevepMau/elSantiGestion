@@ -45,7 +45,7 @@ public class DatabaseSetup {
             
             stmt.execute(sqlServicioEventual);
             
-            String sqlServicioEventualtrabajos = "CREATE TABLE IF NOT EXISTS servicio_eventual_trabajos (" +
+            String sqlServicioEventualTrabajos = "CREATE TABLE IF NOT EXISTS servicio_eventual_trabajos (" +
             	    "servicio_eventual_id INT NOT NULL," +
             	    "trabajo_id INT NOT NULL," +
             	    "cantidad INT NOT NULL DEFAULT 1," +
@@ -54,7 +54,7 @@ public class DatabaseSetup {
             	    "FOREIGN KEY (trabajo_id) REFERENCES trabajos(id) ON DELETE CASCADE" +
             	    ");";
             
-            stmt.execute(sqlServicioEventualtrabajos);
+            stmt.execute(sqlServicioEventualTrabajos);
 
         } catch (Exception e) {
             e.printStackTrace();
