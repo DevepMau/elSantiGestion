@@ -2,25 +2,29 @@ package com.elsantigestion.model;
 
 import java.time.LocalDate;
 
-public class ServicioEventual {
+public class Servicio {
 	
 	private int id;
 	private int clienteId;
 	private LocalDate fechaCreacion;
 	private LocalDate fechaProgramada;
+	private String tipo;
 	private Double precio;
 	private Double gastos;
 	private Double montoFinal;
+	private String estado;
 	
-	public ServicioEventual(int id, int clienteId, LocalDate fechaCreacion, LocalDate fechaProgramada, Double precio, Double gastos, Double montoFinal) {
+	public Servicio(int id, int clienteId, LocalDate fechaCreacion, LocalDate fechaProgramada, String tipo, Double precio, Double gastos, Double montoFinal, String estado) {
 		
 		this.id = id;
 		this.clienteId = clienteId;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaProgramada = fechaProgramada;
+		this.tipo = tipo;
 		this.precio = precio;
 		this.gastos = gastos;
 		this.montoFinal = montoFinal;
+		this.estado = estado;
 		
 	}
 
@@ -46,6 +50,14 @@ public class ServicioEventual {
 
 	public void setFechaProgramada(LocalDate fechaProgramada) {
 		this.fechaProgramada = fechaProgramada;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 
 	public Double getPrecio() {
@@ -78,6 +90,14 @@ public class ServicioEventual {
 
 	public void setClienteId(int clienteId) {
 		this.clienteId = clienteId;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
 
 }
