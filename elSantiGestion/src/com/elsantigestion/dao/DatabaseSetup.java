@@ -32,29 +32,31 @@ public class DatabaseSetup {
 
             stmt.execute(sqlTrabajos);
             
-            String sqlServicioEventual = "CREATE TABLE IF NOT EXISTS servicio_eventual (" +
+            String sqlServicios = "CREATE TABLE IF NOT EXISTS servicios (" +
             	    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
             	    "cliente_id INT NOT NULL, "+
             	    "fecha_creacion DATE NOT NULL," +
             	    "fecha_programada DATE NOT NULL," +
+            	    "tipo TEXT," +
             	    "precio REAL NOT NULL DEFAULT 0," +
             	    "gastos REAL NOT NULL DEFAULT 0," +
             	    "monto_final REAL NOT NULL DEFAULT 0," +
+            	    "estado TEXT," +
             	    "FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE" +
             	    ");";
             
-            stmt.execute(sqlServicioEventual);
+            stmt.execute(sqlServicios);
             
-            String sqlServicioEventualTrabajos = "CREATE TABLE IF NOT EXISTS servicio_eventual_trabajos (" +
-            	    "servicio_eventual_id INT NOT NULL," +
+            String sqlServicioTrabajos = "CREATE TABLE IF NOT EXISTS servicio_trabajos (" +
+            	    "servicio_id INT NOT NULL," +
             	    "trabajo_id INT NOT NULL," +
             	    "cantidad INT NOT NULL DEFAULT 1," +
-            	    "PRIMARY KEY (servicio_eventual_id, trabajo_id)," +
-            	    "FOREIGN KEY (servicio_eventual_id) REFERENCES ServicioEventual(id) ON DELETE CASCADE," +
+            	    "PRIMARY KEY (servicio_id, trabajo_id)," +
+            	    "FOREIGN KEY (servicio_id) REFERENCES ServicioEventual(id) ON DELETE CASCADE," +
             	    "FOREIGN KEY (trabajo_id) REFERENCES trabajos(id) ON DELETE CASCADE" +
             	    ");";
             
-            stmt.execute(sqlServicioEventualTrabajos);
+            stmt.execute(sqlServicioTrabajos);
 
         } catch (Exception e) {
             e.printStackTrace();
