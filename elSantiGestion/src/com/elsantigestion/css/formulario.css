@@ -11,7 +11,7 @@
 
 /* Labels */
 .formulario .label {
-    -fx-font-size: 18px;
+    -fx-font-size: 16px;
     -fx-text-fill: white;
 
 }
@@ -104,7 +104,7 @@
 
 .combo-box {
     -fx-background-color: #333;   /* color de fondo */
-    -fx-border-color: #B35932; 
+    -fx-border-color: #bbb; 
     -fx-border-radius: 5px;
     -fx-font-size: 18px;
     -fx-pref-width: 400;

@@ -1,0 +1,23 @@
+.table-view {
+    -fx-border-color: white;
+    -fx-border-width: 1;
+    -fx-background-color: #333;
+}
+
+.table-row-cell {
+    -fx-pref-height: 50; /* altura de fila */
+    -fx-background-color: #333;
+}
+
+.table-cell {
+    -fx-font-size: 10pt; /* tamaño letra */
+    -fx-font-family: "Arial";
+    -fx-padding: 15 0 0 10;
+    -fx-text-fill: white;
+    -fx-table-cell-border-color: #333; /* cambia las líneas internas */
+}
+
+.table-view .column-header-background .columnaPersonalizada {
+  	-fx-background-color: linear-gradient(to bottom, #888, #555);
+  	-fx-pref-height: 40;
+}

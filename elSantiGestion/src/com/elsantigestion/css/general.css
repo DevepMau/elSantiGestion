@@ -97,3 +97,28 @@
 .barra-superior .button:pressed {
 	-fx-background-color: #FFE4D6;
 }
+
+.combo-tabla {
+    -fx-background-color: #333;   /* color de fondo */
+    -fx-border-color: #B35932; 
+    -fx-border-radius: 5px;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-pref-width: 300;
+    -fx-pref-height: 100;
+}
+
+.combo-tabla .list-cell {
+	-fx-background-color: #333;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-alignment: center;
+}
+
+.combo-tabla .list-cell:hover {
+    -fx-background-color: #FF9755;
+}
+
+.combo-tabla .list-view .list-cell:filled:selected {
+	-fx-background-color: #666;
+}
