@@ -1,25 +1,25 @@
 package com.elsantigestion.model;
 
-public class ServicioEventualTrabajo {
+public class ServicioTrabajo {
 	
-	private int servicioEventualId;
+	private int servicioId;
 	private int trabajoId;
 	private int cantidad;
 	
-	public ServicioEventualTrabajo(int servicioId, int trabajoId, int cantidad) {
+	public ServicioTrabajo(int servicioId, int trabajoId, int cantidad) {
 		
-		this.servicioEventualId = servicioId;
+		this.servicioId = servicioId;
 		this.trabajoId = trabajoId;
 		this.cantidad = cantidad;
 		
 	}
 
-	public int getServicioEventualId() {
-		return servicioEventualId;
+	public int getServicioId() {
+		return servicioId;
 	}
 
-	public void setServicioEventualId(int servicioEventualId) {
-		this.servicioEventualId = servicioEventualId;
+	public void setServicioId(int servicioEventualId) {
+		this.servicioId = servicioEventualId;
 	}
 
 	public int getTrabajoId() {

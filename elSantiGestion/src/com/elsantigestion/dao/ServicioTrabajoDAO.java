@@ -7,18 +7,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.elsantigestion.model.ServicioEventualTrabajo;
+import com.elsantigestion.model.ServicioTrabajo;
 
-public class ServicioEventualTrabajoDAO {
+public class ServicioTrabajoDAO {
     
     // Insertar relación
-    public void agregar(ServicioEventualTrabajo set) {
-        String sql = "INSERT INTO servicio_eventual_trabajos (servicio_eventual_id, trabajo_id, cantidad) VALUES (?, ?, ?)";
+    public void agregar(ServicioTrabajo set) {
+        String sql = "INSERT INTO servicio_trabajos (servicio_id, trabajo_id, cantidad) VALUES (?, ?, ?)";
         
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
-            pstmt.setInt(1, set.getServicioEventualId());
+            pstmt.setInt(1, set.getServicioId());
             pstmt.setInt(2, set.getTrabajoId());
             pstmt.setInt(3, set.getCantidad());
             
@@ -30,17 +30,17 @@ public class ServicioEventualTrabajoDAO {
     }
     
     // Obtener todos los registros
-    public List<ServicioEventualTrabajo> obtenerTodos() {
-        List<ServicioEventualTrabajo> lista = new ArrayList<>();
-        String sql = "SELECT * FROM servicio_eventual_trabajos";
+    public List<ServicioTrabajo> obtenerTodos() {
+        List<ServicioTrabajo> lista = new ArrayList<>();
+        String sql = "SELECT * FROM servicio_trabajos";
         
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
             
             while (rs.next()) {
-                ServicioEventualTrabajo set = new ServicioEventualTrabajo(
-                        rs.getInt("servicio_eventual_id"),
+                ServicioTrabajo set = new ServicioTrabajo(
+                        rs.getInt("servicio_id"),
                         rs.getInt("trabajo_id"),
                         rs.getInt("cantidad")
                 );
@@ -55,9 +55,9 @@ public class ServicioEventualTrabajoDAO {
     }
     
     // Obtener todos los trabajos de un servicio eventual
-    public List<ServicioEventualTrabajo> obtenerPorServicio(int servicioId) {
-        List<ServicioEventualTrabajo> lista = new ArrayList<>();
-        String sql = "SELECT * FROM servicio_eventual_trabajos WHERE servicio_eventual_id = ?";
+    public List<ServicioTrabajo> obtenerPorServicio(int servicioId) {
+        List<ServicioTrabajo> lista = new ArrayList<>();
+        String sql = "SELECT * FROM servicio_trabajos WHERE servicio_id = ?";
         
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -66,8 +66,8 @@ public class ServicioEventualTrabajoDAO {
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
-                ServicioEventualTrabajo set = new ServicioEventualTrabajo(
-                        rs.getInt("servicio_eventual_id"),
+                ServicioTrabajo set = new ServicioTrabajo(
+                        rs.getInt("servicio_id"),
                         rs.getInt("trabajo_id"),
                         rs.getInt("cantidad")
                 );
@@ -82,8 +82,8 @@ public class ServicioEventualTrabajoDAO {
     }
     
     // Obtener un registro específico (por PK compuesta)
-    public ServicioEventualTrabajo obtenerPorIds(int servicioId, int trabajoId) {
-        String sql = "SELECT * FROM servicio_eventual_trabajos WHERE servicio_eventual_id = ? AND trabajo_id = ?";
+    public ServicioTrabajo obtenerPorIds(int servicioId, int trabajoId) {
+        String sql = "SELECT * FROM servicio_trabajos WHERE servicio_id = ? AND trabajo_id = ?";
         
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -93,8 +93,8 @@ public class ServicioEventualTrabajoDAO {
             ResultSet rs = pstmt.executeQuery();
             
             if (rs.next()) {
-                return new ServicioEventualTrabajo(
-                        rs.getInt("servicio_eventual_id"),
+                return new ServicioTrabajo(
+                        rs.getInt("servicio_id"),
                         rs.getInt("trabajo_id"),
                         rs.getInt("cantidad")
                 );
@@ -108,14 +108,14 @@ public class ServicioEventualTrabajoDAO {
     }
     
     // Actualizar cantidad de un registro
-    public void actualizarCantidad(ServicioEventualTrabajo set) {
-        String sql = "UPDATE servicio_eventual_trabajos SET cantidad = ? WHERE servicio_eventual_id = ? AND trabajo_id = ?";
+    public void actualizarCantidad(ServicioTrabajo set) {
+        String sql = "UPDATE servicio_trabajos SET cantidad = ? WHERE servicio_id = ? AND trabajo_id = ?";
         
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setInt(1, set.getCantidad());
-            pstmt.setInt(2, set.getServicioEventualId());
+            pstmt.setInt(2, set.getServicioId());
             pstmt.setInt(3, set.getTrabajoId());
             
             pstmt.executeUpdate();
