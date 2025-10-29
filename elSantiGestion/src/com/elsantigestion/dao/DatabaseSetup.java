@@ -9,17 +9,20 @@ public class DatabaseSetup {
              Statement stmt = conn.createStatement()) {
 
             // Tabla de clientes
-            String sqlClientes = "CREATE TABLE IF NOT EXISTS clientes (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "nombre TEXT NOT NULL," +
-                    "telefono TEXT," +
-                    "localidad TEXT," +
-                    "direccion TEXT," +
-                    "email TEXT," +
-                    "activo INTEGER DEFAULT 1" +
-                    ");";
+        	String sqlClientes = "CREATE TABLE IF NOT EXISTS clientes (" +
+        		    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+        		    "nombre TEXT NOT NULL," +
+        		    "telefono TEXT," +
+        		    "email TEXT," +
+        		    "barrio_privado INTEGER DEFAULT 0," +
+        		    "barrio_nombre TEXT," +
+        		    "barrio_lote INTEGER," +
+        		    "localidad TEXT," +
+        		    "direccion TEXT," +
+        		    "activo INTEGER DEFAULT 1" +
+        		    ");";
 
-            stmt.execute(sqlClientes);
+        	stmt.execute(sqlClientes);
             
             String sqlTrabajos = "CREATE TABLE IF NOT EXISTS trabajos (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
