@@ -3,6 +3,7 @@ package com.elsantigestion.ui;
 import com.elsantigestion.dao.ClienteDAO;
 import com.elsantigestion.model.Cliente;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -82,6 +83,9 @@ private final int iconoTamaño = 50;
         TableColumn<Cliente, String> colDireccion = new TableColumn<>("Direccion");
         TableColumn<Cliente, String> colEmail = new TableColumn<>("Email");
         TableColumn<Cliente, Boolean> colActivo = new TableColumn<>("Activo");
+        TableColumn<Cliente, Boolean> colBarrioPrivado = new TableColumn<>("Barrio Privado");
+        TableColumn<Cliente, String> colBarrioNombre = new TableColumn<>("Nombre del Barrio");
+        TableColumn<Cliente, Number> colBarrioLote = new TableColumn<>("N°. Lote");
         
         colNombre.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNombre()));
         colTelefono.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTelefono()));
@@ -89,6 +93,9 @@ private final int iconoTamaño = 50;
         colDireccion.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDireccion()));
         colEmail.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEmail()));
         colActivo.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().isActivo()));
+        colBarrioPrivado.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().isBarrioPrivado()));
+        colBarrioNombre.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBarrioNombre()));
+        colBarrioLote.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getBarrioLote()));
         
         colNombre.getStyleClass().add("columnaPersonalizada");
         colTelefono.getStyleClass().add("columnaPersonalizada");
@@ -96,6 +103,9 @@ private final int iconoTamaño = 50;
         colDireccion.getStyleClass().add("columnaPersonalizada");
         colEmail.getStyleClass().add("columnaPersonalizada");
         colActivo.getStyleClass().add("columnaPersonalizada");
+        colBarrioPrivado.getStyleClass().add("columnaPersonalizada");
+        colBarrioNombre.getStyleClass().add("columnaPersonalizada");
+        colBarrioLote.getStyleClass().add("columnaPersonalizada");
 
         colActivo.setCellFactory(col -> new TableCell<Cliente, Boolean>() {
             protected void updateItem(Boolean item, boolean empty) {
@@ -115,12 +125,33 @@ private final int iconoTamaño = 50;
                 setAlignment(Pos.CENTER);
             }
         });
+        colBarrioPrivado.setCellFactory(col -> new TableCell<Cliente, Boolean>() {
+            protected void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    if (item) {
+                        setText("Si");
+                        setStyle("-fx-text-fill: green; -fx-padding: 0 0 -1 0;");
+                    } else {
+                        setText("No");
+                        setStyle("-fx-text-fill: red; -fx-padding: 0 0 -1 0;");
+                    }
+                }
+                setAlignment(Pos.CENTER);
+            }
+        });
 
         tabla.getColumns().add(colNombre);
         tabla.getColumns().add(colTelefono); 
+        tabla.getColumns().add(colEmail);
+        tabla.getColumns().add(colBarrioPrivado);
         tabla.getColumns().add(colLocalidad); 
-        tabla.getColumns().add(colDireccion); 
-        tabla.getColumns().add(colEmail); 
+        tabla.getColumns().add(colDireccion);  
+        tabla.getColumns().add(colBarrioNombre); 
+        tabla.getColumns().add(colBarrioLote);
         tabla.getColumns().add(colActivo); 
         tabla.getItems().setAll(dao.obtenerClientes());
     	tabla.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -175,6 +206,9 @@ private final int iconoTamaño = 50;
         colDireccion.setMinWidth(150);
         colEmail.setMinWidth(120);
         colActivo.setMinWidth(80); 
+        colBarrioNombre.setMinWidth(150);
+        colBarrioLote.setMinWidth(80);
+        colBarrioPrivado.setMinWidth(80);
 
     }
         
