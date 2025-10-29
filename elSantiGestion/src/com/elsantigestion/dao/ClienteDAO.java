@@ -12,17 +12,20 @@ public class ClienteDAO {
 
     // Insertar un cliente
     public void agregarCliente(Cliente cliente) {
-        String sql = "INSERT INTO clientes(nombre, telefono, localidad, direccion, email, activo) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO clientes(nombre, telefono, email, barrio_privado, barrio_nombre, barrio_lote, localidad, direccion, activo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, cliente.getNombre());
             pstmt.setString(2, cliente.getTelefono());
-            pstmt.setString(3, cliente.getLocalidad());
-            pstmt.setString(4, cliente.getDireccion());
-            pstmt.setString(5, cliente.getEmail());
-            pstmt.setBoolean(6, cliente.isActivo());
+            pstmt.setString(3, cliente.getEmail());
+            pstmt.setBoolean(4, cliente.isBarrioPrivado());
+            pstmt.setString(5, cliente.getBarrioNombre());
+            pstmt.setInt(6, cliente.getBarrioLote());
+            pstmt.setString(7, cliente.getLocalidad());
+            pstmt.setString(8, cliente.getDireccion());
+            pstmt.setBoolean(9, cliente.isActivo());
 
             pstmt.executeUpdate();
 
@@ -45,9 +48,12 @@ public class ClienteDAO {
                         rs.getInt("id"),
                         rs.getString("nombre"),
                         rs.getString("telefono"),
+                        rs.getString("email"),
+                        rs.getBoolean("barrio_privado"),
+                        rs.getString("barrio_nombre"),
+                        rs.getInt("barrio_lote"),
                         rs.getString("localidad"),
                         rs.getString("direccion"),
-                        rs.getString("email"),
                         rs.getBoolean("activo")
                 );
                 lista.add(c);
@@ -62,18 +68,21 @@ public class ClienteDAO {
     
     // Actualizar un cliente existente
     public void actualizarCliente(Cliente cliente) {
-        String sql = "UPDATE clientes SET nombre = ?, telefono = ?, localidad = ?, direccion = ?, email = ?, activo = ? WHERE id = ?";
+        String sql = "UPDATE clientes SET nombre = ?, telefono = ?, email = ?, barrio_privado = ?, barrio_nombre = ?, barrio_lote = ?, localidad = ?, direccion = ?, activo = ? WHERE id = ?";
 
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, cliente.getNombre());
             pstmt.setString(2, cliente.getTelefono());
-            pstmt.setString(3, cliente.getLocalidad());
-            pstmt.setString(4, cliente.getDireccion());
-            pstmt.setString(5, cliente.getEmail());
-            pstmt.setBoolean(6, cliente.isActivo());
-            pstmt.setInt(7, cliente.getId());
+            pstmt.setString(3, cliente.getEmail());
+            pstmt.setBoolean(4, cliente.isBarrioPrivado());
+            pstmt.setString(5, cliente.getBarrioNombre());
+            pstmt.setInt(6, cliente.getBarrioLote());
+            pstmt.setString(7, cliente.getLocalidad());
+            pstmt.setString(8, cliente.getDireccion());
+            pstmt.setBoolean(9, cliente.isActivo());
+            pstmt.setInt(10, cliente.getId());
 
             pstmt.executeUpdate();
 
@@ -111,9 +120,12 @@ public class ClienteDAO {
                             rs.getInt("id"),
                             rs.getString("nombre"),
                             rs.getString("telefono"),
+                            rs.getString("email"),
+                            rs.getBoolean("barrio_privado"),
+                            rs.getString("barrio_nombre"),
+                            rs.getInt("barrio_lote"),
                             rs.getString("localidad"),
                             rs.getString("direccion"),
-                            rs.getString("email"),
                             rs.getBoolean("activo")
                     );
                 }
