@@ -5,19 +5,25 @@ public class Cliente {
 	private int id;
 	private String nombre;
 	private String telefono;
+	private String email;
+	private boolean barrioPrivado;
+	private String barrioNombre;
+	private int barrioLote;
 	private String localidad;
 	private String direccion;
-	private String email;
 	private boolean activo;
 	
-	public Cliente(int id, String nombre, String telefono, String localidad, String direccion, String email, boolean activo) {
+	public Cliente(int id, String nombre, String telefono, String email, boolean barrioPrivado, String barrioNombre, int barrioLote, String localidad, String direccion, boolean activo) {
 		
 		this.id = id;
 		this.nombre = nombre;
 		this.telefono = telefono;
+		this.email = email;
+		this.barrioPrivado = barrioPrivado;
+		this.barrioNombre = barrioNombre;
+		this.barrioLote = barrioLote;
 		this.localidad = localidad;
 		this.direccion = direccion;
-		this.email = email;
 		this.activo = activo;
 		
 	}
@@ -56,12 +62,28 @@ public class Cliente {
 		this.email = email;
 	}
 
-	public boolean isActivo() {
-		return activo;
+	public boolean isBarrioPrivado() {
+		return barrioPrivado;
 	}
 
-	public void setActivo(boolean activo) {
-		this.activo = activo;
+	public void setBarrioPrivado(boolean barriPrivado) {
+		this.barrioPrivado = barriPrivado;
+	}
+
+	public String getBarrioNombre() {
+		return barrioNombre;
+	}
+
+	public void setBarrioNombre(String barrioNombre) {
+		this.barrioNombre = barrioNombre;
+	}
+
+	public int getBarrioLote() {
+		return barrioLote;
+	}
+
+	public void setBarrioLote(int barrioLote) {
+		this.barrioLote = barrioLote;
 	}
 
 	public String getLocalidad() {
@@ -79,5 +101,15 @@ public class Cliente {
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
 	}
+
+	public boolean isActivo() {
+		return activo;
+	}
+
+	public void setActivo(boolean activo) {
+		this.activo = activo;
+	}
+	
+	
 
 }
