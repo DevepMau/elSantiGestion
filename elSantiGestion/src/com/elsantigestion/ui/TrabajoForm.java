@@ -2,13 +2,16 @@ package com.elsantigestion.ui;
 
 import com.elsantigestion.dao.TrabajoDAO;
 import com.elsantigestion.model.Trabajo;
+import com.elsantigestion.utils.ValidadorCampos;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -30,9 +33,13 @@ public class TrabajoForm extends Stage {
 	private Button btnGuardar;
 	private Button btnCerrar;
 	private TextField txtNombre;
-	private TextField txtDetalle;
+	private TextArea txtDetalle;
 	private TextField txtPrecio;
-	private TextField txtUnidad;
+	private Label lblPrecio;
+	private Label lblUnidad;
+	private Label msgNombre;
+	private Label msgPrecio;
+	private ComboBox<String> cmbUnidad;
 	private CheckBox chkActivo;
 	private HBox barraSuperior;
 	private Region spacer;
@@ -57,16 +64,42 @@ public class TrabajoForm extends Stage {
 		chkText = new Label("¿El trabajo esta activo?");
 		scene = new Scene(grid, 400, 500);
 		
+		msgNombre = new Label("");
+		msgPrecio = new Label("");
+		
+		lblPrecio = new Label("AR$");
+		lblPrecio.setMinWidth(30);
+		lblUnidad = new Label("X");
+		lblUnidad.setMinWidth(10);
+		
 		txtNombre = new TextField();
-		txtDetalle = new TextField();
+		txtDetalle = new TextArea();
 		txtPrecio = new TextField();
-		txtUnidad = new TextField();
 		chkActivo = new CheckBox();
+		
+		cmbUnidad = new ComboBox<>();
+		cmbUnidad.getItems().addAll("Mes", "Semana", "Dia", "Hora", "M3", "M2", "Combo", "Paquete", "Unidad", "N/A");
+		cmbUnidad.setValue("N/A");
+		
+		txtDetalle.setPrefRowCount(4);
+		txtDetalle.setWrapText(true);
+		
+		txtNombre.focusedProperty().addListener((obs, oldVal, newVal) -> {
+			if(!newVal) {
+				if(!ValidadorCampos.esNoVacio(txtNombre, msgNombre)) return;
+			}
+		});
 		
 		txtNombre.setPromptText("Ingrese nombre del trabajo...");
 		txtDetalle.setPromptText("Ingrese detalle del trabajo...");
-		txtPrecio.setPromptText("Ingrese valor del trabajo...");
-		txtUnidad.setPromptText("Ingrese unidad...");
+		txtPrecio.setPromptText("Precio...");
+		
+		txtPrecio.focusedProperty().addListener((obs, oldVal, newVal) -> {
+		    if (!newVal) {
+		    	if(!ValidadorCampos.esNoVacio(txtPrecio, msgPrecio)) return;
+		    	if(!ValidadorCampos.esNumerico(txtPrecio, msgPrecio)) return;
+		    }
+		});
 		
 		if(trabajoExistente != null) {
 			
@@ -74,7 +107,7 @@ public class TrabajoForm extends Stage {
 			txtNombre.setText(trabajoExistente.getNombre());
 			txtDetalle.setText(trabajoExistente.getDetalle());
 			txtPrecio.setText(String.valueOf(trabajoExistente.getPrecio()));
-			txtUnidad.setText(trabajoExistente.getUnidad());
+			cmbUnidad.setValue(trabajoExistente.getUnidad());
 			chkActivo.setSelected(trabajoExistente.isActivo());
 			
 		} else {
@@ -84,18 +117,37 @@ public class TrabajoForm extends Stage {
 			
 		}
 		
+		titulo.getStyleClass().add("label-info");
+		lblPrecio.getStyleClass().add("label-info");
+		lblUnidad.getStyleClass().add("label-info");
+		
+		HBox boxPrecio = new HBox();
+		boxPrecio.setAlignment(Pos.CENTER);
+		boxPrecio.getChildren().addAll(lblPrecio, txtPrecio);
+		boxPrecio.setSpacing(10);
+		
+		HBox boxUnidad = new HBox();
+		boxUnidad.setAlignment(Pos.CENTER);
+		boxUnidad.getChildren().addAll(lblUnidad, cmbUnidad);
+		boxUnidad.setSpacing(10);
+		
+		HBox boxDatos = new HBox();
+	    boxDatos.setAlignment(Pos.CENTER);
+	    boxDatos.getChildren().addAll(boxPrecio, boxUnidad);
+	    boxDatos.setSpacing(10);
+		
 		barraSuperior.setAlignment(Pos.TOP_RIGHT);
 		barraSuperior.setSpacing(10);
 		barraSuperior.getChildren().addAll(titulo, spacer, btnCerrar);
 		barraSuperior.getStyleClass().add("topBar");
 		barraSuperior.setOnMousePressed(event -> {
-			xOffset = event.getSceneX();
-			yOffset = event.getSceneY();
-		});
-		barraSuperior.setOnMouseDragged(event -> {
-			barraSuperior.getScene().getWindow().setX(event.getSceneX() - xOffset);
-			barraSuperior.getScene().getWindow().setY(event.getSceneY() - yOffset);
-		});
+	        xOffset = event.getSceneX();
+	        yOffset = event.getSceneY();
+	    });
+	    barraSuperior.setOnMouseDragged(event -> {
+	        barraSuperior.getScene().getWindow().setX(event.getScreenX() - xOffset);
+	        barraSuperior.getScene().getWindow().setY(event.getScreenY() - yOffset);
+	    });
 		
 		HBox.setMargin(titulo, new Insets(15, 10, 0, 10));
 		HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -103,21 +155,33 @@ public class TrabajoForm extends Stage {
 		HBox chkBar = new HBox();
 		HBox.setMargin(chkActivo, new Insets(10, 0, 10, 0));
 		
+		chkText.getStyleClass().add("label-info");
 	    chkBar.setAlignment(Pos.CENTER);
 	    chkBar.getChildren().addAll(chkText ,chkActivo);
 	    chkBar.setSpacing(20); 
 		
+	    msgNombre.getStyleClass().add("label-error");
+	    msgPrecio.getStyleClass().add("label-error");
 	    chkActivo.getStyleClass().add("check-box");
 	    
 		btnGuardar.getStyleClass().add("boton");
 		btnGuardar.setOnAction(e -> {
+			
+			if(!ValidadorCampos.esNoVacio(txtNombre, msgNombre)) return;
+			if(!ValidadorCampos.esNoVacio(txtPrecio, msgPrecio)) return;
+	    	if(!ValidadorCampos.esNumerico(txtPrecio, msgPrecio)) return;
+	    	
+	    	if(txtDetalle.getText().equals("")) {
+	    		txtDetalle.setText("-");
+	    	}
+			
 			if(trabajoExistente == null) {
 				Trabajo nuevo = new Trabajo(
 						0,
 						txtNombre.getText(),
 						txtDetalle.getText(),
 						Double.parseDouble(txtPrecio.getText()),
-						txtUnidad.getText(),
+						cmbUnidad.getValue(),
 						chkActivo.isSelected()
 						);
 				dao.agregarTrabajo(nuevo);
@@ -125,7 +189,7 @@ public class TrabajoForm extends Stage {
 				trabajoExistente.setNombre(txtNombre.getText());
 				trabajoExistente.setDetalle(txtDetalle.getText());
 				trabajoExistente.setPrecio(Double.parseDouble(txtPrecio.getText()));
-				trabajoExistente.setUnidad(txtUnidad.getText());
+				trabajoExistente.setUnidad(cmbUnidad.getValue());
 				trabajoExistente.setActivo(chkActivo.isSelected());
 				
 				dao.actualizarTrabajo(trabajoExistente);
@@ -144,16 +208,19 @@ public class TrabajoForm extends Stage {
 		grid.getStyleClass().add("formulario");
 		grid.setPadding(new Insets(10));
 		grid.add(barraSuperior, 0, 0);
-		grid.addRow(1, txtNombre);
-		grid.addRow(2, txtDetalle);
-		grid.addRow(3, txtPrecio);
-		grid.addRow(4, txtUnidad);
-		grid.addRow(5, chkBar);
-		grid.add(btnGuardar, 0, 6);
-		GridPane.setMargin(txtNombre, new Insets(45, 20, 0, 20));
-		GridPane.setMargin(txtDetalle, new Insets(0, 20, 0, 20));
-		GridPane.setMargin(txtPrecio, new Insets(0, 20, 0, 20));
-		GridPane.setMargin(txtUnidad, new Insets(0, 20, 0, 20));
+		grid.addRow(1, msgNombre);
+		grid.addRow(2, txtNombre);
+		grid.addRow(3, msgPrecio);
+		grid.addRow(4, boxDatos);
+		grid.addRow(5, txtDetalle);
+		grid.addRow(6, chkBar);
+		grid.add(btnGuardar, 0, 7);
+		GridPane.setMargin(msgNombre, new Insets(30, 20, 0, 20));
+		GridPane.setMargin(txtNombre, new Insets(0, 20, 0, 20));
+		GridPane.setMargin(msgPrecio, new Insets(0, 20, 0, 20));
+		GridPane.setMargin(boxDatos, new Insets(0, 20, 0, 20));
+		GridPane.setMargin(txtDetalle, new Insets(20, 20, 0, 20));
+		GridPane.setMargin(chkBar, new Insets(20, 0, 20, 0));
 		
 		setScene(scene);
 		initModality(Modality.APPLICATION_MODAL);
