@@ -115,10 +115,10 @@ public class ClienteForm extends Stage {
 	    	txtDireccion.setDisable(boo);
 	    	
 	    	if(boo) {
-		    	txtDireccion.setText("-");
+		    	txtDireccion.setText("");
 		    }
 		    else {
-		    	txtBarrioNombre.setText("-");
+		    	txtBarrioNombre.setText("");
 		    	txtBarrioLote.setText("");
 		    }
 	    });
@@ -132,6 +132,18 @@ public class ClienteForm extends Stage {
     		if(!ValidadorCampos.esNumerico(txtTelefono, msgTelefono)) return;
     		if(!ValidadorCampos.longitudEntre(txtTelefono, 8, 16, msgTelefono)) return;
     		if(!ValidadorCampos.esNoVacio(txtLocalidad, msgLocalidad)) return;
+    		
+    		if(txtEmail.getText().equals("")) {
+    			txtEmail.setText("-");
+    		}
+    		
+    		if(txtBarrioNombre.getText().equals("")) {
+    			txtBarrioNombre.setText("-");
+    		}
+    		
+    		if(txtDireccion.getText().equals("")) {
+    			txtDireccion.setText("-");
+    		}
     		
     		if(txtBarrioLote.getText().equals("")) {
     			txtBarrioLote.setText("0");
@@ -236,7 +248,7 @@ public class ClienteForm extends Stage {
 	    boxBarrioPrivado.getStyleClass().add("box-personalizada");
 
 	    GridPane grid = new GridPane(); 
-	    grid.setPadding(new Insets(0));
+	    grid.setPadding(new Insets(10));
 	    grid.add(topBar, 0, 0);
 	    grid.addRow(1, msgNombre); //aviso de error
 	    grid.addRow(2, txtNombre);
@@ -249,16 +261,17 @@ public class ClienteForm extends Stage {
 	    grid.addRow(9, boxActivo);
 	    grid.add(btnGuardar, 0, 10);
 	    
-	    GridPane.setMargin(msgNombre, new Insets(0, 20, -20, 20));
-	    GridPane.setMargin(txtNombre, new Insets(0, 20, -10, 20));
-	    GridPane.setMargin(msgTelefono, new Insets(0, 20, -20, 20));
-	    GridPane.setMargin(boxContactos, new Insets(0, 20, -10, 20));
-	    GridPane.setMargin(msgEmail, new Insets(0, 20, -20, 20));
-	    GridPane.setMargin(txtEmail, new Insets(0, 20, -10, 20));
-	    GridPane.setMargin(msgLocalidad, new Insets(0, 20, -20, 20));
-	    GridPane.setMargin(txtLocalidad, new Insets(0, 20, -10, 20));
-	    GridPane.setMargin(boxBarrioPrivado, new Insets(0, 20, 0, 20));
-	    GridPane.setMargin(txtDireccion, new Insets(0, 20, 0, 20));
+	    GridPane.setMargin(msgNombre, new Insets(20, 20, 0, 20));
+	    GridPane.setMargin(txtNombre, new Insets(0, 20, 0, 20));
+	    GridPane.setMargin(msgTelefono, new Insets(0, 20, 0, 20));
+	    GridPane.setMargin(boxContactos, new Insets(0, 20, 0, 20));
+	    GridPane.setMargin(msgEmail, new Insets(0, 20, 0, 20));
+	    GridPane.setMargin(txtEmail, new Insets(0, 20, 0, 20));
+	    GridPane.setMargin(msgLocalidad, new Insets(0, 20, 0, 20));
+	    GridPane.setMargin(txtLocalidad, new Insets(0, 20, 0, 20));
+	    GridPane.setMargin(boxBarrioPrivado, new Insets(20, 20, 0, 20));
+	    GridPane.setMargin(txtDireccion, new Insets(20, 20, 0, 20));
+	    GridPane.setMargin(boxActivo, new Insets(20, 0, 20, 0));
 
 	    Scene scene = new Scene(grid, 400, 620);
 	    setScene(scene);
