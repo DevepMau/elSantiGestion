@@ -29,7 +29,7 @@ public class DatabaseSetup {
                     "nombre TEXT NOT NULL," +
                     "detalle TEXT," +
                     "precio REAL NOT NULL DEFAULT 0," +
-                    "unidad TEXT NOT NULL DEFAULT 'unidad' CHECK (unidad IN ('unidad','m2','hora','paquete','otro'))," +
+                    "unidad TEXT NOT NULL," +
                     "activo INTEGER NOT NULL DEFAULT 1" +
                     ");";
 
