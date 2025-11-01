@@ -83,9 +83,9 @@ private final int iconoTamaño = 50;
         TableColumn<Cliente, String> colDireccion = new TableColumn<>("Direccion");
         TableColumn<Cliente, String> colEmail = new TableColumn<>("Email");
         TableColumn<Cliente, Boolean> colActivo = new TableColumn<>("Activo");
-        TableColumn<Cliente, Boolean> colBarrioPrivado = new TableColumn<>("Barrio Privado");
+        TableColumn<Cliente, Boolean> colBarrioPrivado = new TableColumn<>("Barrio\nPrivado");
         TableColumn<Cliente, String> colBarrioNombre = new TableColumn<>("Nombre del Barrio");
-        TableColumn<Cliente, Number> colBarrioLote = new TableColumn<>("N°. Lote");
+        TableColumn<Cliente, Number> colBarrioLote = new TableColumn<>("N°.\nLote");
         
         colNombre.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNombre()));
         colTelefono.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTelefono()));
@@ -97,15 +97,15 @@ private final int iconoTamaño = 50;
         colBarrioNombre.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBarrioNombre()));
         colBarrioLote.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getBarrioLote()));
         
-        colNombre.getStyleClass().add("columnaPersonalizada");
-        colTelefono.getStyleClass().add("columnaPersonalizada");
-        colLocalidad.getStyleClass().add("columnaPersonalizada");
-        colDireccion.getStyleClass().add("columnaPersonalizada");
-        colEmail.getStyleClass().add("columnaPersonalizada");
-        colActivo.getStyleClass().add("columnaPersonalizada");
-        colBarrioPrivado.getStyleClass().add("columnaPersonalizada");
-        colBarrioNombre.getStyleClass().add("columnaPersonalizada");
-        colBarrioLote.getStyleClass().add("columnaPersonalizada");
+        colNombre.getStyleClass().add("columna-texto");
+        colTelefono.getStyleClass().add("columna-numero");
+        colLocalidad.getStyleClass().add("columna-texto");
+        colDireccion.getStyleClass().add("columna-texto");
+        colEmail.getStyleClass().add("columna-texto");
+        colActivo.getStyleClass().add("columna-especial");
+        colBarrioPrivado.getStyleClass().add("columna-especial");
+        colBarrioNombre.getStyleClass().add("columna-texto");
+        colBarrioLote.getStyleClass().add("columna-numero");
 
         colActivo.setCellFactory(col -> new TableCell<Cliente, Boolean>() {
             protected void updateItem(Boolean item, boolean empty) {
@@ -205,10 +205,10 @@ private final int iconoTamaño = 50;
         colLocalidad.setMinWidth(100);
         colDireccion.setMinWidth(150);
         colEmail.setMinWidth(120);
-        colActivo.setMinWidth(80); 
+        colActivo.setMinWidth(60); 
         colBarrioNombre.setMinWidth(150);
-        colBarrioLote.setMinWidth(80);
-        colBarrioPrivado.setMinWidth(80);
+        colBarrioLote.setMinWidth(60);
+        colBarrioPrivado.setMinWidth(60);
 
     }
         

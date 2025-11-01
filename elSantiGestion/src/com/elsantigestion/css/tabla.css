@@ -23,12 +23,6 @@
 	-fx-background-color: #228B22; 
 }
 
-.table-cell {
-    -fx-font-size: 10pt; /* tamaño letra */
-    -fx-font-family: "Arial";
-    -fx-padding: 15 0 0 10;
-}
-
 .table-boton {
 	-fx-background-color: transparent;
     -fx-effect: null;
@@ -39,15 +33,64 @@
 	-fx-border-width: 0 0 2 0;
 }
 
-.table-view .column-header-background .columnaPersonalizada .text {
+.table-view .column-header-background .columna-texto .text {
   	-fx-fill: white;
   	-fx-font-size: 14;
+    -fx-text-alignment: center;
 }
 
-.table-view .column-header-background .columnaPersonalizada {
+.table-view .column-header-background .columna-texto {
   	-fx-background-color: linear-gradient(to bottom, #888, #555);
   	-fx-pref-height: 50;
   	-fx-border-color: #999;
+}
+
+.table-cell.columna-texto {
+    -fx-font-size: 10pt;
+    -fx-font-family: "Arial";
+    -fx-padding: 0 10 0 10;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER-LEFT;
+}
+
+.table-view .column-header-background .columna-numero .text {
+  	-fx-fill: white;
+  	-fx-font-size: 14;
+    -fx-text-alignment: center;
+}
+
+.table-view .column-header-background .columna-numero {
+  	-fx-background-color: linear-gradient(to bottom, #888, #555);
+  	-fx-pref-height: 50;
+  	-fx-border-color: #999;
+}
+
+.table-cell.columna-numero {
+    -fx-font-size: 10pt;
+    -fx-font-family: "Arial";
+    -fx-padding: 0 10 0 10;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER-RIGHT;
+}
+
+.table-view .column-header-background .columna-especial .text {
+  	-fx-fill: white;
+  	-fx-font-size: 14;
+    -fx-text-alignment: center;
+}
+
+.table-view .column-header-background .columna-especial {
+  	-fx-background-color: linear-gradient(to bottom, #888, #555);
+  	-fx-pref-height: 50;
+  	-fx-border-color: #999;
+}
+
+.table-cell.columna-especial {
+    -fx-font-size: 10pt;
+    -fx-font-family: "Arial";
+    -fx-padding: 0 10 0 10;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER;
 }
 
 

@@ -115,10 +115,10 @@ public class ClienteForm extends Stage {
 	    	txtDireccion.setDisable(boo);
 	    	
 	    	if(boo) {
-		    	txtDireccion.setText("");
+		    	txtDireccion.setText("-");
 		    }
 		    else {
-		    	txtBarrioNombre.setText("");
+		    	txtBarrioNombre.setText("-");
 		    	txtBarrioLote.setText("");
 		    }
 	    });
