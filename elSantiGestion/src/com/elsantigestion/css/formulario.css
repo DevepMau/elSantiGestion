@@ -1,8 +1,6 @@
 /* Estilo general para el formulario */
 .formulario {
     -fx-padding: 0;
-    -fx-hgap: 0;
-    -fx-vgap: 20; 
     -fx-background-color: #333;
     -fx-border-color: #993026;
     -fx-border-width: 2px;
@@ -124,6 +122,10 @@
     -fx-background-color: #FF9755;
 }
 
+.combo-box .list-view .list-cell:filled:selected {
+	-fx-background-color: #666;
+}
+
 .date-picker {
 	-fx-min-width: 150;
 	-fx-pref-width: 150;
@@ -187,4 +189,15 @@
 	-fx-border-color: #bbb;
 	-fx-border-radius: 5;
 	-fx-padding: 12, 15, 15, 15;
+}
+
+.text-area {
+	-fx-background-color: #333;
+	-fx-control-inner-background: #333;
+	-fx-prompt-text-fill: #999999; 
+	-fx-border-color: #bbb;
+    -fx-padding: 2px;
+    -fx-border-radius: 5;
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
 }

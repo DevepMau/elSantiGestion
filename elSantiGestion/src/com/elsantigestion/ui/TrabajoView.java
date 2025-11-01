@@ -90,11 +90,11 @@ public class TrabajoView extends VBox {
 		colUnidad.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getUnidad()));
 		colActivo.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().isActivo()));
 		
-		colNombre.getStyleClass().add("columnaPersonalizada");
-		colDetalle.getStyleClass().add("columnaPersonalizada");
-		colPrecio.getStyleClass().add("columnaPersonalizada");
-		colUnidad.getStyleClass().add("columnaPersonalizada");
-		colActivo.getStyleClass().add("columnaPersonalizada");
+		colNombre.getStyleClass().add("columna-texto");
+		colDetalle.getStyleClass().add("columna-texto");
+		colPrecio.getStyleClass().add("columna-numero");
+		colUnidad.getStyleClass().add("columna-especial");
+		colActivo.getStyleClass().add("columna-especial");
 		
 		colActivo.setCellFactory(col -> new TableCell<Trabajo, Boolean>() {
 			protected void updateItem(Boolean item, boolean empty) {
@@ -169,11 +169,12 @@ public class TrabajoView extends VBox {
 		///////////////////////////////////////
 		refrescarTabla();
 		
-		colNombre.setMinWidth(150);
-		colDetalle.setMinWidth(250);
-		colPrecio.setMinWidth(60);
-		colUnidad.setMinWidth(60);
-		colActivo.setMinWidth(60);
+		colNombre.setMinWidth(180);
+		colDetalle.setMinWidth(300);
+		colPrecio.setMinWidth(80);
+		colUnidad.setMinWidth(80);
+		colActivo.setMinWidth(80);
+		
 	
 	}
 	
