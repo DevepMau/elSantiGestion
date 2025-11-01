@@ -17,7 +17,7 @@ public class ValidadorCampos {
     }
 
     public static boolean esNumerico(TextField campo, Label infoCampo) {
-        if (!campo.getText().matches("\\d+")) {
+        if (!campo.getText().matches("\\d+([\\.]\\d+)?")) {
         	infoCampo.setText("El campo solo debe contener numeros.");
             resaltarError(campo);
             return false;
