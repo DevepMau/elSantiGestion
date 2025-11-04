@@ -81,6 +81,28 @@ public class ServicioTrabajoDAO {
         return lista;
     }
     
+    // Obtener todos los ID de los trabajos de un servicio
+    public List<Integer> obtenerIdsPorServicio(int servicioId) {
+        List<Integer> listaIds = new ArrayList<>();
+        String sql = "SELECT trabajo_id FROM servicio_trabajos WHERE servicio_id = ?";
+        
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, servicioId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                listaIds.add(rs.getInt("trabajo_id"));
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return listaIds;
+    }
+    
     // Obtener un registro específico (por PK compuesta)
     public ServicioTrabajo obtenerPorIds(int servicioId, int trabajoId) {
         String sql = "SELECT * FROM servicio_trabajos WHERE servicio_id = ? AND trabajo_id = ?";
@@ -127,7 +149,7 @@ public class ServicioTrabajoDAO {
     
     // Eliminar relación
     public void eliminar(int servicioId, int trabajoId) {
-        String sql = "DELETE FROM servicio_eventual_trabajos WHERE servicio_eventual_id = ? AND trabajo_id = ?";
+        String sql = "DELETE FROM servicio_trabajos WHERE servicio_id = ? AND trabajo_id = ?";
         
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -143,7 +165,7 @@ public class ServicioTrabajoDAO {
     
     // Eliminar todos los trabajos de un servicio eventual
     public void eliminarPorServicio(int servicioId) {
-        String sql = "DELETE FROM servicio_eventual_trabajos WHERE servicio_eventual_id = ?";
+        String sql = "DELETE FROM servicio_trabajos WHERE servicio_id = ?";
         
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
