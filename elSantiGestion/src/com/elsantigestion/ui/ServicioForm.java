@@ -5,8 +5,12 @@ import java.util.List;
 
 import com.elsantigestion.dao.ClienteDAO;
 import com.elsantigestion.dao.ServicioDAO;
+import com.elsantigestion.dao.ServicioTrabajoDAO;
 import com.elsantigestion.model.Cliente;
 import com.elsantigestion.model.Servicio;
+import com.elsantigestion.model.ServicioTrabajo;
+import com.elsantigestion.model.Trabajo;
+import com.elsantigestion.utils.ValidadorCampos;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -31,6 +35,7 @@ public class ServicioForm extends Stage {
 	@SuppressWarnings("unused")
 	private ServicioDAO dao;
     private ClienteDAO clienteDao;
+    private ServicioTrabajoDAO stDao;
     private double xOffset;
     private double yOffset;
     private Label titulo;
@@ -39,12 +44,15 @@ public class ServicioForm extends Stage {
     private Label lblGastos;
     private Label lblMontoFinal;
     private Label lblPeriodisidad;
+    private Label msgCliente;
+    private Label msgFechaFinal;
+    private Label msgPrecio;
+    private Label msgGastos;
     private ComboBox<String> cmbPeriodisidad;
     private ComboBox<Cliente> cmbCliente;
     private ComboBox<String> cmbEstado;
     private Button btnGuardar;
     private Button btnCerrar;
-    private Button btnTrabajos;
     private DatePicker dpFechaProgramada;
     private TextField txtPrecio;
     private TextField txtGastos;
@@ -60,9 +68,9 @@ public class ServicioForm extends Stage {
     private HBox barraSuperior;
     private HBox boxPrecio;
     private HBox boxGastos;
-    private HBox boxFechaFinal;
     private HBox boxMontoFinal;
-    private HBox boxPeriodisidad;
+    private HBox boxTipo;
+    private TrabajoChecker tChecker;
 
     @SuppressWarnings("exports") 
     public ServicioForm(ServicioDAO dao, Runnable onSaveCallBack, Servicio servicioExistente) {
@@ -74,10 +82,10 @@ public class ServicioForm extends Stage {
         this.initStyle(StageStyle.UNDECORATED);
 
         clienteDao = new ClienteDAO();
+        stDao = new ServicioTrabajoDAO();
         grid = new GridPane();
         btnGuardar = new Button("Guardar");
         btnCerrar = new Button("X");
-        btnTrabajos = new Button("Trabajos");
         spacer = new Region();
         spacerFechaFinal = new Region();
         spacerPrecio = new Region();
@@ -86,20 +94,23 @@ public class ServicioForm extends Stage {
         spacerPeriodisidad = new Region();
         lblFechaFinal = new Label("Fecha programada: ");
         lblPrecio = new Label("Precio:");
-        lblGastos = new Label("Costos/insumos:");
+        lblGastos = new Label("insumos:");
         lblMontoFinal = new Label("Monto a cobrar:");
         lblPeriodisidad = new Label("Tipo de servicio:");
+        msgCliente = new Label("");
+        msgFechaFinal = new Label("");
+        msgPrecio = new Label("");
+        msgGastos = new Label("");
         dpFechaProgramada = new DatePicker();
         barraSuperior = new HBox();
-        boxFechaFinal = new HBox();
         boxPrecio = new HBox();
         boxGastos = new HBox();
         boxMontoFinal = new HBox();
-        boxPeriodisidad = new HBox();
+        boxTipo = new HBox();
         txtPrecio = new TextField();
         txtGastos = new TextField();
         txtMontoFinal = new TextField();
-        scene = new Scene(grid, 400, 650);
+        scene = new Scene(grid, 400, 600);
         
         cmbPeriodisidad = new ComboBox<>();
         cmbPeriodisidad.getItems().addAll( "Eventual", "Mensual");
@@ -153,17 +164,26 @@ public class ServicioForm extends Stage {
         txtPrecio.setPromptText("Ingrese precio...");
         txtGastos.setPromptText("Ingrese gastos...");
         
-        txtPrecio.setMaxWidth(150);
-        txtGastos.setMaxWidth(150);
+        //txtPrecio.setMaxWidth(250);
+        //txtGastos.setMaxWidth(250);
         txtMontoFinal.setMaxWidth(150);
         cmbPeriodisidad.setMaxWidth(200);
+        
+        lblFechaFinal.getStyleClass().add("label-info");
+        lblPrecio.getStyleClass().add("label-info");
+        lblGastos.getStyleClass().add("label-info");
+        lblMontoFinal.getStyleClass().add("label-info");
+        lblPeriodisidad.getStyleClass().add("label-info");
+        msgCliente.getStyleClass().add("label-error");
+        msgFechaFinal.getStyleClass().add("label-error");
+        msgPrecio.getStyleClass().add("label-error");
+        msgGastos.getStyleClass().add("label-error");
         
         txtMontoFinal.setEditable(false);
         txtMontoFinal.setDisable(true);
         
         txtPrecio.textProperty().addListener((obs, oldVal, newVal) -> actualizarMontoFinal());
-        txtGastos.textProperty().addListener((obs, oldVal, newVal) -> actualizarMontoFinal());
-        
+        txtGastos.textProperty().addListener((obs, oldVal, newVal) -> actualizarMontoFinal());       
 
         if (servicioExistente != null) {
             titulo = new Label("Modificar servicio");
@@ -178,13 +198,48 @@ public class ServicioForm extends Stage {
             txtPrecio.setText(String.valueOf(servicioExistente.getPrecio()));
             txtGastos.setText(String.valueOf(servicioExistente.getGastos()));
             txtMontoFinal.setText(String.valueOf(servicioExistente.getMontoFinal()));
+            tChecker = new TrabajoChecker(stDao.obtenerIdsPorServicio(servicioExistente.getId()));
         } else {
+        	tChecker = new TrabajoChecker(null);
             titulo = new Label("Agregar servicio");
         }
         
-        boxFechaFinal.setAlignment(Pos.TOP_RIGHT);
-        boxFechaFinal.setSpacing(10);
-        boxFechaFinal.getChildren().addAll(lblFechaFinal, spacerFechaFinal, dpFechaProgramada);
+        dpFechaProgramada.setDisable(cmbPeriodisidad.getValue().equals("Mensual"));
+        
+        cmbCliente.focusedProperty().addListener((obs, oldVal, newVal) -> {
+        	if(!newVal) {
+        		if(!ValidadorCampos.esSeleccionValida(cmbCliente, msgCliente)) return;
+        	}
+        });      
+        cmbPeriodisidad.setOnAction(c -> {
+        	String seleccion = cmbPeriodisidad.getValue();
+    		if(seleccion.equals("Mensual")) {
+    			msgFechaFinal.setText("");
+    			dpFechaProgramada.setStyle("");
+    			dpFechaProgramada.setValue(LocalDate.now());
+    			dpFechaProgramada.setDisable(true);
+    		}
+    		else {
+    			dpFechaProgramada.setDisable(false);
+    		}
+        });
+        dpFechaProgramada.focusedProperty().addListener((obs, oldVal, newVal) -> {
+        	if(!newVal) {
+        		if(!ValidadorCampos.esFechaValida(dpFechaProgramada, msgFechaFinal)) return;
+        	}
+        });
+        txtPrecio.focusedProperty().addListener((obs, oldVal, newVal) -> {
+        	if(!newVal) {
+        		if(!ValidadorCampos.esNoVacio(txtPrecio, msgPrecio)) return;
+        		if(!ValidadorCampos.esNumerico(txtPrecio, msgPrecio)) return;
+        	}
+        });
+        txtGastos.focusedProperty().addListener((obs, oldVal, newVal) -> {
+        	if(!newVal) {
+        		if(!ValidadorCampos.esNoVacio(txtGastos, msgGastos)) return;
+        		if(!ValidadorCampos.esNumerico(txtGastos, msgGastos)) return;
+        	}
+        });
         
         boxPrecio.setAlignment(Pos.TOP_RIGHT);
         boxPrecio.setSpacing(10);
@@ -198,9 +253,9 @@ public class ServicioForm extends Stage {
         boxMontoFinal.setSpacing(10);
         boxMontoFinal.getChildren().addAll(lblMontoFinal, spacerMontoFinal, txtMontoFinal);
         
-        boxPeriodisidad.setAlignment(Pos.TOP_RIGHT);
-        boxPeriodisidad.setSpacing(10);
-        boxPeriodisidad.getChildren().addAll(lblPeriodisidad, spacerPeriodisidad, cmbPeriodisidad);
+        boxTipo.setAlignment(Pos.TOP_RIGHT);
+        boxTipo.setSpacing(10);
+        boxTipo.getChildren().addAll(cmbPeriodisidad, dpFechaProgramada);
         
         barraSuperior.setAlignment(Pos.TOP_RIGHT);
         barraSuperior.setSpacing(10);
@@ -232,15 +287,22 @@ public class ServicioForm extends Stage {
 
         HBox.setMargin(titulo, new Insets(15, 10, 0, 10));
         HBox.setHgrow(spacer, Priority.ALWAYS);
+        titulo.getStyleClass().add("label-info");
 
         btnGuardar.getStyleClass().add("boton");
         btnGuardar.setOnAction(e -> {
-            
+        	
         	Cliente clienteSeleccionado = cmbCliente.getValue();
         	
-        	if(dpFechaProgramada.getValue() == null) {
-        		dpFechaProgramada.setValue(LocalDate.now());
-        	}
+        	if(!ValidadorCampos.esSeleccionValida(cmbCliente, msgCliente)) return;
+        	if(!ValidadorCampos.esFechaValida(dpFechaProgramada, msgFechaFinal)) return;
+        	if(!ValidadorCampos.esNoVacio(txtPrecio, msgPrecio)) return;
+    		if(!ValidadorCampos.esNumerico(txtPrecio, msgPrecio)) return;
+    		if(!ValidadorCampos.esNoVacio(txtGastos, msgGastos)) return;
+    		if(!ValidadorCampos.esNumerico(txtGastos, msgGastos)) return;
+        	
+        	if(txtPrecio.getText().equals("")) {txtPrecio.setText("0");}
+        	if(txtGastos.getText().equals("")) {txtGastos.setText("0");}
 
             if (servicioExistente == null) {
                 Servicio nuevo = new Servicio(
@@ -253,7 +315,14 @@ public class ServicioForm extends Stage {
                         Double.parseDouble(txtGastos.getText()),
                         Double.parseDouble(txtMontoFinal.getText()),
                         cmbEstado.getValue());
-                dao.agregarServicio(nuevo);
+                int idGenerado = dao.agregarServicio(nuevo);
+                
+                List<Trabajo> trabajos = tChecker.obtenerTrabajos(); 
+            	for(int i=0; i<trabajos.size(); i++) {
+            		ServicioTrabajo st = new ServicioTrabajo(idGenerado, trabajos.get(i).getId(), 1);
+            		stDao.agregar(st);
+            	}
+                
             } else {
             	servicioExistente.setClienteId(clienteSeleccionado.getId());
                 servicioExistente.setFechaProgramada(dpFechaProgramada.getValue());
@@ -264,6 +333,14 @@ public class ServicioForm extends Stage {
                 servicioExistente.setEstado(cmbEstado.getValue());
                
                 dao.actualizarServicio(servicioExistente);
+                
+                stDao.eliminarPorServicio(servicioExistente.getId());
+                
+                List<Trabajo> trabajos = tChecker.obtenerTrabajos(); 
+            	for(int i=0; i<trabajos.size(); i++) {
+            		ServicioTrabajo st = new ServicioTrabajo(servicioExistente.getId(), trabajos.get(i).getId(), 1);
+            		stDao.agregar(st);
+            	}
 
             }
 
@@ -274,32 +351,31 @@ public class ServicioForm extends Stage {
         });
 
         btnCerrar.setOnAction(e -> close());
-        
-        btnTrabajos.setOnAction(e -> {
-        	TrabajoManager tm = new TrabajoManager();
-        	tm.showAndWait();
-        });
 
         // LAYOUT //////////////////////////////
 
         grid.getStyleClass().add("formulario");
         grid.setPadding(new Insets(10));
         grid.add(barraSuperior, 0, 0);
-        grid.addRow(1, cmbCliente);
-        grid.addRow(2, boxPeriodisidad);
-        grid.addRow(3, boxFechaFinal);
-        grid.addRow(4, btnTrabajos);
-        grid.addRow(5, boxPrecio);
-        grid.addRow(6, boxGastos);
-        grid.addRow(7, boxMontoFinal);
-        grid.add(btnGuardar, 0, 8);
-        GridPane.setMargin(cmbCliente, new Insets(30, 20, 10, 20));
-        GridPane.setMargin(boxFechaFinal, new Insets(0, 20, 0, 20));
-        GridPane.setMargin(boxPeriodisidad, new Insets(0, 20, 0, 20));
-        GridPane.setMargin(btnTrabajos, new Insets(0, 20, 0, 20));
-        GridPane.setMargin(boxPrecio, new Insets(0, 20, 0, 20));
-        GridPane.setMargin(boxGastos, new Insets(0, 20, 0, 20));
-        GridPane.setMargin(boxMontoFinal, new Insets(0, 20, 25, 20));
+        grid.addRow(1, msgCliente);
+        grid.addRow(2, cmbCliente);
+        grid.addRow(3, msgFechaFinal);
+        grid.addRow(4, boxTipo);
+        grid.addRow(5, tChecker);
+        grid.addRow(6, msgPrecio);
+        grid.addRow(7, txtPrecio);
+        grid.addRow(8, msgGastos);
+        grid.addRow(9, txtGastos);
+        grid.add(btnGuardar, 0, 10);
+        GridPane.setMargin(msgCliente, new Insets(30, 20, 0, 20));
+        GridPane.setMargin(cmbCliente, new Insets(0, 20, 0, 20));
+        GridPane.setMargin(msgFechaFinal, new Insets(0, 20, 0, 20));
+        GridPane.setMargin(boxTipo, new Insets(0, 20, 0, 20));
+        GridPane.setMargin(tChecker, new Insets(20, 20, 0, 20));
+        GridPane.setMargin(msgPrecio, new Insets(0, 20, 0, 20));
+        GridPane.setMargin(txtPrecio, new Insets(0, 20, 0, 20));
+        GridPane.setMargin(msgGastos, new Insets(0, 20, 0, 20));
+        GridPane.setMargin(txtGastos, new Insets(0, 20, 25, 20));
 
         setScene(scene);
         initModality(Modality.APPLICATION_MODAL);
