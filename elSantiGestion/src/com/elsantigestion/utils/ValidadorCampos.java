@@ -1,5 +1,9 @@
 package com.elsantigestion.utils;
 
+import java.time.LocalDate;
+
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
@@ -50,6 +54,33 @@ public class ValidadorCampos {
         return true;
     }
     
+    public static boolean esSeleccionValida(ComboBox<?> combo, Label infoCampo) {
+        if (combo.getValue() == null) {
+            infoCampo.setText("Debe seleccionar una opción.");
+            resaltarErrorCombo(combo);
+            return false;
+        }
+        infoCampo.setText("");
+        limpiarEstiloCombo(combo);
+        return true;
+    }
+    
+    public static boolean esFechaValida(DatePicker picker, Label infoCampo) {
+        if (picker.getValue() == null) {
+            infoCampo.setText("Debe seleccionar una fecha.");
+            resaltarErrorDatePicker(picker);
+            return false;
+        }
+        if (picker.getValue().isBefore(LocalDate.now())) {
+            infoCampo.setText("La fecha no puede ser anterior a la actual.");
+            resaltarErrorDatePicker(picker);
+            return false;
+        }
+        infoCampo.setText("");
+        limpiarEstiloDatePicker(picker);
+        return true;
+    }
+    
     /////////////////////////////////////
 
     
@@ -63,6 +94,22 @@ public class ValidadorCampos {
 
     private static void limpiarEstilo(TextField campo) {
         campo.setStyle("");
+    }
+    
+    private static void resaltarErrorCombo(ComboBox<?> combo) {
+        combo.setStyle("-fx-border-color: #FF1A1A; -fx-border-width: 2;");
+    }
+
+    private static void limpiarEstiloCombo(ComboBox<?> combo) {
+        combo.setStyle("");
+    }
+    
+    private static void resaltarErrorDatePicker(DatePicker picker) {
+        picker.setStyle("-fx-border-color: #FF1A1A; -fx-border-width: 2;");
+    }
+
+    private static void limpiarEstiloDatePicker(DatePicker picker) {
+        picker.setStyle("");
     }
     
 }
