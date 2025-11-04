@@ -1,10 +1,14 @@
 package com.elsantigestion.ui;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.elsantigestion.dao.ClienteDAO;
 import com.elsantigestion.dao.ServicioDAO;
+import com.elsantigestion.dao.ServicioTrabajoDAO;
+import com.elsantigestion.model.Cliente;
 import com.elsantigestion.model.Servicio;
+import com.elsantigestion.model.Trabajo;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -12,7 +16,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -32,6 +39,7 @@ public class ServicioView extends VBox {
 	private StackPane stack;
 	private ServicioDAO servicioDao;
 	private ClienteDAO clienteDao;
+	private ServicioTrabajoDAO stDao;
 	private Button btnNuevo;
 	private Button btnModificar;
 	private Button btnEliminar;
@@ -53,6 +61,7 @@ public class ServicioView extends VBox {
 		
 		servicioDao = new ServicioDAO();
 		clienteDao = new ClienteDAO();
+		stDao = new ServicioTrabajoDAO();
 		tablaEventuales = new TableView<>();
 		tablaMensuales = new TableView<>();
 		stack = new StackPane(tablaMensuales, tablaEventuales);
@@ -75,8 +84,8 @@ public class ServicioView extends VBox {
 		boxBotones = new HBox(2, btnEliminar, btnModificar, btnNuevo);
 		barraAcciones = new HBox();
 		
-		cmbTabla.getItems().addAll("Servicios Eventuales", "Servicios Mensuales");
-		cmbTabla.setValue("Servicios Mensuales");
+		cmbTabla.getItems().addAll("Eventuales", "Mensuales");
+		cmbTabla.setValue("Mensuales");
 		
 		iconoAgregar.setFitWidth(iconoTamaño);
 		iconoAgregar.setFitHeight(iconoTamaño);
@@ -113,7 +122,7 @@ public class ServicioView extends VBox {
 		TableColumn<Servicio, LocalDate> colFechaProgramadaSE = new TableColumn<>("Programado");
 		TableColumn<Servicio, Number> colPrecioSE = new TableColumn<>("Precio");
 		TableColumn<Servicio, Number> colGastosSE = new TableColumn<>("Gastos");
-		TableColumn<Servicio, Number> colMontoFinalSE = new TableColumn<>("Monto final");
+		TableColumn<Servicio, Number> colMontoFinalSE = new TableColumn<>("Monto\nfinal");
 		TableColumn<Servicio, String> colEstadoSE = new TableColumn<>("Estado");
 	
 		colClienteSE.setCellValueFactory(c -> {
@@ -128,14 +137,45 @@ public class ServicioView extends VBox {
 		colMontoFinalSE.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().getMontoFinal()));
 		colEstadoSE.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEstado()));
 		
+		colEstadoSE.setCellFactory(col -> new TableCell<Servicio, String>() {
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                	setText(item);
+
+                    // Estilo según el valor del estado
+                    switch (item.toLowerCase()) {
+                        case "en curso":
+                            setStyle("-fx-background-color: #0078D7; -fx-text-fill: white; -fx-font-weight: bold;"); // azul
+                            break;
+                        case "suspendido":
+                            setStyle("-fx-background-color: #E5A50A; -fx-text-fill: white; -fx-font-weight: bold;"); // amarillo
+                            break;
+                        case "atrasado":
+                            setStyle("-fx-background-color: #D90429; -fx-text-fill: white; -fx-font-weight: bold;"); // rojo
+                            break;
+                        case "finalizado":
+                            setStyle("-fx-background-color: #2E8B57; -fx-text-fill: white; -fx-font-weight: bold;"); // verde
+                            break;
+                        default:
+                            setStyle("-fx-background-color: white; -fx-text-fill: black;");
+                            break;
+                    }
+                }
+                setAlignment(Pos.CENTER);
+            }
+        });
 		
-		colClienteSE.getStyleClass().add("columnaPersonalizada");
-		colFechaCreacionSE.getStyleClass().add("columnaPersonalizada");
-		colFechaProgramadaSE.getStyleClass().add("columnaPersonalizada");
-		colPrecioSE.getStyleClass().add("columnaPersonalizada");
-		colGastosSE.getStyleClass().add("columnaPersonalizada");
-		colMontoFinalSE.getStyleClass().add("columnaPersonalizada");
-		colEstadoSE.getStyleClass().add("columnaPersonalizada");
+		colClienteSE.getStyleClass().add("columna-texto");
+		colFechaCreacionSE.getStyleClass().add("columna-especial");
+		colFechaProgramadaSE.getStyleClass().add("columna-especial");
+		colPrecioSE.getStyleClass().add("columna-numero");
+		colGastosSE.getStyleClass().add("columna-numero");
+		colMontoFinalSE.getStyleClass().add("columna-numero");
+		colEstadoSE.getStyleClass().add("columna-especial");
 		
 		tablaEventuales.getColumns().add(colFechaCreacionSE);
 		tablaEventuales.getColumns().add(colClienteSE);
@@ -147,14 +187,14 @@ public class ServicioView extends VBox {
 		tablaEventuales.getItems().setAll(servicioDao.obtenerServiciosPorTipo("Eventual"));
     	tablaEventuales.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	tablaEventuales.setPrefWidth(Double.MAX_VALUE);
-    	VBox.setVgrow(tablaEventuales, Priority.ALWAYS);
+    	//VBox.setVgrow(tablaEventuales, Priority.ALWAYS);
     	
     	//Columnas para la tabla de servicios mensuales///////////////////////////////////////////
     	TableColumn<Servicio, String> colClienteSM = new TableColumn<>("Cliente");
     	TableColumn<Servicio, LocalDate> colFechaCreacionSM = new TableColumn<>("Creado");
     	TableColumn<Servicio, Number> colPrecioSM = new TableColumn<>("Precio");
     	TableColumn<Servicio, Number> colGastosSM = new TableColumn<>("Gastos");
-    	TableColumn<Servicio, Number> colMontoFinalSM = new TableColumn<>("Monto final");
+    	TableColumn<Servicio, Number> colMontoFinalSM = new TableColumn<>("Monto\nfinal");
     	TableColumn<Servicio, String> colEstadoSM = new TableColumn<>("Estado");
     			
     	colClienteSM.setCellValueFactory(c -> {
@@ -168,13 +208,44 @@ public class ServicioView extends VBox {
     	colMontoFinalSM.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().getMontoFinal()));
     	colEstadoSM.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEstado()));
     	
+    	colEstadoSM.setCellFactory(col -> new TableCell<Servicio, String>() {
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                	setText(item);
+
+                    // Estilo según el valor del estado
+                    switch (item.toLowerCase()) {
+                        case "en curso":
+                            setStyle("-fx-text-fill: #0078D7; -fx-font-weight: bold;"); // azul
+                            break;
+                        case "suspendido":
+                            setStyle("-fx-text-fill: #E5A50A; -fx-font-weight: bold;"); // amarillo
+                            break;
+                        case "atrasado":
+                            setStyle("-fx-text-fill: #D90429; -fx-font-weight: bold;"); // rojo
+                            break;
+                        case "finalizado":
+                            setStyle("-fx-text-fill: #2E8B57; -fx-font-weight: bold;"); // verde
+                            break;
+                        default:
+                            setStyle("-fx-text-fill: black;");
+                            break;
+                    }
+                }
+                setAlignment(Pos.CENTER);
+            }
+        });
     	
-    	colClienteSM.getStyleClass().add("columnaPersonalizada");
-    	colFechaCreacionSM.getStyleClass().add("columnaPersonalizada");
-    	colPrecioSM.getStyleClass().add("columnaPersonalizada");
-    	colGastosSM.getStyleClass().add("columnaPersonalizada");
-    	colMontoFinalSM.getStyleClass().add("columnaPersonalizada");
-    	colEstadoSM.getStyleClass().add("columnaPersonalizada");
+    	colClienteSM.getStyleClass().add("columna-texto");
+    	colFechaCreacionSM.getStyleClass().add("columna-especial");
+    	colPrecioSM.getStyleClass().add("columna-numero");
+    	colGastosSM.getStyleClass().add("columna-numero");
+    	colMontoFinalSM.getStyleClass().add("columna-numero");
+    	colEstadoSM.getStyleClass().add("columna-especial");
     			
     	tablaMensuales.getColumns().add(colFechaCreacionSM);
     	tablaMensuales.getColumns().add(colClienteSM);
@@ -185,7 +256,8 @@ public class ServicioView extends VBox {
     	tablaMensuales.getItems().setAll(servicioDao.obtenerServiciosPorTipo("Mensual"));
     	tablaMensuales.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	tablaMensuales.setPrefWidth(Double.MAX_VALUE);
-    	VBox.setVgrow(tablaMensuales, Priority.ALWAYS);
+    	
+    	VBox.setVgrow(stack, Priority.ALWAYS);
 		
     	this.getChildren().addAll(barraAcciones, stack);
 		this.getStylesheets().add(
@@ -198,7 +270,7 @@ public class ServicioView extends VBox {
             
             refrescarTabla();
 
-            if ("Servicios Mensuales".equals(seleccion)) {
+            if ("Mensuales".equals(seleccion)) {
                 tablaMensuales.toFront();
                 tablaMensuales.setVisible(true);
                 tablaEventuales.setVisible(false);
@@ -218,7 +290,7 @@ public class ServicioView extends VBox {
 			
 			Servicio seleccionado = null;
 			String seleccion = cmbTabla.getValue();
-			if("Servicios Mensuales".equals(seleccion)) {
+			if("Mensuales".equals(seleccion)) {
 				seleccionado = tablaMensuales.getSelectionModel().getSelectedItem();
 			}
 			else {
@@ -237,7 +309,7 @@ public class ServicioView extends VBox {
 			
 			Servicio seleccionado = null;
 			String seleccion = cmbTabla.getValue();
-			if("Servicios Mensuales".equals(seleccion)) {
+			if("Mensuales".equals(seleccion)) {
 				seleccionado = tablaMensuales.getSelectionModel().getSelectedItem();
 			}
 			else {
