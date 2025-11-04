@@ -11,7 +11,7 @@ import com.elsantigestion.model.Servicio;
 public class ServicioDAO {
 	
 	//Agregar servicio eventual
-	public void agregarServicio(Servicio servicio) {
+	public int agregarServicio(Servicio servicio) {
 		
 		String sql = "INSERT INTO servicios (cliente_id, fecha_creacion, fecha_programada, tipo, precio, gastos, monto_final, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		
@@ -29,11 +29,22 @@ public class ServicioDAO {
 			
 			pstmt.executeUpdate();
 			
+			// Recuperar el ID generado automáticamente
+	        try (ResultSet rs = pstmt.getGeneratedKeys()) {
+	            if (rs.next()) {
+	                int idGenerado = rs.getInt(1);
+	                servicio.setId(idGenerado); // 👈 Actualiza el objeto con el ID real
+	                return idGenerado;
+	            }
+	        }
+			
 		} catch(Exception e) {
 			
 			e.printStackTrace();
 			
 		}
+		
+		return -1;
 		
 	}
 	
