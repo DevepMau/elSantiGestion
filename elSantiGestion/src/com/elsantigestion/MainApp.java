@@ -2,7 +2,7 @@ package com.elsantigestion;
 
 import com.elsantigestion.dao.DatabaseSetup;
 import com.elsantigestion.ui.ClienteView;
-import com.elsantigestion.ui.ServicioEventualView;
+import com.elsantigestion.ui.ServicioView;
 import com.elsantigestion.ui.TrabajoView;
 
 import javafx.application.Application;
@@ -106,7 +106,7 @@ public class MainApp extends Application {
                 // Cambiar el contenido central
                 if (btn == btnClientes) root.setCenter(new ClienteView());
                 else if (btn == btnTrabajos) root.setCenter(new TrabajoView());
-                else if (btn == btnServicios) root.setCenter(new ServicioEventualView());
+                else if (btn == btnServicios) root.setCenter(new ServicioView());
                 else if (btn == btnGastos) root.setCenter(new javafx.scene.control.Label("Vista de Gastos"));
                 else if (btn == btnCronograma) root.setCenter(new javafx.scene.control.Label("Vista de Cronograma"));
                 else if (btn == btnReportes) root.setCenter(new javafx.scene.control.Label("Vista de Reportes"));
