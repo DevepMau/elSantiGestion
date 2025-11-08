@@ -1,6 +1,7 @@
 package com.elsantigestion.ui;
 
-import com.elsantigestion.dao.ClienteDAO;
+import java.time.LocalDate;
+
 import com.elsantigestion.model.Cliente;
 import com.elsantigestion.utils.ValidadorCampos;
 
@@ -23,18 +24,12 @@ import javafx.stage.StageStyle;
 
 public class ClienteForm extends Stage {
 	
-	@SuppressWarnings("unused")
-	private ClienteDAO dao;
-	@SuppressWarnings("unused")
-    private Runnable onSaveCallback;
     private Label titulo;
+    private Cliente cliente;
     private double xOffset = 0;
     private double yOffset = 0;
 	
-    @SuppressWarnings("exports")
-	public ClienteForm(ClienteDAO dao, Runnable onSaveCallback, Cliente clienteExistente) {
-	    this.dao = dao;
-	    this.onSaveCallback = onSaveCallback;
+	public ClienteForm(Cliente clienteExistente) {
 	    this.initStyle(StageStyle.UNDECORATED);
 
 	    TextField txtNombre = new TextField();
@@ -161,9 +156,12 @@ public class ClienteForm extends Stage {
 	                Integer.parseInt(txtBarrioLote.getText()),
 	                txtLocalidad.getText(),
 	                txtDireccion.getText(),
-	                chkActivo.isSelected()
+	                chkActivo.isSelected(),
+	                LocalDate.now()
 	            );
-	            dao.agregarCliente(nuevo);
+	            
+	            setCliente(nuevo);
+	            
 	        } else {
 	            // Editar cliente
 	            clienteExistente.setNombre(txtNombre.getText());
@@ -175,12 +173,10 @@ public class ClienteForm extends Stage {
 	            clienteExistente.setLocalidad(txtLocalidad.getText());
 	            clienteExistente.setDireccion(txtDireccion.getText());
 	            clienteExistente.setActivo(chkActivo.isSelected());
-	            dao.actualizarCliente(clienteExistente);
+	            
+	            setCliente(clienteExistente);
 	        }
 
-	        if (onSaveCallback != null) {
-	            onSaveCallback.run();
-	        }
 	        close();
 	    });
 	    
@@ -283,6 +279,14 @@ public class ClienteForm extends Stage {
 	        getClass().getResource("/com/elsantigestion/css/formulario.css").toExternalForm()
 	    );
 	    
+	}
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
 
 
