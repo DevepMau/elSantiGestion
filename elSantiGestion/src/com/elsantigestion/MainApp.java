@@ -1,5 +1,7 @@
 package com.elsantigestion;
 
+import com.elsantigestion.controller.ClienteController;
+import com.elsantigestion.dao.ClienteDAO;
 import com.elsantigestion.dao.DatabaseSetup;
 import com.elsantigestion.ui.ClienteView;
 import com.elsantigestion.ui.ServicioView;
@@ -94,6 +96,11 @@ public class MainApp extends Application {
         root.setTop(barraSuperior);
         root.setLeft(menuLateral);
         root.getStyleClass().add("panel");
+        
+        ClienteView clienteView = new ClienteView();
+        ClienteDAO clienteDao = new ClienteDAO();
+        ClienteController clienteController = new ClienteController(clienteView, clienteDao);
+        
 
         // Función para manejar selección de botón
         for (Button btn : botones) {
@@ -104,7 +111,7 @@ public class MainApp extends Application {
                 btn.getStyleClass().add("activo");
 
                 // Cambiar el contenido central
-                if (btn == btnClientes) root.setCenter(new ClienteView());
+                if (btn == btnClientes) root.setCenter(clienteController.getView());
                 else if (btn == btnTrabajos) root.setCenter(new TrabajoView());
                 else if (btn == btnServicios) root.setCenter(new ServicioView());
                 else if (btn == btnGastos) root.setCenter(new javafx.scene.control.Label("Vista de Gastos"));
