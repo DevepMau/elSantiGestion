@@ -19,7 +19,8 @@ public class DatabaseSetup {
         		    "barrio_lote INTEGER," +
         		    "localidad TEXT," +
         		    "direccion TEXT," +
-        		    "activo INTEGER DEFAULT 1" +
+        		    "activo INTEGER DEFAULT 1," +
+        		    "fecha_creacion DATE NOT NULL" +
         		    ");";
 
         	stmt.execute(sqlClientes);
