@@ -1,9 +1,11 @@
 package com.elsantigestion.ui;
 
-import com.elsantigestion.dao.ClienteDAO;
+import java.time.LocalDate;
+
 import com.elsantigestion.model.Cliente;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -23,10 +25,10 @@ public class ClienteView extends VBox {
 private final int iconoTamaño = 50;
 	
 	private TableView<Cliente> tabla;
-	private ClienteDAO dao;
 	private Button btnNuevo;
 	private Button btnModificar;
 	private Button btnEliminar;
+	
 	private Image agregar;
 	private Image modificar;
 	private Image eliminar;
@@ -40,11 +42,11 @@ private final int iconoTamaño = 50;
 
     public ClienteView() {
     	
-    	dao = new ClienteDAO();
 		tabla = new TableView<>();
 		btnNuevo = new Button();
 		btnModificar = new Button();
 		btnEliminar = new Button();
+		
 		agregar = new Image(getClass().getResource("/iconos/cliente.png").toExternalForm());
 		modificar = new Image(getClass().getResource("/iconos/edit.png").toExternalForm());
 		eliminar = new Image(getClass().getResource("/iconos/delete.png").toExternalForm());
@@ -77,6 +79,7 @@ private final int iconoTamaño = 50;
 		barraAcciones.setAlignment(Pos.CENTER_RIGHT);
 		barraAcciones.getStyleClass().add("barra");
         
+		TableColumn<Cliente, LocalDate> colFechaCreacion = new TableColumn<>("Fecha de\nRegistro");
         TableColumn<Cliente, String> colNombre = new TableColumn<>("Nombre");
         TableColumn<Cliente, String> colTelefono = new TableColumn<>("Teléfono");
         TableColumn<Cliente, String> colLocalidad = new TableColumn<>("Localidad");
@@ -87,6 +90,7 @@ private final int iconoTamaño = 50;
         TableColumn<Cliente, String> colBarrioNombre = new TableColumn<>("Nombre del Barrio");
         TableColumn<Cliente, Number> colBarrioLote = new TableColumn<>("N°.\nLote");
         
+        colFechaCreacion.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getFechaCreacion()));
         colNombre.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNombre()));
         colTelefono.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTelefono()));
         colLocalidad.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLocalidad()));
@@ -97,6 +101,7 @@ private final int iconoTamaño = 50;
         colBarrioNombre.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBarrioNombre()));
         colBarrioLote.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getBarrioLote()));
         
+        colFechaCreacion.getStyleClass().add("columna-especial");
         colNombre.getStyleClass().add("columna-texto");
         colTelefono.getStyleClass().add("columna-numero");
         colLocalidad.getStyleClass().add("columna-texto");
@@ -144,6 +149,7 @@ private final int iconoTamaño = 50;
             }
         });
 
+        tabla.getColumns().add(colFechaCreacion);
         tabla.getColumns().add(colNombre);
         tabla.getColumns().add(colTelefono); 
         tabla.getColumns().add(colEmail);
@@ -153,7 +159,6 @@ private final int iconoTamaño = 50;
         tabla.getColumns().add(colBarrioNombre); 
         tabla.getColumns().add(colBarrioLote);
         tabla.getColumns().add(colActivo); 
-        tabla.getItems().setAll(dao.obtenerClientes());
     	tabla.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	tabla.setPrefWidth(Double.MAX_VALUE);
     	VBox.setVgrow(tabla, Priority.ALWAYS);
@@ -162,44 +167,8 @@ private final int iconoTamaño = 50;
 		this.getStylesheets().add(
     	        getClass().getResource("/com/elsantigestion/css/tabla.css").toExternalForm()
     	    );
-		
-		//Botones acciones/////////////////////
-		btnNuevo.setOnAction(e -> {
-			ClienteForm form = new ClienteForm(dao, ClienteView.this::refrescarTabla, null);
-			form.showAndWait();
-		});
-		
-		btnModificar.setOnAction(e -> {
-		    Cliente seleccionado = tabla.getSelectionModel().getSelectedItem();
-		    
-		    if (seleccionado != null) {
-		        ClienteForm form = new ClienteForm(dao, ClienteView.this::refrescarTabla, seleccionado);
-		        form.showAndWait();
-		    } else {
-		    	Alerta.warning("Atención", "Debe seleccionar un cliente para modificar.");
-		    }
-		});
-		
-		btnEliminar.setOnAction(e -> {
-		    Cliente seleccionado = tabla.getSelectionModel().getSelectedItem();
 
-		    if (seleccionado != null) {
-		        boolean confirmado = Alerta.confirmar(
-		            "Confirmar eliminación",
-		            "¿Está seguro de eliminar el cliente: " + seleccionado.getNombre() + "?"
-		        );
-		        if (confirmado) {
-		            dao.eliminarCliente(seleccionado.getId());
-		            refrescarTabla();
-		        }
-		    } else {
-		        Alerta.warning("Atención", "Debe seleccionar un cliente para eliminar.");
-		    }
-		});
-		
-		///////////////////////////////////////
-		refrescarTabla();
-
+		colFechaCreacion.setMinWidth(100);
         colNombre.setMinWidth(150);
         colTelefono.setMinWidth(100);
         colLocalidad.setMinWidth(100);
@@ -211,11 +180,33 @@ private final int iconoTamaño = 50;
         colBarrioPrivado.setMinWidth(60);
 
     }
-        
-    private void refrescarTabla() {
-    	
-    	tabla.getItems().setAll(dao.obtenerClientes());
-    	
+    
+	public TableView<Cliente> getTabla(){
+    	return tabla;
     }
+
+	public Button getBtnNuevo() {
+		return btnNuevo;
+	}
+
+	public void setBtnNuevo(Button btnNuevo) {
+		this.btnNuevo = btnNuevo;
+	}
+
+	public Button getBtnModificar() {
+		return btnModificar;
+	}
+
+	public void setBtnModificar(Button btnModificar) {
+		this.btnModificar = btnModificar;
+	}
+
+	public Button getBtnEliminar() {
+		return btnEliminar;
+	}
+
+	public void setBtnEliminar(Button btnEliminar) {
+		this.btnEliminar = btnEliminar;
+	}
         
 }
