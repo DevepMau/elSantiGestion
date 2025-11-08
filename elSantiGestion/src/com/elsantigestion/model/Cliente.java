@@ -1,5 +1,7 @@
 package com.elsantigestion.model;
 
+import java.time.LocalDate;
+
 public class Cliente {
 	
 	private int id;
@@ -12,8 +14,9 @@ public class Cliente {
 	private String localidad;
 	private String direccion;
 	private boolean activo;
+	private LocalDate fechaCreacion;
 	
-	public Cliente(int id, String nombre, String telefono, String email, boolean barrioPrivado, String barrioNombre, int barrioLote, String localidad, String direccion, boolean activo) {
+	public Cliente(int id, String nombre, String telefono, String email, boolean barrioPrivado, String barrioNombre, int barrioLote, String localidad, String direccion, boolean activo, LocalDate fechaCreacion) {
 		
 		this.id = id;
 		this.nombre = nombre;
@@ -25,8 +28,27 @@ public class Cliente {
 		this.localidad = localidad;
 		this.direccion = direccion;
 		this.activo = activo;
+		this.fechaCreacion = fechaCreacion;
 		
 	}
+	
+	public void validar() {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalStateException("El nombre no puede estar vacío.");
+        }
+        
+        if (telefono == null || telefono.trim().isEmpty()) {
+            throw new IllegalStateException("El telefono no puede estar vacío.");
+        }
+
+        if (telefono != null && !telefono.matches("\\d{7,15}")) {
+            throw new IllegalStateException("El teléfono debe tener entre 7 y 15 números.");
+        }
+
+        if (localidad == null || localidad.trim().isEmpty()) {
+            throw new IllegalStateException("Debe especificar la localidad del cliente.");
+        }
+    }
 	
 	//GETTERS & SETTERS
 
@@ -110,6 +132,12 @@ public class Cliente {
 		this.activo = activo;
 	}
 	
-	
+	public LocalDate getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	public void setFechaCreacion(LocalDate fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}	
 
 }

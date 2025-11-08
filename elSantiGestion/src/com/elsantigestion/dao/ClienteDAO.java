@@ -5,6 +5,7 @@ import com.elsantigestion.model.Cliente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class ClienteDAO {
 
     // Insertar un cliente
     public void agregarCliente(Cliente cliente) {
-        String sql = "INSERT INTO clientes(nombre, telefono, email, barrio_privado, barrio_nombre, barrio_lote, localidad, direccion, activo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO clientes(nombre, telefono, email, barrio_privado, barrio_nombre, barrio_lote, localidad, direccion, activo, fecha_creacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -26,6 +27,7 @@ public class ClienteDAO {
             pstmt.setString(7, cliente.getLocalidad());
             pstmt.setString(8, cliente.getDireccion());
             pstmt.setBoolean(9, cliente.isActivo());
+            pstmt.setDate(10, java.sql.Date.valueOf(cliente.getFechaCreacion()));
 
             pstmt.executeUpdate();
 
@@ -54,7 +56,8 @@ public class ClienteDAO {
                         rs.getInt("barrio_lote"),
                         rs.getString("localidad"),
                         rs.getString("direccion"),
-                        rs.getBoolean("activo")
+                        rs.getBoolean("activo"),
+                        rs.getDate("fecha_creacion").toLocalDate()
                 );
                 lista.add(c);
             }
@@ -68,7 +71,7 @@ public class ClienteDAO {
     
     // Actualizar un cliente existente
     public void actualizarCliente(Cliente cliente) {
-        String sql = "UPDATE clientes SET nombre = ?, telefono = ?, email = ?, barrio_privado = ?, barrio_nombre = ?, barrio_lote = ?, localidad = ?, direccion = ?, activo = ? WHERE id = ?";
+        String sql = "UPDATE clientes SET nombre = ?, telefono = ?, email = ?, barrio_privado = ?, barrio_nombre = ?, barrio_lote = ?, localidad = ?, direccion = ?, activo = ?, fecha_creacion = ? WHERE id = ?";
 
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -82,7 +85,8 @@ public class ClienteDAO {
             pstmt.setString(7, cliente.getLocalidad());
             pstmt.setString(8, cliente.getDireccion());
             pstmt.setBoolean(9, cliente.isActivo());
-            pstmt.setInt(10, cliente.getId());
+            pstmt.setDate(10, java.sql.Date.valueOf(cliente.getFechaCreacion()));
+            pstmt.setInt(11, cliente.getId());
 
             pstmt.executeUpdate();
 
@@ -126,7 +130,8 @@ public class ClienteDAO {
                             rs.getInt("barrio_lote"),
                             rs.getString("localidad"),
                             rs.getString("direccion"),
-                            rs.getBoolean("activo")
+                            rs.getBoolean("activo"),
+                            rs.getDate("fecha_creacion").toLocalDate()
                     );
                 }
             }
@@ -136,6 +141,24 @@ public class ClienteDAO {
         }
 
         return cliente;
+    }
+    
+    public boolean existeClientePorId(int id) {
+        String sql = "SELECT 1 FROM clientes WHERE id = ?";
+        
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, id);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return false;
     }
     
     
