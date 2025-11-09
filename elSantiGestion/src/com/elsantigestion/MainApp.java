@@ -1,8 +1,10 @@
 package com.elsantigestion;
 
 import com.elsantigestion.controller.ClienteController;
+import com.elsantigestion.controller.TrabajoController;
 import com.elsantigestion.dao.ClienteDAO;
 import com.elsantigestion.dao.DatabaseSetup;
+import com.elsantigestion.dao.TrabajoDAO;
 import com.elsantigestion.ui.ClienteView;
 import com.elsantigestion.ui.ServicioView;
 import com.elsantigestion.ui.TrabajoView;
@@ -99,7 +101,11 @@ public class MainApp extends Application {
         
         ClienteView clienteView = new ClienteView();
         ClienteDAO clienteDao = new ClienteDAO();
-        ClienteController clienteController = new ClienteController(clienteView, clienteDao);
+        ClienteController clientes = new ClienteController(clienteView, clienteDao);
+        
+        TrabajoView trabajoView = new TrabajoView();
+        TrabajoDAO trabajoDao = new TrabajoDAO();
+        TrabajoController trabajos = new TrabajoController(trabajoView, trabajoDao);
         
 
         // Función para manejar selección de botón
@@ -111,8 +117,8 @@ public class MainApp extends Application {
                 btn.getStyleClass().add("activo");
 
                 // Cambiar el contenido central
-                if (btn == btnClientes) root.setCenter(clienteController.getView());
-                else if (btn == btnTrabajos) root.setCenter(new TrabajoView());
+                if (btn == btnClientes) root.setCenter(clientes.getView());
+                else if (btn == btnTrabajos) root.setCenter(trabajos.getView());
                 else if (btn == btnServicios) root.setCenter(new ServicioView());
                 else if (btn == btnGastos) root.setCenter(new javafx.scene.control.Label("Vista de Gastos"));
                 else if (btn == btnCronograma) root.setCenter(new javafx.scene.control.Label("Vista de Cronograma"));
