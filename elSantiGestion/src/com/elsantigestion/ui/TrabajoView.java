@@ -1,6 +1,5 @@
 package com.elsantigestion.ui;
 
-import com.elsantigestion.dao.TrabajoDAO;
 import com.elsantigestion.model.Trabajo;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -23,10 +22,10 @@ public class TrabajoView extends VBox {
 	private final int iconoTamaño = 50;
 	
 	private TableView<Trabajo> tabla;
-	private TrabajoDAO dao;
 	private Button btnNuevo;
 	private Button btnModificar;
 	private Button btnEliminar;
+	
 	private Image agregar;
 	private Image modificar;
 	private Image eliminar;
@@ -40,11 +39,11 @@ public class TrabajoView extends VBox {
 	
 	public TrabajoView() {
 		
-		dao = new TrabajoDAO();
 		tabla = new TableView<>();
 		btnNuevo = new Button();
 		btnModificar = new Button();
 		btnEliminar = new Button();
+		
 		agregar = new Image(getClass().getResource("/iconos/add.png").toExternalForm());
 		modificar = new Image(getClass().getResource("/iconos/edit.png").toExternalForm());
 		eliminar = new Image(getClass().getResource("/iconos/delete.png").toExternalForm());
@@ -121,7 +120,6 @@ public class TrabajoView extends VBox {
 		tabla.getColumns().add(colPrecio);
 		tabla.getColumns().add(colUnidad);
 		tabla.getColumns().add(colActivo);
-		tabla.getItems().setAll(dao.obtenerTrabajos());
     	tabla.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	tabla.setPrefWidth(Double.MAX_VALUE);
     	VBox.setVgrow(tabla, Priority.ALWAYS);
@@ -132,56 +130,45 @@ public class TrabajoView extends VBox {
     	        getClass().getResource("/com/elsantigestion/css/tabla.css").toExternalForm()
     	    );
 		
-		//Botones acciones/////////////////////
-		btnNuevo.setOnAction(e -> {
-			TrabajoForm form = new TrabajoForm(dao, TrabajoView.this::refrescarTabla, null);
-			form.showAndWait();
-		});
-		
-		btnModificar.setOnAction(e -> {
-		    Trabajo seleccionado = tabla.getSelectionModel().getSelectedItem();
-		    
-		    if (seleccionado != null) {
-		        TrabajoForm form = new TrabajoForm(dao, TrabajoView.this::refrescarTabla, seleccionado);
-		        form.showAndWait();
-		    } else {
-		    	Alerta.warning("Atención", "Debe seleccionar un trabajo para modificar.");
-		    }
-		});
-		
-		btnEliminar.setOnAction(e -> {
-		    Trabajo seleccionado = tabla.getSelectionModel().getSelectedItem();
-
-		    if (seleccionado != null) {
-		        boolean confirmado = Alerta.confirmar(
-		            "Confirmar eliminación",
-		            "¿Está seguro de eliminar el trabajo: " + seleccionado.getNombre() + "?"
-		        );
-		        if (confirmado) {
-		            dao.eliminarTrabajo(seleccionado.getId());
-		            refrescarTabla();
-		        }
-		    } else {
-		        Alerta.warning("Atención", "Debe seleccionar un trabajo para eliminar.");
-		    }
-		});
-		
-		///////////////////////////////////////
-		refrescarTabla();
-		
-		colNombre.setMinWidth(180);
-		colDetalle.setMinWidth(300);
+		colNombre.setMinWidth(120);
+		colDetalle.setMinWidth(280);
 		colPrecio.setMinWidth(80);
 		colUnidad.setMinWidth(80);
 		colActivo.setMinWidth(80);
 		
 	
 	}
-	
-	private void refrescarTabla() {
-    	
-		tabla.getItems().setAll(dao.obtenerTrabajos());
-    		
-    }
+
+	public TableView<Trabajo> getTabla() {
+		return tabla;
+	}
+
+	public void setTabla(TableView<Trabajo> tabla) {
+		this.tabla = tabla;
+	}
+
+	public Button getBtnNuevo() {
+		return btnNuevo;
+	}
+
+	public void setBtnNuevo(Button btnNuevo) {
+		this.btnNuevo = btnNuevo;
+	}
+
+	public Button getBtnModificar() {
+		return btnModificar;
+	}
+
+	public void setBtnModificar(Button btnModificar) {
+		this.btnModificar = btnModificar;
+	}
+
+	public Button getBtnEliminar() {
+		return btnEliminar;
+	}
+
+	public void setBtnEliminar(Button btnEliminar) {
+		this.btnEliminar = btnEliminar;
+	}
 
 }

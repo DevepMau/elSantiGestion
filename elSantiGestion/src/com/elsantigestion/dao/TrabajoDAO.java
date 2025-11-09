@@ -143,5 +143,23 @@ public class TrabajoDAO {
 		}
 		return null;
 	}
+	
+	public boolean existeTrabajoPorId(int id) {
+		String sql = "SELECT 1 FROM trabajos WHERE id = ?";
+		
+		try(Connection conn = Database.connect();
+			PreparedStatement pstmt = conn.prepareStatement(sql)){
+			
+			pstmt.setInt(1, id);
+			try(ResultSet rs = pstmt.executeQuery()){
+				return rs.next();
+			}
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
 
 }

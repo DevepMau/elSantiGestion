@@ -1,6 +1,5 @@
 package com.elsantigestion.ui;
 
-import com.elsantigestion.dao.TrabajoDAO;
 import com.elsantigestion.model.Trabajo;
 import com.elsantigestion.utils.ValidadorCampos;
 
@@ -23,10 +22,7 @@ import javafx.stage.StageStyle;
 
 public class TrabajoForm extends Stage {
 	
-	@SuppressWarnings("unused")
-	private TrabajoDAO dao;
-	@SuppressWarnings("unused")
-	private Runnable onSaveCallBack;
+	private Trabajo trabajo;
 	private Label titulo;
 	private double xOffset;
 	private double yOffset;
@@ -46,12 +42,9 @@ public class TrabajoForm extends Stage {
 	private GridPane grid;
 	private Scene scene;
 	private Label chkText;
-	
-	@SuppressWarnings("exports") 
-	public TrabajoForm(TrabajoDAO dao, Runnable onSaveCallBack, Trabajo trabajoExistente) {
+	 
+	public TrabajoForm(Trabajo trabajoExistente) {
 		
-		this.dao = dao;
-		this.onSaveCallBack = onSaveCallBack;
 		this.xOffset = 0;
 		this.yOffset = 0;
 		this.initStyle(StageStyle.UNDECORATED);
@@ -184,7 +177,8 @@ public class TrabajoForm extends Stage {
 						cmbUnidad.getValue(),
 						chkActivo.isSelected()
 						);
-				dao.agregarTrabajo(nuevo);
+				
+				setTrabajo(nuevo);
 			} else {
 				trabajoExistente.setNombre(txtNombre.getText());
 				trabajoExistente.setDetalle(txtDetalle.getText());
@@ -192,12 +186,9 @@ public class TrabajoForm extends Stage {
 				trabajoExistente.setUnidad(cmbUnidad.getValue());
 				trabajoExistente.setActivo(chkActivo.isSelected());
 				
-				dao.actualizarTrabajo(trabajoExistente);
+				setTrabajo(trabajoExistente);
 			}
 			
-			if(onSaveCallBack != null) {
-				onSaveCallBack.run();
-			}
 			close();
 		});
 		
@@ -229,6 +220,14 @@ public class TrabajoForm extends Stage {
 		        getClass().getResource("/com/elsantigestion/css/formulario.css").toExternalForm()
 		    );
 		
+	}
+
+	public Trabajo getTrabajo() {
+		return trabajo;
+	}
+
+	public void setTrabajo(Trabajo trabajo) {
+		this.trabajo = trabajo;
 	}
 
 }

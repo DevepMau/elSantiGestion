@@ -19,6 +19,20 @@ public class Trabajo {
 		this.activo = activo;
 		
 	}
+	
+	public void validar() {
+		if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre no puede estar vacío.");
+        }
+
+        if (precio <= 0) {
+            throw new IllegalArgumentException("El precio debe ser un número positivo.");
+        }
+        
+        if (unidad == null || unidad.trim().isEmpty()) {
+            throw new IllegalArgumentException("La unidad no puede estar vacío.");
+        }
+	}
 
 	public int getId() {
 		return id;
