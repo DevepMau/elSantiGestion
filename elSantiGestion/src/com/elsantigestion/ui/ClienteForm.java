@@ -40,7 +40,7 @@ public class ClienteForm extends Stage {
 	    TextField txtBarrioLote = new TextField();
 	    TextField txtLocalidad = new TextField();
 	    TextField txtDireccion = new TextField();
-	    CheckBox chkActivo = new CheckBox();
+	    //CheckBox chkActivo = new CheckBox();
 	    
 	    txtNombre.setPromptText("Ingrese nombre...");	    
 	    txtTelefono.setPromptText("Ingrese telefono...");
@@ -73,11 +73,11 @@ public class ClienteForm extends Stage {
 	        txtBarrioLote.setText(String.valueOf(clienteExistente.getBarrioLote()));
 	        txtLocalidad.setText(clienteExistente.getLocalidad());
 	        txtDireccion.setText(clienteExistente.getDireccion());
-	        chkActivo.setSelected(clienteExistente.isActivo());
+	        //chkActivo.setSelected(clienteExistente.isActivo());
 	    } else {
 	    	titulo = new Label("Agregar cliente");
 	    	chkBarrioPrivado.setSelected(false);
-	        chkActivo.setSelected(true);
+	        //chkActivo.setSelected(true);
 	    }
 	    
 	    txtBarrioNombre.setDisable(!chkBarrioPrivado.isSelected());
@@ -156,7 +156,7 @@ public class ClienteForm extends Stage {
 	                Integer.parseInt(txtBarrioLote.getText()),
 	                txtLocalidad.getText(),
 	                txtDireccion.getText(),
-	                chkActivo.isSelected(),
+	                /*chkActivo.isSelected()*/true,
 	                LocalDate.now()
 	            );
 	            
@@ -172,7 +172,7 @@ public class ClienteForm extends Stage {
 	            clienteExistente.setBarrioLote(Integer.parseInt(txtBarrioLote.getText()));
 	            clienteExistente.setLocalidad(txtLocalidad.getText());
 	            clienteExistente.setDireccion(txtDireccion.getText());
-	            clienteExistente.setActivo(chkActivo.isSelected());
+	            //clienteExistente.setActivo(chkActivo.isSelected());
 	            
 	            setCliente(clienteExistente);
 	        }
@@ -211,12 +211,12 @@ public class ClienteForm extends Stage {
 	    
 	    HBox boxActivo = new HBox();
 	    boxActivo.setAlignment(Pos.CENTER);
-	    Label lblActivo = new Label("¿El Cliente esta activo?");
+	    /*Label lblActivo = new Label("¿El Cliente esta activo?");
 	    lblActivo.getStyleClass().add("label-info");
 	    boxActivo.getChildren().addAll(lblActivo ,chkActivo);
 	    HBox.setMargin(chkActivo, new Insets(10, 0, 10, 0));
 	    boxActivo.setSpacing(20);
-	    chkActivo.getStyleClass().add("check-box");
+	    chkActivo.getStyleClass().add("check-box");*/
 	    
 	    HBox boxContactos = new HBox();
 	    boxContactos.setAlignment(Pos.CENTER);
@@ -254,8 +254,8 @@ public class ClienteForm extends Stage {
 	    grid.addRow(6, txtLocalidad);
 	    grid.addRow(7, boxBarrioPrivado);
 	    grid.addRow(8, txtDireccion);
-	    grid.addRow(9, boxActivo);
-	    grid.add(btnGuardar, 0, 10);
+	    //grid.addRow(9, boxActivo);
+	    grid.add(btnGuardar, 0, 9);
 	    
 	    GridPane.setMargin(msgNombre, new Insets(20, 20, 0, 20));
 	    GridPane.setMargin(txtNombre, new Insets(0, 20, 0, 20));
@@ -266,10 +266,10 @@ public class ClienteForm extends Stage {
 	    GridPane.setMargin(msgLocalidad, new Insets(0, 20, 0, 20));
 	    GridPane.setMargin(txtLocalidad, new Insets(0, 20, 0, 20));
 	    GridPane.setMargin(boxBarrioPrivado, new Insets(20, 20, 0, 20));
-	    GridPane.setMargin(txtDireccion, new Insets(20, 20, 0, 20));
-	    GridPane.setMargin(boxActivo, new Insets(20, 0, 20, 0));
+	    GridPane.setMargin(txtDireccion, new Insets(20, 20, 20, 20));
+	    //GridPane.setMargin(boxActivo, new Insets(20, 0, 20, 0));
 
-	    Scene scene = new Scene(grid, 400, 620);
+	    Scene scene = new Scene(grid, 400, 550);
 	    setScene(scene);
 	    initModality(Modality.APPLICATION_MODAL);
 	    

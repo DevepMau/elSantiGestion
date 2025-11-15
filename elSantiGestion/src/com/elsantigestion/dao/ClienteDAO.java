@@ -94,6 +94,21 @@ public class ClienteDAO {
             e.printStackTrace();
         }
     }
+    
+    // alternar activo / inactivo
+    public void alternarActivo(int clienteId) {
+        String sql = "UPDATE clientes SET activo = NOT activo WHERE id = ?";
+
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, clienteId);
+            pstmt.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     // Eliminar un cliente
     public void eliminarCliente(int id) {
@@ -159,6 +174,42 @@ public class ClienteDAO {
         }
         
         return false;
+    }
+    
+ // Listar todos los clientes por estado
+    public List<Cliente> obtenerClientesPorEstado(boolean activo) {
+        List<Cliente> lista = new ArrayList<>();
+        String sql = "SELECT * FROM clientes WHERE activo = ?";
+        
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setBoolean(1, activo);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Cliente c = new Cliente(
+                            rs.getInt("id"),
+                            rs.getString("nombre"),
+                            rs.getString("telefono"),
+                            rs.getString("email"),
+                            rs.getBoolean("barrio_privado"),
+                            rs.getString("barrio_nombre"),
+                            rs.getInt("barrio_lote"),
+                            rs.getString("localidad"),
+                            rs.getString("direccion"),
+                            rs.getBoolean("activo"),
+                            rs.getDate("fecha_creacion").toLocalDate()
+                    );
+                    lista.add(c);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return lista;
     }
     
     

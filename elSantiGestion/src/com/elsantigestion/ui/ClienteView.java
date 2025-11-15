@@ -85,7 +85,7 @@ private final int iconoTamaño = 50;
         TableColumn<Cliente, String> colLocalidad = new TableColumn<>("Localidad");
         TableColumn<Cliente, String> colDireccion = new TableColumn<>("Direccion");
         TableColumn<Cliente, String> colEmail = new TableColumn<>("Email");
-        TableColumn<Cliente, Boolean> colActivo = new TableColumn<>("Activo");
+        //TableColumn<Cliente, Boolean> colActivo = new TableColumn<>("Activo");
         TableColumn<Cliente, Boolean> colBarrioPrivado = new TableColumn<>("Barrio\nPrivado");
         TableColumn<Cliente, String> colBarrioNombre = new TableColumn<>("Nombre del Barrio");
         TableColumn<Cliente, Number> colBarrioLote = new TableColumn<>("N°.\nLote");
@@ -96,7 +96,7 @@ private final int iconoTamaño = 50;
         colLocalidad.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLocalidad()));
         colDireccion.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDireccion()));
         colEmail.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEmail()));
-        colActivo.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().isActivo()));
+        //colActivo.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().isActivo()));
         colBarrioPrivado.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().isBarrioPrivado()));
         colBarrioNombre.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBarrioNombre()));
         colBarrioLote.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getBarrioLote()));
@@ -107,12 +107,12 @@ private final int iconoTamaño = 50;
         colLocalidad.getStyleClass().add("columna-texto");
         colDireccion.getStyleClass().add("columna-texto");
         colEmail.getStyleClass().add("columna-texto");
-        colActivo.getStyleClass().add("columna-especial");
+        //colActivo.getStyleClass().add("columna-especial");
         colBarrioPrivado.getStyleClass().add("columna-especial");
         colBarrioNombre.getStyleClass().add("columna-texto");
-        colBarrioLote.getStyleClass().add("columna-numero");
+        colBarrioLote.getStyleClass().add("columna-especial");
 
-        colActivo.setCellFactory(col -> new TableCell<Cliente, Boolean>() {
+        /*colActivo.setCellFactory(col -> new TableCell<Cliente, Boolean>() {
             protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
@@ -129,7 +129,7 @@ private final int iconoTamaño = 50;
                 }
                 setAlignment(Pos.CENTER);
             }
-        });
+        });*/
         colBarrioPrivado.setCellFactory(col -> new TableCell<Cliente, Boolean>() {
             protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty);
@@ -158,7 +158,7 @@ private final int iconoTamaño = 50;
         tabla.getColumns().add(colDireccion);  
         tabla.getColumns().add(colBarrioNombre); 
         tabla.getColumns().add(colBarrioLote);
-        tabla.getColumns().add(colActivo); 
+        //tabla.getColumns().add(colActivo); 
     	tabla.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	tabla.setPrefWidth(Double.MAX_VALUE);
     	VBox.setVgrow(tabla, Priority.ALWAYS);
@@ -174,7 +174,7 @@ private final int iconoTamaño = 50;
         colLocalidad.setMinWidth(100);
         colDireccion.setMinWidth(150);
         colEmail.setMinWidth(120);
-        colActivo.setMinWidth(60); 
+        //colActivo.setMinWidth(60); 
         colBarrioNombre.setMinWidth(150);
         colBarrioLote.setMinWidth(60);
         colBarrioPrivado.setMinWidth(60);

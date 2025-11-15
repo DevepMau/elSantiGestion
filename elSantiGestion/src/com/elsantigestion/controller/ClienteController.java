@@ -49,7 +49,7 @@ public class ClienteController {
     }
     
     public void refrescarTabla() {
-    	view.getTabla().getItems().setAll(dao.obtenerClientes());
+    	view.getTabla().getItems().setAll(dao.obtenerClientesPorEstado(true));
     }
 
     private void mostrarFormularioNuevo() {
@@ -90,7 +90,8 @@ public class ClienteController {
 	            "¿Está seguro de eliminar el cliente: " + seleccionado.getNombre() + "?"
 	        );
 	        if (confirmado) {
-	            dao.eliminarCliente(seleccionado.getId());
+	            //dao.eliminarCliente(seleccionado.getId());
+	            dao.alternarActivo(seleccionado.getId());
 	            //view.refrescarTabla();
 	        }
 	    } else {
