@@ -56,7 +56,7 @@ public class DatabaseSetup {
             	    "trabajo_id INT NOT NULL," +
             	    "cantidad INT NOT NULL DEFAULT 1," +
             	    "PRIMARY KEY (servicio_id, trabajo_id)," +
-            	    "FOREIGN KEY (servicio_id) REFERENCES ServicioEventual(id) ON DELETE CASCADE," +
+            	    "FOREIGN KEY (servicio_id) REFERENCES servicios(id) ON DELETE CASCADE," +
             	    "FOREIGN KEY (trabajo_id) REFERENCES trabajos(id) ON DELETE CASCADE" +
             	    ");";
             
