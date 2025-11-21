@@ -1,17 +1,15 @@
 package com.elsantigestion.ui;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import com.elsantigestion.dao.TrabajoDAO;
 import com.elsantigestion.model.Trabajo;
 
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -20,26 +18,77 @@ import javafx.util.Callback;
 
 public class TrabajoChecker extends HBox {
 	
-	//private final int iconoTamaño = 15;
-	
 	private TrabajoDAO dao;
 	private TableView<Trabajo> tabla;
 	private ObservableList<Trabajo> iniciales;
-	private HashMap<Integer, Trabajo> marcados;
-	private List<Integer> previos;
+	private HashMap<Integer, Integer> listaAuxiliar;
+	private HashMap<Integer, Integer> marcados;
 	
-	public TrabajoChecker(List<Integer> idsPrevios) {
+	public TrabajoChecker(HashMap<Integer, Integer> trabajosPrevios) {
 		
 		this.dao = new TrabajoDAO();
 		this.iniciales = FXCollections.observableArrayList(dao.obtenerTrabajos());
 		this.tabla = new TableView<>();
-		this.marcados = new HashMap<>();
-		this.previos = idsPrevios;
+		if(trabajosPrevios != null) {
+			this.marcados = trabajosPrevios;
+			this.listaAuxiliar = trabajosPrevios;
+		}
+		else {
+			this.marcados = new HashMap<>();
+			this.listaAuxiliar = new HashMap<>();
+		}
 		
-		TableColumn<Trabajo, Integer> colId = new TableColumn<>("ID");
 		TableColumn<Trabajo, String> colNombre = new TableColumn<>("Nombre");
+		TableColumn<Trabajo, Integer> colCantidad = new TableColumn<>("Cantidad");
 		TableColumn<Trabajo, Void> colAccion = new TableColumn<>("");
 
+		Callback<TableColumn<Trabajo, Integer>, TableCell<Trabajo, Integer>> cellSpinner = new Callback<>() {
+			@Override
+			public TableCell<Trabajo, Integer> call(final TableColumn<Trabajo, Integer> param) {
+				return new TableCell<>() {
+					private final Spinner<Integer> spinner = new Spinner<>(1, 100, 1);
+					
+					{
+						spinner.valueProperty().addListener((obs, oldVal, newVal) -> {
+						    if (newVal != null && !newVal.equals(oldVal)) {
+						    	
+						    	Trabajo trabajo = getTableView().getItems().get(getIndex());
+						    	int id = trabajo.getId();
+						    	
+						    	if(marcados.containsKey(id)) {
+						    		marcados.put(id, spinner.getValue());
+						    	}
+						    	else {
+						    		listaAuxiliar.put(id, spinner.getValue());
+						    	}
+						    }
+						});
+					}
+					
+					@Override
+		            protected void updateItem(Integer item, boolean empty) {
+		                super.updateItem(item, empty);
+		                if (empty) {
+		                    setGraphic(null);
+		                } else {
+		                	if(marcados != null) {
+		                		
+		                		Trabajo trabajo = getTableView().getItems().get(getIndex());
+		                		int id = trabajo.getId();
+		                		
+		                		if(marcados.containsKey(id)) {
+		                			spinner.getValueFactory().setValue(marcados.get(id));
+		                		}
+		                	}
+		                	
+		                    setGraphic(spinner);
+		                    setStyle("-fx-alignment: CENTER;");
+		                }
+		            }
+				};
+			}
+		};
+		
 		Callback<TableColumn<Trabajo, Void>, TableCell<Trabajo, Void>> cellFactory = new Callback<>() {
 		    @Override
 		    public TableCell<Trabajo, Void> call(final TableColumn<Trabajo, Void> param) {
@@ -48,13 +97,22 @@ public class TrabajoChecker extends HBox {
 
 		            {
 		                checkBox.setOnAction(event -> {
-		                    Trabajo trabajo = getTableView().getItems().get(getIndex());
+		                	
 		                    boolean seleccionado = checkBox.isSelected();
+		                    Trabajo trabajo = getTableView().getItems().get(getIndex());
+		                    int id = trabajo.getId();
+		                    
 		                    if(seleccionado) {
-		                    	marcados.put(trabajo.getId(), trabajo);
+		                    	if(listaAuxiliar.containsKey(id)) {
+		                    		marcados.put(id, listaAuxiliar.get(id));
+		                    	}
+		                    	else {
+		                    		marcados.put(id, 1);
+		                    	}
+		                    	System.out.println("id: "+id+", cant: "+listaAuxiliar.get(id));
 		                    }
 		                    else {
-		                    	marcados.remove(trabajo.getId());
+		                    	marcados.remove(id);
 		                    }
 		                });
 		            }
@@ -65,12 +123,15 @@ public class TrabajoChecker extends HBox {
 		                if (empty) {
 		                    setGraphic(null);
 		                } else {
+		                	
 		                    Trabajo trabajo = getTableView().getItems().get(getIndex());
-		                    // Marcar el checkbox si el trabajo está en la lista previos
-		                    if (previos != null) {
-		                    	if(previos.contains(trabajo.getId())) {
+		                    int id = trabajo.getId();
+		                    
+		                    if (listaAuxiliar != null) {
+		                    	
+		                    	if(listaAuxiliar.containsKey(id)) {
+		                    		
 		                    		checkBox.setSelected(true);
-			                        marcados.put(trabajo.getId(), trabajo);
 		                    	}  
 		                    } else {
 		                        checkBox.setSelected(false);
@@ -84,19 +145,19 @@ public class TrabajoChecker extends HBox {
 		    }
 		};
 		
-		colId.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getId()).asObject());
 		colNombre.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNombre()));
+		colCantidad.setCellFactory(cellSpinner);
 		colAccion.setCellFactory(cellFactory);
 		
-		colId.setMinWidth(50);
-		colNombre.setMinWidth(200);
+		colNombre.setMinWidth(150);
+		colCantidad.setMinWidth(60);
 		colAccion.setMinWidth(50);
 		
-		colId.getStyleClass().add("columna-personalizada");
 		colNombre.getStyleClass().add("columna-personalizada");
+		colCantidad.getStyleClass().add("columna-personalizada");
 		colAccion.getStyleClass().add("columna-personalizada");
 		
-		tabla.getColumns().add(colId);
+		tabla.getColumns().add(colCantidad);
 		tabla.getColumns().add(colNombre);
 		tabla.getColumns().add(colAccion);
 		tabla.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -113,9 +174,8 @@ public class TrabajoChecker extends HBox {
 		
 	}
 	
-	@SuppressWarnings("exports")
-	public List<Trabajo> obtenerTrabajos() {
-        return new ArrayList<>(marcados.values());
+	public HashMap<Integer, Integer> obtenerTrabajosAAgregar() {
+        return this.marcados;
     }
 
 }
