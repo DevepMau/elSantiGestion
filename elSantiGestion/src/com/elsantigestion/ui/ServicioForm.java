@@ -1,15 +1,13 @@
 package com.elsantigestion.ui;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 
 import com.elsantigestion.dao.ClienteDAO;
-import com.elsantigestion.dao.ServicioDAO;
 import com.elsantigestion.dao.ServicioTrabajoDAO;
 import com.elsantigestion.model.Cliente;
 import com.elsantigestion.model.Servicio;
-import com.elsantigestion.model.ServicioTrabajo;
-import com.elsantigestion.model.Trabajo;
 import com.elsantigestion.utils.ValidadorCampos;
 
 import javafx.geometry.Insets;
@@ -30,10 +28,7 @@ import javafx.stage.StageStyle;
 
 public class ServicioForm extends Stage {
 
-	@SuppressWarnings("unused")
-	private Runnable onSaveCallBack;
-	@SuppressWarnings("unused")
-	private ServicioDAO dao;
+	private Servicio servicio;
     private ClienteDAO clienteDao;
     private ServicioTrabajoDAO stDao;
     private double xOffset;
@@ -72,11 +67,8 @@ public class ServicioForm extends Stage {
     private HBox boxTipo;
     private TrabajoChecker tChecker;
 
-    @SuppressWarnings("exports") 
-    public ServicioForm(ServicioDAO dao, Runnable onSaveCallBack, Servicio servicioExistente) {
+    public ServicioForm(Servicio servicioExistente) {
 
-        this.dao = dao;
-        this.onSaveCallBack = onSaveCallBack;
         this.xOffset = 0;
         this.yOffset = 0;
         this.initStyle(StageStyle.UNDECORATED);
@@ -125,7 +117,6 @@ public class ServicioForm extends Stage {
         cmbCliente.getItems().addAll(clientes);
         cmbCliente.setPromptText("Seleccione un cliente...");
 
-        // Mostrar nombre pero mantener ID internamente
         cmbCliente.setCellFactory(listView -> new javafx.scene.control.ListCell<Cliente>() {
             @Override
             protected void updateItem(Cliente item, boolean empty) {
@@ -164,8 +155,6 @@ public class ServicioForm extends Stage {
         txtPrecio.setPromptText("Ingrese precio...");
         txtGastos.setPromptText("Ingrese gastos...");
         
-        //txtPrecio.setMaxWidth(250);
-        //txtGastos.setMaxWidth(250);
         txtMontoFinal.setMaxWidth(150);
         cmbPeriodisidad.setMaxWidth(200);
         
@@ -187,7 +176,7 @@ public class ServicioForm extends Stage {
 
         if (servicioExistente != null) {
             titulo = new Label("Modificar servicio");
-            // Seleccionamos el cliente correcto en el ComboBox
+
             clientes.stream()
                     .filter(c -> c.getId() == servicioExistente.getClienteId())
                     .findFirst()
@@ -198,7 +187,7 @@ public class ServicioForm extends Stage {
             txtPrecio.setText(String.valueOf(servicioExistente.getPrecio()));
             txtGastos.setText(String.valueOf(servicioExistente.getGastos()));
             txtMontoFinal.setText(String.valueOf(servicioExistente.getMontoFinal()));
-            tChecker = new TrabajoChecker(stDao.obtenerIdsPorServicio(servicioExistente.getId()));
+            tChecker = new TrabajoChecker(stDao.obtenerTrabajosPorServicio(servicioExistente.getId()));
         } else {
         	tChecker = new TrabajoChecker(null);
             titulo = new Label("Agregar servicio");
@@ -315,14 +304,8 @@ public class ServicioForm extends Stage {
                         Double.parseDouble(txtGastos.getText()),
                         Double.parseDouble(txtMontoFinal.getText()),
                         cmbEstado.getValue());
-                int idGenerado = dao.agregarServicio(nuevo);
-                
-                List<Trabajo> trabajos = tChecker.obtenerTrabajos(); 
-            	for(int i=0; i<trabajos.size(); i++) {
-            		ServicioTrabajo st = new ServicioTrabajo(idGenerado, trabajos.get(i).getId(), 1);
-            		stDao.agregar(st);
-            	}
-                
+
+                setServicio(nuevo);   
             } else {
             	servicioExistente.setClienteId(clienteSeleccionado.getId());
                 servicioExistente.setFechaProgramada(dpFechaProgramada.getValue());
@@ -331,22 +314,10 @@ public class ServicioForm extends Stage {
                 servicioExistente.setGastos(Double.parseDouble(txtGastos.getText()));
                 servicioExistente.setMontoFinal(Double.parseDouble(txtMontoFinal.getText()));
                 servicioExistente.setEstado(cmbEstado.getValue());
-               
-                dao.actualizarServicio(servicioExistente);
-                
-                stDao.eliminarPorServicio(servicioExistente.getId());
-                
-                List<Trabajo> trabajos = tChecker.obtenerTrabajos(); 
-            	for(int i=0; i<trabajos.size(); i++) {
-            		ServicioTrabajo st = new ServicioTrabajo(servicioExistente.getId(), trabajos.get(i).getId(), 1);
-            		stDao.agregar(st);
-            	}
 
+                setServicio(servicioExistente);
             }
 
-            if (onSaveCallBack != null) {
-                onSaveCallBack.run();
-            }
             close();
         });
 
@@ -394,4 +365,16 @@ public class ServicioForm extends Stage {
         } catch (NumberFormatException e) {
         }
     }
+
+	public Servicio getServicio() {
+		return servicio;
+	}
+	
+	public HashMap<Integer, Integer> getListaTrabajos(){
+		return this.tChecker.obtenerTrabajosAAgregar();
+	}
+
+	public void setServicio(Servicio servicio) {
+		this.servicio = servicio;
+	}
 }
