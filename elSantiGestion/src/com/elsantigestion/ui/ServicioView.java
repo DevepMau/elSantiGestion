@@ -1,14 +1,9 @@
 package com.elsantigestion.ui;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import com.elsantigestion.dao.ClienteDAO;
-import com.elsantigestion.dao.ServicioDAO;
-import com.elsantigestion.dao.ServicioTrabajoDAO;
-import com.elsantigestion.model.Cliente;
 import com.elsantigestion.model.Servicio;
-import com.elsantigestion.model.Trabajo;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -16,10 +11,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -37,9 +30,7 @@ public class ServicioView extends VBox {
 	private TableView<Servicio> tablaEventuales;
 	private TableView<Servicio> tablaMensuales;
 	private StackPane stack;
-	private ServicioDAO servicioDao;
 	private ClienteDAO clienteDao;
-	private ServicioTrabajoDAO stDao;
 	private Button btnNuevo;
 	private Button btnModificar;
 	private Button btnEliminar;
@@ -56,12 +47,11 @@ public class ServicioView extends VBox {
 	private HBox barraAcciones;
 	private HBox boxBotones;
 	private Region spacer;
+	private boolean tablaEventual = false;
 	
 	public ServicioView() {
 		
-		servicioDao = new ServicioDAO();
 		clienteDao = new ClienteDAO();
-		stDao = new ServicioTrabajoDAO();
 		tablaEventuales = new TableView<>();
 		tablaMensuales = new TableView<>();
 		stack = new StackPane(tablaMensuales, tablaEventuales);
@@ -184,7 +174,6 @@ public class ServicioView extends VBox {
 		tablaEventuales.getColumns().add(colGastosSE);
 		tablaEventuales.getColumns().add(colMontoFinalSE);
 		tablaEventuales.getColumns().add(colEstadoSE);
-		tablaEventuales.getItems().setAll(servicioDao.obtenerServiciosPorTipo("Eventual"));
     	tablaEventuales.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	tablaEventuales.setPrefWidth(Double.MAX_VALUE);
     	//VBox.setVgrow(tablaEventuales, Priority.ALWAYS);
@@ -253,7 +242,6 @@ public class ServicioView extends VBox {
     	tablaMensuales.getColumns().add(colGastosSM);
     	tablaMensuales.getColumns().add(colMontoFinalSM);
     	tablaMensuales.getColumns().add(colEstadoSM);
-    	tablaMensuales.getItems().setAll(servicioDao.obtenerServiciosPorTipo("Mensual"));
     	tablaMensuales.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	tablaMensuales.setPrefWidth(Double.MAX_VALUE);
     	
@@ -267,80 +255,67 @@ public class ServicioView extends VBox {
 		//Botones acciones/////////////////////
 		cmbTabla.setOnAction(e -> {
             String seleccion = cmbTabla.getValue();
-            
-            refrescarTabla();
 
             if ("Mensuales".equals(seleccion)) {
                 tablaMensuales.toFront();
                 tablaMensuales.setVisible(true);
                 tablaEventuales.setVisible(false);
+                setTablaEventual(false);
             } else {
                 tablaEventuales.toFront();
                 tablaEventuales.setVisible(true);
                 tablaMensuales.setVisible(false);
+                setTablaEventual(true);
             }
         });
 		
-		btnNuevo.setOnAction(e -> {
-			ServicioForm form = new ServicioForm(servicioDao, ServicioView.this::refrescarTabla, null);
-			form.showAndWait();
-		});
-		
-		btnModificar.setOnAction(e -> {
-			
-			Servicio seleccionado = null;
-			String seleccion = cmbTabla.getValue();
-			if("Mensuales".equals(seleccion)) {
-				seleccionado = tablaMensuales.getSelectionModel().getSelectedItem();
-			}
-			else {
-				seleccionado = tablaEventuales.getSelectionModel().getSelectedItem();
-			}
-		    
-		    if (seleccionado != null) {
-		        ServicioForm form = new ServicioForm(servicioDao, ServicioView.this::refrescarTabla, seleccionado);
-		        form.showAndWait();
-		    } else {
-		    	Alerta.warning("Atención", "Debe seleccionar un servicio para modificar.");
-		    }
-		});
-		
-		btnEliminar.setOnAction(e -> {
-			
-			Servicio seleccionado = null;
-			String seleccion = cmbTabla.getValue();
-			if("Mensuales".equals(seleccion)) {
-				seleccionado = tablaMensuales.getSelectionModel().getSelectedItem();
-			}
-			else {
-				seleccionado = tablaEventuales.getSelectionModel().getSelectedItem();
-			}
-
-		    if (seleccionado != null) {
-		        boolean confirmado = Alerta.confirmar(
-		            "Confirmar eliminación",
-		            "¿Está seguro de eliminar el servicio con ID: " + seleccionado.getId() + "?"
-		        );
-		        if (confirmado) {
-		            servicioDao.eliminarServicio(seleccionado.getId());
-		            refrescarTabla();
-		        }
-		    } else {
-		        Alerta.warning("Atención", "Debe seleccionar un servicio para eliminar.");
-		    }
-		});
-		
 		///////////////////////////////////////
-		refrescarTabla();
 		
+	}	
+	
+	public TableView<Servicio> getTablaEventuales(){
+		return this.tablaEventuales;
 	}
 	
-	private void refrescarTabla() {
-    	
-		tablaEventuales.getItems().setAll(servicioDao.obtenerServiciosPorTipo("Eventual"));
-		tablaMensuales.getItems().setAll(servicioDao.obtenerServiciosPorTipo("Mensual"));
-    		
-    }
+	public TableView<Servicio> getTablaMensuales(){
+		return this.tablaMensuales;
+	}
+
+	public Button getBtnNuevo() {
+		return btnNuevo;
+	}
+
+	public void setBtnNuevo(Button btnNuevo) {
+		this.btnNuevo = btnNuevo;
+	}
+
+	public Button getBtnModificar() {
+		return btnModificar;
+	}
+
+	public void setBtnModificar(Button btnModificar) {
+		this.btnModificar = btnModificar;
+	}
+
+	public Button getBtnEliminar() {
+		return btnEliminar;
+	}
+
+	public void setBtnEliminar(Button btnEliminar) {
+		this.btnEliminar = btnEliminar;
+	}
+
+	public void setTablaMensuales(TableView<Servicio> tablaMensuales) {
+		this.tablaMensuales = tablaMensuales;
+	}
+
+	public boolean isTablaEventual() {
+		return tablaEventual;
+	}
+
+	public void setTablaEventual(boolean tablaEventual) {
+		this.tablaEventual = tablaEventual;
+	}
 	
 	/*/private HashMap<Integer, String> crearListaDeClientes(ClienteDAO dao) {
 	    HashMap<Integer, String> map = new HashMap<>();
