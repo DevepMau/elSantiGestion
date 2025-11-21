@@ -39,6 +39,20 @@
 	-fx-effect: innershadow(gaussian, rgba(0,0,0,0.5), 10, 0.1, 5, 0);	
 }
 
+.footer {
+	-fx-background-color: #333;
+	-fx-min-height: 40;
+	-fx-pref-height: 40;
+	-fx-max-height: 40;
+	-fx-effect: innershadow(gaussian, rgba(0,0,0,0.5), 10, 0.1, 5, 0);	
+}
+
+.footer Label {
+	-fx-text-fill: white;
+	-fx-font-size: 14;
+	-fx-padding: 0 10 0 0;
+}
+
 .barra-boton {
 	-fx-background-color: linear-gradient(to bottom, #666, #333);
 	-fx-min-height: 100;
