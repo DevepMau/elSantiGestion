@@ -1,0 +1,147 @@
+package com.elsantigestion.controller;
+
+import java.util.HashMap;
+
+import com.elsantigestion.dao.ServicioDAO;
+import com.elsantigestion.dao.ServicioTrabajoDAO;
+import com.elsantigestion.model.Servicio;
+import com.elsantigestion.model.ServicioTrabajo;
+import com.elsantigestion.ui.Alerta;
+import com.elsantigestion.ui.ServicioForm;
+import com.elsantigestion.ui.ServicioView;
+
+import javafx.collections.FXCollections;
+
+public class ServicioController {
+	
+	private final String SERVICIO_MENSUAL = "Mensual";
+	private final String SERVICIO_EVENTUAL = "Eventual";
+	
+	private ServicioView view;
+	private ServicioDAO dao;
+	private ServicioTrabajoDAO stDao;
+	
+	public ServicioController(ServicioView view, ServicioDAO dao, ServicioTrabajoDAO stDao) {
+		this.view = view;
+		this.dao = dao;
+		this.stDao = stDao;
+		inicializar();	
+	}
+	
+	public ServicioView getView() {
+		return this.view;
+	}
+	
+	public void guardarServicio(Servicio servicio, HashMap<Integer, Integer> listaTrabajos) {
+		try {
+	        servicio.validar();
+	        int idGenerado = dao.agregarServicio(servicio);
+	        for(var trabajo : listaTrabajos.entrySet()) {
+	        	ServicioTrabajo st = new ServicioTrabajo(idGenerado, trabajo.getKey(), trabajo.getValue());
+	        	stDao.agregar(st);
+	        }
+	        
+	        Alerta.info("Formulario de trabajo", "El trabajo se guardo correctamente!");
+	    } catch (IllegalStateException e) {
+	    	Alerta.warning("Error al validar datos", e.getMessage());
+	    } catch (Exception e) {
+	        Alerta.warning("Error al guardar el trabajo", e.getMessage());
+	    }
+	}
+	
+	public void modificarServicio(Servicio servicio, HashMap<Integer, Integer> listaTrabajos) {
+		try {
+	        servicio.validar();
+	        stDao.eliminarPorServicio(servicio.getId());
+	        for(var trabajo : listaTrabajos.entrySet()) {
+	        	ServicioTrabajo st = new ServicioTrabajo(servicio.getId(), trabajo.getKey(), trabajo.getValue());
+	        	stDao.agregar(st);
+	        }
+	        
+	        Alerta.info("Formulario de trabajo", "El trabajo se guardo correctamente!");
+	    } catch (IllegalStateException e) {
+	    	Alerta.warning("Error al validar datos", e.getMessage());
+	    } catch (Exception e) {
+	        Alerta.warning("Error al guardar el trabajo", e.getMessage());
+	    }
+	}
+	
+	private void inicializar() {
+		view.getTablaEventuales().setItems(FXCollections.observableArrayList(dao.obtenerServiciosPorTipo(SERVICIO_EVENTUAL)));
+		view.getTablaMensuales().setItems(FXCollections.observableArrayList(dao.obtenerServiciosPorTipo(SERVICIO_MENSUAL)));
+		
+		view.getBtnNuevo().setOnAction(e -> mostrarFormularioNuevo());
+		view.getBtnModificar().setOnAction(e -> mostrarFormularioModificar());
+		view.getBtnEliminar().setOnAction(e -> eliminarSeleccionado());
+	}
+	
+	public void refrescarTabla() {
+		view.getTablaEventuales().getItems().setAll(dao.obtenerServiciosPorTipo(SERVICIO_EVENTUAL));
+		view.getTablaMensuales().getItems().setAll(dao.obtenerServiciosPorTipo(SERVICIO_MENSUAL));
+	}
+	
+	private void mostrarFormularioNuevo() {
+		ServicioForm form = new ServicioForm(null);
+		form.showAndWait();
+		
+		Servicio servicio = form.getServicio();
+		//System.out.println("bandera");
+		if (servicio != null) {
+			HashMap<Integer, Integer> listaTrabajos = form.getListaTrabajos();
+	        guardarServicio(servicio, listaTrabajos);
+	        refrescarTabla();
+	    }
+	}
+	
+	private void mostrarFormularioModificar() {
+		Servicio seleccionado = null;
+		boolean tablaEventual = view.isTablaEventual();
+		
+		if(tablaEventual) {
+			seleccionado = view.getTablaEventuales().getSelectionModel().getSelectedItem();
+		}
+		else {
+			seleccionado = view.getTablaMensuales().getSelectionModel().getSelectedItem();
+		}
+	    
+	    if (seleccionado != null) {
+	        ServicioForm form = new ServicioForm(seleccionado);
+	        form.showAndWait();
+	        
+	        Servicio servicio = form.getServicio();
+	        if (servicio != null) {
+				HashMap<Integer, Integer> listaTrabajos = form.getListaTrabajos();
+		        modificarServicio(servicio, listaTrabajos);
+		        refrescarTabla();
+		    }
+	    } else {
+	    	Alerta.warning("Atención", "Debe seleccionar un servicio para modificar.");
+	    }
+	}
+	
+	private void eliminarSeleccionado() {
+		Servicio seleccionado = null;
+		boolean tablaEventual = view.isTablaEventual();
+		
+		if(tablaEventual) {
+			seleccionado = view.getTablaEventuales().getSelectionModel().getSelectedItem();
+		}
+		else {
+			seleccionado = view.getTablaMensuales().getSelectionModel().getSelectedItem();
+		}
+
+	    if (seleccionado != null) {
+	        boolean confirmado = Alerta.confirmar(
+	            "Confirmar eliminación",
+	            "¿Está seguro de eliminar el servicio con ID: " + seleccionado.getId() + "?"
+	        );
+	        if (confirmado) {
+	            dao.eliminarServicio(seleccionado.getId());
+	            refrescarTabla();
+	        }
+	    } else {
+	        Alerta.warning("Atención", "Debe seleccionar un servicio para eliminar.");
+	    }
+	}
+
+}
