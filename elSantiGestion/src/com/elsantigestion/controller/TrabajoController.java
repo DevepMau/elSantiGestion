@@ -23,7 +23,7 @@ public class TrabajoController {
 		return this.view;
 	}
 	
-	public void guardarCliente(Trabajo trabajo) {
+	public void guardarTrabajo(Trabajo trabajo) {
 	    try {
 	        trabajo.validar();
 	        if(dao.existeTrabajoPorId(trabajo.getId())) {
@@ -57,8 +57,8 @@ public class TrabajoController {
 		form.showAndWait();
 		
 		Trabajo trabajo = form.getTrabajo();
-	    if (form.getTrabajo() != null) {
-	        guardarCliente(trabajo);
+	    if (trabajo != null) {
+	        guardarTrabajo(trabajo);
 	        refrescarTabla();
 	    }
 	}
@@ -72,7 +72,7 @@ public class TrabajoController {
 	        
 	        Trabajo trabajo = form.getTrabajo();
 		    if (form.getTrabajo() != null) {
-		        guardarCliente(trabajo);
+		        guardarTrabajo(trabajo);
 		        refrescarTabla();
 		    }
 	    } else {
