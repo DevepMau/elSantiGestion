@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.elsantigestion.model.ServicioTrabajo;
@@ -82,9 +83,9 @@ public class ServicioTrabajoDAO {
     }
     
     // Obtener todos los ID de los trabajos de un servicio
-    public List<Integer> obtenerIdsPorServicio(int servicioId) {
-        List<Integer> listaIds = new ArrayList<>();
-        String sql = "SELECT trabajo_id FROM servicio_trabajos WHERE servicio_id = ?";
+    public HashMap<Integer, Integer> obtenerTrabajosPorServicio(int servicioId) {
+        HashMap<Integer, Integer> mapIds = new HashMap<>();
+        String sql = "SELECT trabajo_id, cantidad FROM servicio_trabajos WHERE servicio_id = ?";
         
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -93,14 +94,14 @@ public class ServicioTrabajoDAO {
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
-                listaIds.add(rs.getInt("trabajo_id"));
+                mapIds.put(rs.getInt("trabajo_id"), rs.getInt("cantidad"));
             }
             
         } catch (SQLException e) {
             e.printStackTrace();
         }
         
-        return listaIds;
+        return mapIds;
     }
     
     // Obtener un registro específico (por PK compuesta)
