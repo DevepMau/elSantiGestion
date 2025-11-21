@@ -27,6 +27,33 @@ public class Servicio {
 		this.estado = estado;
 		
 	}
+	
+	public void validar() {
+        if (clienteId <= 0) {
+            throw new IllegalStateException("El ID del cliente no puede ser negativo o cero.");
+        }
+        
+        if (fechaCreacion == null) {
+            throw new IllegalStateException("La fecha de creacion no puede ser null.");
+        }
+
+        if (fechaProgramada == null) {
+            throw new IllegalStateException("La fecha programada no puede ser null.");
+        }
+
+        if (tipo == null || tipo.trim().isEmpty()) {
+            throw new IllegalStateException("Debe especificar el tipo de servicio.");
+        }
+        
+        if (precio < 0) {
+            throw new IllegalStateException("El precio del servicio no puede ser negativo.");
+        }
+        
+        if (gastos < 0) {
+            throw new IllegalStateException("Los gastos del servicio no pueden ser negativo.");
+        }
+        
+    }
 
 	public int getId() {
 		return id;
