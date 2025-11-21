@@ -1,7 +1,5 @@
 package com.elsantigestion.utils;
 
-import java.time.LocalDate;
-
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -71,22 +69,12 @@ public class ValidadorCampos {
             resaltarErrorDatePicker(picker);
             return false;
         }
-        if (picker.getValue().isBefore(LocalDate.now())) {
-            infoCampo.setText("La fecha no puede ser anterior a la actual.");
-            resaltarErrorDatePicker(picker);
-            return false;
-        }
         infoCampo.setText("");
         limpiarEstiloDatePicker(picker);
         return true;
     }
     
     /////////////////////////////////////
-
-    
-    /*private static void mostrarAlerta(String mensaje) {
-    	Alerta.warning("Validacion de formulario", mensaje);
-    }*/
     
     private static void resaltarError(TextField campo) {
         campo.setStyle("-fx-border-color: #FF1A1A; -fx-border-width: 2;");
