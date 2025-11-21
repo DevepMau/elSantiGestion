@@ -12,10 +12,12 @@ public class ClienteController {
 	
 	private ClienteView view;
 	private ClienteDAO dao;
+	private boolean soloActivos;
 	
 	public ClienteController(ClienteView view, ClienteDAO dao) {
         this.view = view;
         this.dao = dao;
+        this.soloActivos = true;
         inicializar();
     }
 	
@@ -41,15 +43,23 @@ public class ClienteController {
 	}
 
     private void inicializar() {
-        view.getTabla().setItems(FXCollections.observableArrayList(dao.obtenerClientes()));
+        view.getTabla().setItems(FXCollections.observableArrayList(dao.obtenerClientesPorEstado(soloActivos)));
         
         view.getBtnNuevo().setOnAction(e -> mostrarFormularioNuevo());
         view.getBtnModificar().setOnAction(e -> mostrarFormularioModificar());
-        view.getBtnEliminar().setOnAction(e -> eliminarSeleccionado());
+        view.getBtnEliminar().setOnAction(e -> archivarRecuperarSeleccionado());
+        view.getBtnSwap().setOnAction(e -> alternarTablas());
     }
     
     public void refrescarTabla() {
-    	view.getTabla().getItems().setAll(dao.obtenerClientesPorEstado(true));
+    	view.getTabla().getItems().setAll(dao.obtenerClientesPorEstado(soloActivos));
+    }
+    
+    private void alternarTablas() {
+    	soloActivos = !soloActivos;
+    	view.alternarIcono(soloActivos);
+    	view.setTituloDeTabla(soloActivos);
+    	refrescarTabla();
     }
 
     private void mostrarFormularioNuevo() {
@@ -81,13 +91,17 @@ public class ClienteController {
 	    }
     }
     
-    private void eliminarSeleccionado() {
+    private void archivarRecuperarSeleccionado() {
     	Cliente seleccionado = view.getTabla().getSelectionModel().getSelectedItem();
+    	String titulo = "Confirmar eliminación";
+    	String mensaje = "¿Está seguro de archivar el cliente: ";
 
 	    if (seleccionado != null) {
-	        boolean confirmado = Alerta.confirmar(
-	            "Confirmar eliminación",
-	            "¿Está seguro de eliminar el cliente: " + seleccionado.getNombre() + "?"
+	    	if(!soloActivos) {
+	    		titulo = "Confirmar recuperacion";
+	        	mensaje = "¿Está seguro de recuperar el cliente: ";
+	    	}
+	        boolean confirmado = Alerta.confirmar(titulo, mensaje + seleccionado.getNombre() + "?"
 	        );
 	        if (confirmado) {
 	            //dao.eliminarCliente(seleccionado.getId());
@@ -95,7 +109,7 @@ public class ClienteController {
 	            //view.refrescarTabla();
 	        }
 	    } else {
-	        Alerta.warning("Atención", "Debe seleccionar un cliente para eliminar.");
+	        Alerta.warning("Atención", "Debe seleccionar un cliente para ejecutar la accion.");
 	    }
 	    refrescarTabla();
     }
