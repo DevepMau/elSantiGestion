@@ -20,11 +20,13 @@ public class ServicioController {
 	private ServicioView view;
 	private ServicioDAO dao;
 	private ServicioTrabajoDAO stDao;
+	private boolean soloEventuales;
 	
 	public ServicioController(ServicioView view, ServicioDAO dao, ServicioTrabajoDAO stDao) {
 		this.view = view;
 		this.dao = dao;
 		this.stDao = stDao;
+		this.soloEventuales = true;
 		inicializar();	
 	}
 	
@@ -73,11 +75,32 @@ public class ServicioController {
 		view.getBtnNuevo().setOnAction(e -> mostrarFormularioNuevo());
 		view.getBtnModificar().setOnAction(e -> mostrarFormularioModificar());
 		view.getBtnEliminar().setOnAction(e -> eliminarSeleccionado());
+		view.getBtnSwap().setOnAction(e -> alternarTablas());
 	}
 	
 	public void refrescarTabla() {
-		view.getTablaEventuales().getItems().setAll(dao.obtenerServiciosPorTipo(SERVICIO_EVENTUAL));
-		view.getTablaMensuales().getItems().setAll(dao.obtenerServiciosPorTipo(SERVICIO_MENSUAL));
+		String tipo = soloEventuales ? SERVICIO_EVENTUAL : SERVICIO_MENSUAL;
+		view.getTablaEventuales().getItems().setAll(dao.obtenerServiciosPorTipo(tipo));
+	}
+	
+	private void alternarTablas() {
+		soloEventuales = !soloEventuales;
+		cambiarOrdenDeTablas(soloEventuales);
+		view.setTituloDeTabla(soloEventuales);
+		refrescarTabla();
+	}
+	
+	private void cambiarOrdenDeTablas(boolean boo) {
+		if(boo) {
+			view.getTablaEventuales().toFront();
+			view.getTablaEventuales().setVisible(true);
+			view.getTablaMensuales().setVisible(false);
+		}
+		else {
+			view.getTablaMensuales().toFront();
+			view.getTablaMensuales().setVisible(true);
+			view.getTablaEventuales().setVisible(false);
+		}		
 	}
 	
 	private void mostrarFormularioNuevo() {
@@ -95,9 +118,9 @@ public class ServicioController {
 	
 	private void mostrarFormularioModificar() {
 		Servicio seleccionado = null;
-		boolean tablaEventual = view.isTablaEventual();
+		//boolean tablaEventual = view.isTablaEventual();
 		
-		if(tablaEventual) {
+		if(soloEventuales) {
 			seleccionado = view.getTablaEventuales().getSelectionModel().getSelectedItem();
 		}
 		else {
@@ -121,9 +144,9 @@ public class ServicioController {
 	
 	private void eliminarSeleccionado() {
 		Servicio seleccionado = null;
-		boolean tablaEventual = view.isTablaEventual();
+		//boolean tablaEventual = view.isTablaEventual();
 		
-		if(tablaEventual) {
+		if(soloEventuales) {
 			seleccionado = view.getTablaEventuales().getSelectionModel().getSelectedItem();
 		}
 		else {
