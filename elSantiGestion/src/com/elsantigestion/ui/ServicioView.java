@@ -10,7 +10,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -19,13 +19,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 public class ServicioView extends VBox {
 	
 	private final int iconoTamaño = 50;
+	private final String TITULO_EVENTUALES = "Tabla de servicios Eventuales";
+	private final String TITULO_MENSUALES = "Tabla de servicios Mensuales";
 	
 	private TableView<Servicio> tablaEventuales;
 	private TableView<Servicio> tablaMensuales;
@@ -34,20 +35,22 @@ public class ServicioView extends VBox {
 	private Button btnNuevo;
 	private Button btnModificar;
 	private Button btnEliminar;
+	private Button btnSwap;
 	private Image agregar;
 	private Image modificar;
 	private Image eliminar;
+	private Image swap;
 	private ImageView iconoAgregar;
 	private ImageView iconoModificar;
 	private ImageView iconoEliminar;
+	private ImageView iconoSwap;
 	private Tooltip tooltipNuevo;
 	private Tooltip tooltipModificar;
 	private Tooltip tooltipEliminar;
-	private ComboBox<String> cmbTabla;
+	private Tooltip tooltipSwap;
 	private HBox barraAcciones;
-	private HBox boxBotones;
-	private Region spacer;
-	private boolean tablaEventual = false;
+	private HBox footer;
+	private Label lblFooter;
 	
 	public ServicioView() {
 		
@@ -55,27 +58,27 @@ public class ServicioView extends VBox {
 		tablaEventuales = new TableView<>();
 		tablaMensuales = new TableView<>();
 		stack = new StackPane(tablaMensuales, tablaEventuales);
-		tablaMensuales.setVisible(true);
-        tablaEventuales.setVisible(false);
+		tablaMensuales.setVisible(false);
+        tablaEventuales.setVisible(true);
 		btnNuevo = new Button();
 		btnModificar = new Button();
 		btnEliminar = new Button();
+		btnSwap = new Button();
 		agregar = new Image(getClass().getResource("/iconos/add.png").toExternalForm());
 		modificar = new Image(getClass().getResource("/iconos/edit.png").toExternalForm());
 		eliminar = new Image(getClass().getResource("/iconos/delete.png").toExternalForm());
+		swap = new Image(getClass().getResource("/iconos/table-swap.png").toExternalForm());
 		iconoAgregar = new ImageView(agregar);
 		iconoModificar = new ImageView(modificar);
 		iconoEliminar = new ImageView(eliminar);
+		iconoSwap = new ImageView(swap);
 		tooltipNuevo = new Tooltip("Agregar servicio");
 		tooltipModificar = new Tooltip("Modificar servicio");
 		tooltipEliminar = new Tooltip("Eliminar servicio");
-		cmbTabla = new ComboBox<>();
-		spacer = new Region();
-		boxBotones = new HBox(2, btnEliminar, btnModificar, btnNuevo);
-		barraAcciones = new HBox();
-		
-		cmbTabla.getItems().addAll("Eventuales", "Mensuales");
-		cmbTabla.setValue("Mensuales");
+		tooltipSwap = new Tooltip("Cambiar tabla");
+		lblFooter = new Label(TITULO_EVENTUALES);
+		barraAcciones = new HBox(2, btnSwap, btnEliminar, btnModificar, btnNuevo);
+		footer = new HBox(lblFooter);
 		
 		iconoAgregar.setFitWidth(iconoTamaño);
 		iconoAgregar.setFitHeight(iconoTamaño);
@@ -83,28 +86,29 @@ public class ServicioView extends VBox {
 		iconoModificar.setFitHeight(iconoTamaño);
 		iconoEliminar.setFitWidth(iconoTamaño);
 		iconoEliminar.setFitHeight(iconoTamaño);
+		iconoSwap.setFitWidth(iconoTamaño);
+		iconoSwap.setFitHeight(iconoTamaño);
 		
 		btnNuevo.getStyleClass().add("barra-boton");
 		btnModificar.getStyleClass().add("barra-boton");
 		btnEliminar.getStyleClass().add("barra-boton");
-		cmbTabla.getStyleClass().add("combo-tabla");
+		btnSwap.getStyleClass().add("barra-boton");
 		
 		btnNuevo.setGraphic(iconoAgregar);
 		btnModificar.setGraphic(iconoModificar);
 		btnEliminar.setGraphic(iconoEliminar);
+		btnSwap.setGraphic(iconoSwap);
 		
 		btnNuevo.setTooltip(tooltipNuevo);
 		btnModificar.setTooltip(tooltipModificar);
 		btnEliminar.setTooltip(tooltipEliminar);
+		btnSwap.setTooltip(tooltipSwap);
 		
-		boxBotones.setAlignment(Pos.CENTER_RIGHT);
+		barraAcciones.setAlignment(Pos.CENTER_RIGHT);
+		barraAcciones.getStyleClass().add("barra");
 		
-		barraAcciones.getStyleClass().add("barra");	
-		barraAcciones.setAlignment(Pos.TOP_RIGHT);
-		barraAcciones.setSpacing(10);
-		barraAcciones.getChildren().addAll(cmbTabla, spacer, boxBotones);
-		
-		HBox.setHgrow(spacer, Priority.ALWAYS);
+		footer.setAlignment(Pos.CENTER_RIGHT);
+		footer.getStyleClass().add("footer");
 		
 		//Columnas para la tabla de servicios eventuales/////////////////////////////////////
 		TableColumn<Servicio, String> colClienteSE = new TableColumn<>("Cliente");
@@ -176,7 +180,6 @@ public class ServicioView extends VBox {
 		tablaEventuales.getColumns().add(colEstadoSE);
     	tablaEventuales.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	tablaEventuales.setPrefWidth(Double.MAX_VALUE);
-    	//VBox.setVgrow(tablaEventuales, Priority.ALWAYS);
     	
     	//Columnas para la tabla de servicios mensuales///////////////////////////////////////////
     	TableColumn<Servicio, String> colClienteSM = new TableColumn<>("Cliente");
@@ -247,30 +250,10 @@ public class ServicioView extends VBox {
     	
     	VBox.setVgrow(stack, Priority.ALWAYS);
 		
-    	this.getChildren().addAll(barraAcciones, stack);
+    	this.getChildren().addAll(barraAcciones, stack, footer);
 		this.getStylesheets().add(
     	        getClass().getResource("/com/elsantigestion/css/tabla.css").toExternalForm()
     	    );
-    	
-		//Botones acciones/////////////////////
-		cmbTabla.setOnAction(e -> {
-            String seleccion = cmbTabla.getValue();
-
-            if ("Mensuales".equals(seleccion)) {
-                tablaMensuales.toFront();
-                tablaMensuales.setVisible(true);
-                tablaEventuales.setVisible(false);
-                setTablaEventual(false);
-            } else {
-                tablaEventuales.toFront();
-                tablaEventuales.setVisible(true);
-                tablaMensuales.setVisible(false);
-                setTablaEventual(true);
-            }
-        });
-		
-		///////////////////////////////////////
-		
 	}	
 	
 	public TableView<Servicio> getTablaEventuales(){
@@ -304,27 +287,34 @@ public class ServicioView extends VBox {
 	public void setBtnEliminar(Button btnEliminar) {
 		this.btnEliminar = btnEliminar;
 	}
+	
+	public Button getBtnSwap() {
+		return btnSwap;
+	}
+	
+	public void setBtnSwap(Button btnSwap) {
+		this.btnSwap = btnSwap;
+	}
+
+	public String getTITULO_MENSUALES() {
+		return TITULO_MENSUALES;
+	}
+
+	public String getTITULO_EVENTUALES() {
+		return TITULO_EVENTUALES;
+	}
+	
+	public void setTituloDeTabla(Boolean boo) {
+		if(boo) {
+			this.lblFooter.setText(TITULO_EVENTUALES);
+		}
+		else {
+			this.lblFooter.setText(TITULO_MENSUALES);
+		}
+	}
 
 	public void setTablaMensuales(TableView<Servicio> tablaMensuales) {
 		this.tablaMensuales = tablaMensuales;
 	}
-
-	public boolean isTablaEventual() {
-		return tablaEventual;
-	}
-
-	public void setTablaEventual(boolean tablaEventual) {
-		this.tablaEventual = tablaEventual;
-	}
-	
-	/*/private HashMap<Integer, String> crearListaDeClientes(ClienteDAO dao) {
-	    HashMap<Integer, String> map = new HashMap<>();
-
-	    dao.obtenerClientes().forEach(cliente -> {
-	        map.put(cliente.getId(), cliente.getNombre());
-	    });
-
-	    return map;
-	}/*/
 
 }
