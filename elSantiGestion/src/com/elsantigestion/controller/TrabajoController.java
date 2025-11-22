@@ -12,10 +12,12 @@ public class TrabajoController {
 	
 	private TrabajoView view;
 	private TrabajoDAO dao;
+	private boolean soloActivos;
 	
 	public TrabajoController(TrabajoView view, TrabajoDAO dao) {
 		this.view = view;
 		this.dao = dao;
+		this.soloActivos = true;
 		inicializar();
 	}
 	
@@ -41,15 +43,23 @@ public class TrabajoController {
 	}
 	
 	public void inicializar() {
-		view.getTabla().setItems(FXCollections.observableArrayList(dao.obtenerTrabajos()));
+		view.getTabla().setItems(FXCollections.observableArrayList(dao.obtenerTrabajosPorEstado(soloActivos)));
 		
 		view.getBtnNuevo().setOnAction(e -> mostrarFormularioNuevo());
 		view.getBtnModificar().setOnAction(e -> mostrarFormularioModificar());
-		view.getBtnEliminar().setOnAction(e -> eliminarSeleccionado());
+		view.getBtnEliminar().setOnAction(e -> archivarRecuperarSeleccionado());
+		view.getBtnSwap().setOnAction(e -> alternarTablas());
 	}
 	
 	public void refrescarTabla() {
-		view.getTabla().getItems().setAll(dao.obtenerTrabajos());
+		view.getTabla().getItems().setAll(dao.obtenerTrabajosPorEstado(soloActivos));
+	}
+	
+	private void alternarTablas() {
+		soloActivos = !soloActivos;
+		view.alternarIcono(soloActivos);
+		view.setTituloDeTabla(soloActivos);
+		refrescarTabla();
 	}
 	
 	private void mostrarFormularioNuevo() {
@@ -80,16 +90,20 @@ public class TrabajoController {
 	    }
 	}
 	
-	private void eliminarSeleccionado() {
+	private void archivarRecuperarSeleccionado() {
 		Trabajo seleccionado = view.getTabla().getSelectionModel().getSelectedItem();
-
+		String titulo = "Confirmar eliminacion";
+		String mensaje = "¿Esta seguro de archivar el trabajo";
+		
 	    if (seleccionado != null) {
-	        boolean confirmado = Alerta.confirmar(
-	            "Confirmar eliminación",
-	            "¿Está seguro de eliminar el trabajo: " + seleccionado.getNombre() + "?"
+	    	if(!soloActivos) {
+	    		titulo = "Confirmar recuperacion";
+	    		mensaje = "¿Esta seguro de recuperar el trabajo";
+	    	}
+	        boolean confirmado = Alerta.confirmar(titulo, mensaje + seleccionado.getNombre() + "?"
 	        );
 	        if (confirmado) {
-	            dao.eliminarTrabajo(seleccionado.getId());
+	            dao.alternarActivo(seleccionado.getId());
 	            refrescarTabla();
 	        }
 	    } else {
