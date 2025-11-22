@@ -95,6 +95,21 @@ public class TrabajoDAO {
 		
 	}
 	
+	// alternar activo / inactivo
+    public void alternarActivo(int trabajoId) {
+        String sql = "UPDATE trabajos SET activo = NOT activo WHERE id = ?";
+
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, trabajoId);
+            pstmt.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+	
 	//Eliminar trabajo
 	public void eliminarTrabajo(int id) {
 		
@@ -161,5 +176,35 @@ public class TrabajoDAO {
 		
 		return false;
 	}
+	
+	// Listar todos los clientes por estado
+	public List<Trabajo> obtenerTrabajosPorEstado(boolean activo){
+		List<Trabajo> lista = new ArrayList<>();
+		String sql = "SELECT * FROM trabajos WHERE activo = ?";
+		
+		try(Connection conn = Database.connect();
+			PreparedStatement pstmt = conn.prepareStatement(sql)){
+			
+			pstmt.setBoolean(1, activo);
+			
+			try(ResultSet rs = pstmt.executeQuery()){
+				while(rs.next()) {
+					Trabajo t = new Trabajo(
+							rs.getInt("id"),
+							rs.getString("nombre"),
+							rs.getString("detalle"),
+							rs.getDouble("precio"),
+							rs.getString("unidad"),
+							rs.getBoolean("activo")
+					);
+					lista.add(t);
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return lista;
+	} 
 
 }
