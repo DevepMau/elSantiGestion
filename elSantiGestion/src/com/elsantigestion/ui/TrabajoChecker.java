@@ -109,7 +109,6 @@ public class TrabajoChecker extends HBox {
 		                    	else {
 		                    		marcados.put(id, 1);
 		                    	}
-		                    	System.out.println("id: "+id+", cant: "+listaAuxiliar.get(id));
 		                    }
 		                    else {
 		                    	marcados.remove(id);
