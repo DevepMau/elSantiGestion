@@ -46,7 +46,7 @@ public class DatabaseSetup {
             	    "gastos REAL NOT NULL DEFAULT 0," +
             	    "monto_final REAL NOT NULL DEFAULT 0," +
             	    "estado TEXT," +
-            	    "FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE" +
+            	    "FOREIGN KEY (cliente_id) REFERENCES clientes(id)" +
             	    ");";
             
             stmt.execute(sqlServicios);
@@ -55,9 +55,10 @@ public class DatabaseSetup {
             	    "servicio_id INT NOT NULL," +
             	    "trabajo_id INT NOT NULL," +
             	    "cantidad INT NOT NULL DEFAULT 1," +
+            	    "activo INTEGER NOT NULL DEFAULT 1," +
             	    "PRIMARY KEY (servicio_id, trabajo_id)," +
-            	    "FOREIGN KEY (servicio_id) REFERENCES servicios(id) ON DELETE CASCADE," +
-            	    "FOREIGN KEY (trabajo_id) REFERENCES trabajos(id) ON DELETE CASCADE" +
+            	    "FOREIGN KEY (servicio_id) REFERENCES servicios(id)," +
+            	    "FOREIGN KEY (trabajo_id) REFERENCES trabajos(id)" +
             	    ");";
             
             stmt.execute(sqlServicioTrabajos);
