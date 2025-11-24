@@ -39,7 +39,7 @@ public class ServicioController {
 	        servicio.validar();
 	        int idGenerado = dao.agregarServicio(servicio);
 	        for(var trabajo : listaTrabajos.entrySet()) {
-	        	ServicioTrabajo st = new ServicioTrabajo(idGenerado, trabajo.getKey(), trabajo.getValue());
+	        	ServicioTrabajo st = new ServicioTrabajo(idGenerado, trabajo.getKey(), trabajo.getValue(), true);
 	        	stDao.agregar(st);
 	        }
 	        
@@ -56,7 +56,7 @@ public class ServicioController {
 	        servicio.validar();
 	        stDao.eliminarPorServicio(servicio.getId());
 	        for(var trabajo : listaTrabajos.entrySet()) {
-	        	ServicioTrabajo st = new ServicioTrabajo(servicio.getId(), trabajo.getKey(), trabajo.getValue());
+	        	ServicioTrabajo st = new ServicioTrabajo(servicio.getId(), trabajo.getKey(), trabajo.getValue(), true);
 	        	stDao.agregar(st);
 	        }
 	        
@@ -79,8 +79,8 @@ public class ServicioController {
 	}
 	
 	public void refrescarTabla() {
-		String tipo = soloEventuales ? SERVICIO_EVENTUAL : SERVICIO_MENSUAL;
-		view.getTablaEventuales().getItems().setAll(dao.obtenerServiciosPorTipo(tipo));
+		view.getTablaEventuales().getItems().setAll(dao.obtenerServiciosPorTipo(SERVICIO_EVENTUAL));
+		view.getTablaMensuales().getItems().setAll(dao.obtenerServiciosPorTipo(SERVICIO_MENSUAL));
 	}
 	
 	private void alternarTablas() {
@@ -118,7 +118,6 @@ public class ServicioController {
 	
 	private void mostrarFormularioModificar() {
 		Servicio seleccionado = null;
-		//boolean tablaEventual = view.isTablaEventual();
 		
 		if(soloEventuales) {
 			seleccionado = view.getTablaEventuales().getSelectionModel().getSelectedItem();
@@ -144,7 +143,6 @@ public class ServicioController {
 	
 	private void eliminarSeleccionado() {
 		Servicio seleccionado = null;
-		//boolean tablaEventual = view.isTablaEventual();
 		
 		if(soloEventuales) {
 			seleccionado = view.getTablaEventuales().getSelectionModel().getSelectedItem();
@@ -159,6 +157,7 @@ public class ServicioController {
 	            "¿Está seguro de eliminar el servicio con ID: " + seleccionado.getId() + "?"
 	        );
 	        if (confirmado) {
+	        	stDao.eliminarPorServicio(seleccionado.getId());
 	            dao.eliminarServicio(seleccionado.getId());
 	            refrescarTabla();
 	        }
