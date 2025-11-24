@@ -5,12 +5,14 @@ public class ServicioTrabajo {
 	private int servicioId;
 	private int trabajoId;
 	private int cantidad;
+	private boolean activo;
 	
-	public ServicioTrabajo(int servicioId, int trabajoId, int cantidad) {
+	public ServicioTrabajo(int servicioId, int trabajoId, int cantidad, boolean activo) {
 		
 		this.servicioId = servicioId;
 		this.trabajoId = trabajoId;
 		this.cantidad = cantidad;
+		this.activo = activo;
 		
 	}
 
@@ -36,6 +38,14 @@ public class ServicioTrabajo {
 
 	public void setCantidad(int cantidad) {
 		this.cantidad = cantidad;
+	}
+
+	public boolean isActivo() {
+		return activo;
+	}
+
+	public void setActivo(boolean activo) {
+		this.activo = activo;
 	}
 	
 

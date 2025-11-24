@@ -14,7 +14,7 @@ public class ServicioTrabajoDAO {
     
     // Insertar relación
     public void agregar(ServicioTrabajo set) {
-        String sql = "INSERT INTO servicio_trabajos (servicio_id, trabajo_id, cantidad) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO servicio_trabajos (servicio_id, trabajo_id, cantidad, activo) VALUES (?, ?, ?, ?)";
         
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -22,6 +22,7 @@ public class ServicioTrabajoDAO {
             pstmt.setInt(1, set.getServicioId());
             pstmt.setInt(2, set.getTrabajoId());
             pstmt.setInt(3, set.getCantidad());
+            pstmt.setBoolean(4, set.isActivo());
             
             pstmt.executeUpdate();
             
@@ -43,7 +44,8 @@ public class ServicioTrabajoDAO {
                 ServicioTrabajo set = new ServicioTrabajo(
                         rs.getInt("servicio_id"),
                         rs.getInt("trabajo_id"),
-                        rs.getInt("cantidad")
+                        rs.getInt("cantidad"),
+                        rs.getBoolean("activo")
                 );
                 lista.add(set);
             }
@@ -70,7 +72,8 @@ public class ServicioTrabajoDAO {
                 ServicioTrabajo set = new ServicioTrabajo(
                         rs.getInt("servicio_id"),
                         rs.getInt("trabajo_id"),
-                        rs.getInt("cantidad")
+                        rs.getInt("cantidad"),
+                        rs.getBoolean("activo")
                 );
                 lista.add(set);
             }
@@ -119,7 +122,8 @@ public class ServicioTrabajoDAO {
                 return new ServicioTrabajo(
                         rs.getInt("servicio_id"),
                         rs.getInt("trabajo_id"),
-                        rs.getInt("cantidad")
+                        rs.getInt("cantidad"),
+                        rs.getBoolean("activo")
                 );
             }
             
@@ -140,6 +144,7 @@ public class ServicioTrabajoDAO {
             pstmt.setInt(1, set.getCantidad());
             pstmt.setInt(2, set.getServicioId());
             pstmt.setInt(3, set.getTrabajoId());
+            pstmt.setBoolean(4, set.isActivo());
             
             pstmt.executeUpdate();
             
