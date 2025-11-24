@@ -7,7 +7,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -36,12 +35,10 @@ public class TrabajoForm extends Stage {
 	private Label msgNombre;
 	private Label msgPrecio;
 	private ComboBox<String> cmbUnidad;
-	private CheckBox chkActivo;
 	private HBox barraSuperior;
 	private Region spacer;
 	private GridPane grid;
 	private Scene scene;
-	private Label chkText;
 	 
 	public TrabajoForm(Trabajo trabajoExistente) {
 		
@@ -54,8 +51,7 @@ public class TrabajoForm extends Stage {
 		btnCerrar = new Button("X");
 		barraSuperior = new HBox();
 		spacer = new Region();
-		chkText = new Label("¿El trabajo esta activo?");
-		scene = new Scene(grid, 400, 500);
+		scene = new Scene(grid, 400, 450);
 		
 		msgNombre = new Label("");
 		msgPrecio = new Label("");
@@ -68,7 +64,6 @@ public class TrabajoForm extends Stage {
 		txtNombre = new TextField();
 		txtDetalle = new TextArea();
 		txtPrecio = new TextField();
-		chkActivo = new CheckBox();
 		
 		cmbUnidad = new ComboBox<>();
 		cmbUnidad.getItems().addAll("Mes", "Semana", "Dia", "Hora", "M3", "M2", "Combo", "Paquete", "Unidad", "N/A");
@@ -101,12 +96,10 @@ public class TrabajoForm extends Stage {
 			txtDetalle.setText(trabajoExistente.getDetalle());
 			txtPrecio.setText(String.valueOf(trabajoExistente.getPrecio()));
 			cmbUnidad.setValue(trabajoExistente.getUnidad());
-			chkActivo.setSelected(trabajoExistente.isActivo());
 			
 		} else {
 			
 			titulo = new Label("Agregar trabajo");
-			chkActivo.setSelected(true);
 			
 		}
 		
@@ -143,19 +136,10 @@ public class TrabajoForm extends Stage {
 	    });
 		
 		HBox.setMargin(titulo, new Insets(15, 10, 0, 10));
-		HBox.setHgrow(spacer, Priority.ALWAYS);
-		
-		HBox chkBar = new HBox();
-		HBox.setMargin(chkActivo, new Insets(10, 0, 10, 0));
-		
-		chkText.getStyleClass().add("label-info");
-	    chkBar.setAlignment(Pos.CENTER);
-	    chkBar.getChildren().addAll(chkText ,chkActivo);
-	    chkBar.setSpacing(20); 
+		HBox.setHgrow(spacer, Priority.ALWAYS);		
 		
 	    msgNombre.getStyleClass().add("label-error");
 	    msgPrecio.getStyleClass().add("label-error");
-	    chkActivo.getStyleClass().add("check-box");
 	    
 		btnGuardar.getStyleClass().add("boton");
 		btnGuardar.setOnAction(e -> {
@@ -175,7 +159,7 @@ public class TrabajoForm extends Stage {
 						txtDetalle.getText(),
 						Double.parseDouble(txtPrecio.getText()),
 						cmbUnidad.getValue(),
-						chkActivo.isSelected()
+						true
 						);
 				
 				setTrabajo(nuevo);
@@ -184,7 +168,6 @@ public class TrabajoForm extends Stage {
 				trabajoExistente.setDetalle(txtDetalle.getText());
 				trabajoExistente.setPrecio(Double.parseDouble(txtPrecio.getText()));
 				trabajoExistente.setUnidad(cmbUnidad.getValue());
-				trabajoExistente.setActivo(chkActivo.isSelected());
 				
 				setTrabajo(trabajoExistente);
 			}
@@ -204,14 +187,12 @@ public class TrabajoForm extends Stage {
 		grid.addRow(3, msgPrecio);
 		grid.addRow(4, boxDatos);
 		grid.addRow(5, txtDetalle);
-		grid.addRow(6, chkBar);
-		grid.add(btnGuardar, 0, 7);
+		grid.add(btnGuardar, 0, 6);
 		GridPane.setMargin(msgNombre, new Insets(30, 20, 0, 20));
 		GridPane.setMargin(txtNombre, new Insets(0, 20, 0, 20));
 		GridPane.setMargin(msgPrecio, new Insets(0, 20, 0, 20));
 		GridPane.setMargin(boxDatos, new Insets(0, 20, 0, 20));
-		GridPane.setMargin(txtDetalle, new Insets(20, 20, 0, 20));
-		GridPane.setMargin(chkBar, new Insets(20, 0, 20, 0));
+		GridPane.setMargin(txtDetalle, new Insets(20, 20, 20, 20));
 		
 		setScene(scene);
 		initModality(Modality.APPLICATION_MODAL);
