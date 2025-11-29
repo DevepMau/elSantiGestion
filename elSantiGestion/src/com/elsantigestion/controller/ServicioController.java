@@ -43,11 +43,11 @@ public class ServicioController {
 	        	stDao.agregar(st);
 	        }
 	        
-	        Alerta.info("Formulario de trabajo", "El trabajo se guardo correctamente!");
+	        Alerta.info("Formulario de servicio", "El servicio se guardo correctamente!");
 	    } catch (IllegalStateException e) {
 	    	Alerta.warning("Error al validar datos", e.getMessage());
 	    } catch (Exception e) {
-	        Alerta.warning("Error al guardar el trabajo", e.getMessage());
+	        Alerta.warning("Error al guardar el servicio", e.getMessage());
 	    }
 	}
 	
@@ -60,11 +60,11 @@ public class ServicioController {
 	        	stDao.agregar(st);
 	        }
 	        
-	        Alerta.info("Formulario de trabajo", "El trabajo se guardo correctamente!");
+	        Alerta.info("Formulario de servicio", "El servicio se guardo correctamente!");
 	    } catch (IllegalStateException e) {
 	    	Alerta.warning("Error al validar datos", e.getMessage());
 	    } catch (Exception e) {
-	        Alerta.warning("Error al guardar el trabajo", e.getMessage());
+	        Alerta.warning("Error al guardar el servicio", e.getMessage());
 	    }
 	}
 	
