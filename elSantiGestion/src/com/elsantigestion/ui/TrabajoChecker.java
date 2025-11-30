@@ -1,8 +1,8 @@
 package com.elsantigestion.ui;
 
 import java.util.HashMap;
+import java.util.List;
 
-import com.elsantigestion.dao.TrabajoDAO;
 import com.elsantigestion.model.Trabajo;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -18,16 +18,14 @@ import javafx.util.Callback;
 
 public class TrabajoChecker extends HBox {
 	
-	private TrabajoDAO dao;
 	private TableView<Trabajo> tabla;
 	private ObservableList<Trabajo> iniciales;
 	private HashMap<Integer, Integer> listaAuxiliar;
 	private HashMap<Integer, Integer> marcados;
 	
-	public TrabajoChecker(HashMap<Integer, Integer> trabajosPrevios) {
+	public TrabajoChecker(List<Trabajo> trabajosRegistrados, HashMap<Integer, Integer> trabajosPrevios) {
 		
-		this.dao = new TrabajoDAO();
-		this.iniciales = FXCollections.observableArrayList(dao.obtenerTrabajos());
+		this.iniciales = FXCollections.observableArrayList(trabajosRegistrados);
 		this.tabla = new TableView<>();
 		if(trabajosPrevios != null) {
 			this.marcados = trabajosPrevios;
@@ -176,5 +174,10 @@ public class TrabajoChecker extends HBox {
 	public HashMap<Integer, Integer> obtenerTrabajosAAgregar() {
         return this.marcados;
     }
+	
+	public void cargarTrabajosPrevios(HashMap<Integer, Integer> map) {
+		this.marcados = map;
+		this.listaAuxiliar = map;
+	}
 
 }
