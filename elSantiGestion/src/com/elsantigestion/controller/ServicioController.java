@@ -84,6 +84,17 @@ public class ServicioController {
 		view.getBtnModificar().setOnAction(e -> mostrarFormularioModificar());
 		view.getBtnEliminar().setOnAction(e -> eliminarSeleccionado());
 		view.getBtnSwap().setOnAction(e -> alternarTablas());
+		
+		view.setOnServicioEventualSeleccionado((obs, oldVal, newVal) -> {
+			if(newVal != null) {
+				view.getGestorDeTareas().getTabla().getItems().setAll(stDao.obtenerPorServicio(newVal.getId()));
+			}
+		});
+		view.setOnServicioMensualSeleccionado((obs, oldVal, newVal) -> {
+			if(newVal != null) {
+				view.getGestorDeTareas().getTabla().getItems().setAll(stDao.obtenerPorServicio(newVal.getId()));
+			}
+		});
 	}
 	
 	public void refrescarTabla() {
@@ -133,7 +144,7 @@ public class ServicioController {
 			seleccionado = view.getTablaMensuales().getSelectionModel().getSelectedItem();
 		}
 	    
-	    if (seleccionado != null) {
+	    if (seleccionado != null) {;
 	    	ServicioForm form = new ServicioForm(seleccionado, listaClientes, new TrabajoChecker(listaTrabajos, stDao.obtenerTrabajosPorServicio(seleccionado.getId())));
 	    	form.showAndWait();
 	        
