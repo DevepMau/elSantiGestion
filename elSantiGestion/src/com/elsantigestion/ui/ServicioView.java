@@ -8,6 +8,7 @@ import com.elsantigestion.model.Servicio;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -52,7 +53,9 @@ public class ServicioView extends VBox {
 	private HBox footer;
 	private Label lblFooter;
 	
-	public ServicioView() {
+	private GestorDeTareas gestor;
+	
+	public ServicioView(GestorDeTareas gdt) {
 		
 		clienteDao = new ClienteDAO();
 		tablaEventuales = new TableView<>();
@@ -79,6 +82,8 @@ public class ServicioView extends VBox {
 		lblFooter = new Label(TITULO_EVENTUALES);
 		barraAcciones = new HBox(2, btnSwap, btnEliminar, btnModificar, btnNuevo);
 		footer = new HBox(lblFooter);
+		
+		gestor = gdt;
 		
 		iconoAgregar.setFitWidth(iconoTamaño);
 		iconoAgregar.setFitHeight(iconoTamaño);
@@ -250,11 +255,19 @@ public class ServicioView extends VBox {
     	
     	VBox.setVgrow(stack, Priority.ALWAYS);
 		
-    	this.getChildren().addAll(barraAcciones, stack, footer);
+    	this.getChildren().addAll(barraAcciones, stack, gestor, footer);
 		this.getStylesheets().add(
     	        getClass().getResource("/com/elsantigestion/css/tabla.css").toExternalForm()
     	    );
-	}	
+	}
+	
+	public void setOnServicioEventualSeleccionado(ChangeListener<Servicio> listener) {
+        tablaEventuales.getSelectionModel().selectedItemProperty().addListener(listener);
+    }
+	
+	public void setOnServicioMensualSeleccionado(ChangeListener<Servicio> listener) {
+        tablaMensuales.getSelectionModel().selectedItemProperty().addListener(listener);
+    }
 	
 	public TableView<Servicio> getTablaEventuales(){
 		return this.tablaEventuales;
@@ -294,6 +307,10 @@ public class ServicioView extends VBox {
 	
 	public void setBtnSwap(Button btnSwap) {
 		this.btnSwap = btnSwap;
+	}
+	
+	public GestorDeTareas getGestorDeTareas() {
+		return gestor;
 	}
 
 	public String getTITULO_MENSUALES() {
