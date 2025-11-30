@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 
-import com.elsantigestion.dao.ClienteDAO;
-import com.elsantigestion.dao.ServicioTrabajoDAO;
 import com.elsantigestion.model.Cliente;
 import com.elsantigestion.model.Servicio;
 import com.elsantigestion.utils.ValidadorCampos;
@@ -28,9 +26,7 @@ import javafx.stage.StageStyle;
 
 public class ServicioForm extends Stage {
 
-	private Servicio servicio;
-    private ClienteDAO clienteDao;
-    private ServicioTrabajoDAO stDao;
+	private Servicio servicioCreado;
     private double xOffset;
     private double yOffset;
     private Label titulo;
@@ -66,15 +62,14 @@ public class ServicioForm extends Stage {
     private HBox boxMontoFinal;
     private HBox boxTipo;
     private TrabajoChecker tChecker;
+    private List<Cliente> clientes;
 
-    public ServicioForm(Servicio servicioExistente) {
+    public ServicioForm(Servicio servicioExistente ,List<Cliente> listaClientes, TrabajoChecker tChecker) {
 
         this.xOffset = 0;
         this.yOffset = 0;
         this.initStyle(StageStyle.UNDECORATED);
 
-        clienteDao = new ClienteDAO();
-        stDao = new ServicioTrabajoDAO();
         grid = new GridPane();
         btnGuardar = new Button("Guardar");
         btnCerrar = new Button("X");
@@ -104,6 +99,8 @@ public class ServicioForm extends Stage {
         txtMontoFinal = new TextField();
         scene = new Scene(grid, 400, 600);
         
+        this.tChecker = tChecker;
+        
         cmbPeriodisidad = new ComboBox<>();
         cmbPeriodisidad.getItems().addAll( "Eventual", "Mensual");
         cmbPeriodisidad.setValue("Eventual");
@@ -112,7 +109,7 @@ public class ServicioForm extends Stage {
         cmbEstado.getItems().addAll("En Curso", "Finalizado", "Suspendido");
         cmbEstado.setValue("En Curso");
         
-        List<Cliente> clientes = clienteDao.obtenerClientes();
+        clientes = listaClientes;
         cmbCliente = new ComboBox<>();
         cmbCliente.getItems().addAll(clientes);
         cmbCliente.setPromptText("Seleccione un cliente...");
@@ -187,9 +184,7 @@ public class ServicioForm extends Stage {
             txtPrecio.setText(String.valueOf(servicioExistente.getPrecio()));
             txtGastos.setText(String.valueOf(servicioExistente.getGastos()));
             txtMontoFinal.setText(String.valueOf(servicioExistente.getMontoFinal()));
-            tChecker = new TrabajoChecker(stDao.obtenerTrabajosPorServicio(servicioExistente.getId()));
         } else {
-        	tChecker = new TrabajoChecker(null);
             titulo = new Label("Agregar servicio");
         }
         
@@ -305,7 +300,7 @@ public class ServicioForm extends Stage {
                         Double.parseDouble(txtMontoFinal.getText()),
                         cmbEstado.getValue());
 
-                setServicio(nuevo);   
+                setServicioCreado(nuevo);   
             } else {
             	servicioExistente.setClienteId(clienteSeleccionado.getId());
                 servicioExistente.setFechaProgramada(dpFechaProgramada.getValue());
@@ -315,7 +310,7 @@ public class ServicioForm extends Stage {
                 servicioExistente.setMontoFinal(Double.parseDouble(txtMontoFinal.getText()));
                 servicioExistente.setEstado(cmbEstado.getValue());
 
-                setServicio(servicioExistente);
+                setServicioCreado(servicioExistente);
             }
 
             close();
@@ -366,15 +361,16 @@ public class ServicioForm extends Stage {
         }
     }
 
-	public Servicio getServicio() {
-		return servicio;
+	public Servicio getServicioCreado() {
+		return servicioCreado;
+	}
+	
+	public void setServicioCreado(Servicio servicio) {
+		this.servicioCreado = servicio;
 	}
 	
 	public HashMap<Integer, Integer> getListaTrabajos(){
 		return this.tChecker.obtenerTrabajosAAgregar();
 	}
 
-	public void setServicio(Servicio servicio) {
-		this.servicio = servicio;
-	}
 }
