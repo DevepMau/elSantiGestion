@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ClienteDAO {
@@ -34,6 +35,28 @@ public class ClienteDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    public HashMap<Integer, String> obtenerMapaClientes(){
+    	HashMap<Integer, String> map = new HashMap<>();
+    	String sql = "SELECT id, nombre FROM clientes";
+    	
+    	try(Connection conn = Database.connect();
+    		PreparedStatement pstmt = conn.prepareStatement(sql);
+    		ResultSet rs = pstmt.executeQuery()){
+    		
+    		while (rs.next()) {
+                map.put(
+                    rs.getInt("id"),
+                    rs.getString("nombre")
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return map;	
     }
 
     // Listar todos los clientes
