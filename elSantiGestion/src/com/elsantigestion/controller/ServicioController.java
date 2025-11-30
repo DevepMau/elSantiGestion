@@ -1,14 +1,18 @@
 package com.elsantigestion.controller;
 
 import java.util.HashMap;
+import java.util.List;
 
 import com.elsantigestion.dao.ServicioDAO;
 import com.elsantigestion.dao.ServicioTrabajoDAO;
+import com.elsantigestion.model.Cliente;
 import com.elsantigestion.model.Servicio;
 import com.elsantigestion.model.ServicioTrabajo;
+import com.elsantigestion.model.Trabajo;
 import com.elsantigestion.ui.Alerta;
 import com.elsantigestion.ui.ServicioForm;
 import com.elsantigestion.ui.ServicioView;
+import com.elsantigestion.ui.TrabajoChecker;
 
 import javafx.collections.FXCollections;
 
@@ -20,12 +24,16 @@ public class ServicioController {
 	private ServicioView view;
 	private ServicioDAO dao;
 	private ServicioTrabajoDAO stDao;
+	private List<Cliente> listaClientes;
+	private List<Trabajo> listaTrabajos;
 	private boolean soloEventuales;
 	
-	public ServicioController(ServicioView view, ServicioDAO dao, ServicioTrabajoDAO stDao) {
+	public ServicioController(ServicioView view, ServicioDAO dao, ServicioTrabajoDAO stDao, List<Cliente> listaClientes, List<Trabajo> listaTrabajos) {
 		this.view = view;
 		this.dao = dao;
 		this.stDao = stDao;
+		this.listaClientes = listaClientes;
+		this.listaTrabajos = listaTrabajos;
 		this.soloEventuales = true;
 		inicializar();	
 	}
@@ -104,11 +112,10 @@ public class ServicioController {
 	}
 	
 	private void mostrarFormularioNuevo() {
-		ServicioForm form = new ServicioForm(null);
+		ServicioForm form = new ServicioForm(null, listaClientes, new TrabajoChecker(listaTrabajos, null));
 		form.showAndWait();
 		
-		Servicio servicio = form.getServicio();
-		//System.out.println("bandera");
+		Servicio servicio = form.getServicioCreado();
 		if (servicio != null) {
 			HashMap<Integer, Integer> listaTrabajos = form.getListaTrabajos();
 	        guardarServicio(servicio, listaTrabajos);
@@ -127,10 +134,10 @@ public class ServicioController {
 		}
 	    
 	    if (seleccionado != null) {
-	        ServicioForm form = new ServicioForm(seleccionado);
-	        form.showAndWait();
+	    	ServicioForm form = new ServicioForm(seleccionado, listaClientes, new TrabajoChecker(listaTrabajos, stDao.obtenerTrabajosPorServicio(seleccionado.getId())));
+	    	form.showAndWait();
 	        
-	        Servicio servicio = form.getServicio();
+	        Servicio servicio = form.getServicioCreado();
 	        if (servicio != null) {
 				HashMap<Integer, Integer> listaTrabajos = form.getListaTrabajos();
 		        modificarServicio(servicio, listaTrabajos);
