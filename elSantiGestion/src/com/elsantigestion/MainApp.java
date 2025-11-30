@@ -9,6 +9,7 @@ import com.elsantigestion.dao.ServicioDAO;
 import com.elsantigestion.dao.ServicioTrabajoDAO;
 import com.elsantigestion.dao.TrabajoDAO;
 import com.elsantigestion.ui.ClienteView;
+import com.elsantigestion.ui.GestorDeTareas;
 import com.elsantigestion.ui.ServicioView;
 import com.elsantigestion.ui.TrabajoView;
 
@@ -110,7 +111,9 @@ public class MainApp extends Application {
         TrabajoDAO trabajoDao = new TrabajoDAO();
         TrabajoController trabajos = new TrabajoController(trabajoView, trabajoDao);  
         
-        ServicioView servicioView = new ServicioView();
+        GestorDeTareas gestorDeTareas = new GestorDeTareas(clienteDao.obtenerMapaClientes(), trabajoDao.obtenerMapaTrabajos());
+        
+        ServicioView servicioView = new ServicioView(gestorDeTareas);
         ServicioDAO servicioDao = new ServicioDAO();
         ServicioTrabajoDAO serTraDao = new ServicioTrabajoDAO();
         ServicioController servicios = new ServicioController(servicioView, servicioDao, serTraDao, clienteDao.obtenerClientes(), trabajoDao.obtenerTrabajos());
