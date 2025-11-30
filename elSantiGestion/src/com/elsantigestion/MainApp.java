@@ -108,12 +108,12 @@ public class MainApp extends Application {
         
         TrabajoView trabajoView = new TrabajoView();
         TrabajoDAO trabajoDao = new TrabajoDAO();
-        TrabajoController trabajos = new TrabajoController(trabajoView, trabajoDao);
+        TrabajoController trabajos = new TrabajoController(trabajoView, trabajoDao);  
         
         ServicioView servicioView = new ServicioView();
         ServicioDAO servicioDao = new ServicioDAO();
         ServicioTrabajoDAO serTraDao = new ServicioTrabajoDAO();
-        ServicioController servicios = new ServicioController(servicioView, servicioDao, serTraDao);
+        ServicioController servicios = new ServicioController(servicioView, servicioDao, serTraDao, clienteDao.obtenerClientes(), trabajoDao.obtenerTrabajos());
         
 
         // Función para manejar selección de botón
