@@ -10,6 +10,7 @@ import com.elsantigestion.dao.ServicioTrabajoDAO;
 import com.elsantigestion.dao.TrabajoDAO;
 import com.elsantigestion.ui.ClienteView;
 import com.elsantigestion.ui.GestorDeTareas;
+import com.elsantigestion.ui.KanbanTablero;
 import com.elsantigestion.ui.ServicioView;
 import com.elsantigestion.ui.TrabajoView;
 
@@ -52,8 +53,9 @@ public class MainApp extends Application {
         Button btnGastos = new Button("Gastos");
         Button btnCronograma = new Button("Cronograma");
         Button btnReportes = new Button("Reportes");
+        Button btnKanban = new Button("Gestor De Tareas");
 
-        Button[] botones = {btnClientes, btnTrabajos, btnServicios, btnGastos, btnCronograma, btnReportes};
+        Button[] botones = {btnClientes, btnTrabajos, btnServicios, btnGastos, btnCronograma, btnReportes, btnKanban};
 
         // Barra superior
         Button btnCerrar = new Button("X");
@@ -94,7 +96,7 @@ public class MainApp extends Application {
             btn.getStyleClass().add("menu-boton");
         }
 
-        VBox menuLateral = new VBox(10, logoView, btnClientes, btnTrabajos, btnServicios, btnGastos, btnCronograma, btnReportes);
+        VBox menuLateral = new VBox(10, logoView, btnClientes, btnTrabajos, btnServicios, btnGastos, btnCronograma, btnReportes, btnKanban);
         menuLateral.getStyleClass().add("menu-lateral");
 
         // Panel principal
@@ -118,6 +120,7 @@ public class MainApp extends Application {
         ServicioTrabajoDAO serTraDao = new ServicioTrabajoDAO();
         ServicioController servicios = new ServicioController(servicioView, servicioDao, serTraDao, clienteDao.obtenerClientes(), trabajoDao.obtenerTrabajos());
         
+        KanbanTablero kanbanBoard = new KanbanTablero();
 
         // Función para manejar selección de botón
         for (Button btn : botones) {
@@ -134,6 +137,7 @@ public class MainApp extends Application {
                 else if (btn == btnGastos) root.setCenter(new javafx.scene.control.Label("Vista de Gastos"));
                 else if (btn == btnCronograma) root.setCenter(new javafx.scene.control.Label("Vista de Cronograma"));
                 else if (btn == btnReportes) root.setCenter(new javafx.scene.control.Label("Vista de Reportes"));
+                else if (btn == btnKanban) root.setCenter(kanbanBoard);
             });
         }
 

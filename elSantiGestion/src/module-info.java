@@ -10,6 +10,7 @@ module elSantiGestion {
 	requires javafx.graphics;
 	requires javafx.fxml;
 	requires javafx.base;
+	requires java.smartcardio;
 	
 	exports com.elsantigestion;
 	exports com.elsantigestion.ui;
