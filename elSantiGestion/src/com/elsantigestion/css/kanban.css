@@ -1,0 +1,40 @@
+.columna {
+	-fx-pref-width: 200;
+	-fx-border-color: #999;
+	-fx-background-color: #333;
+}
+
+.columna-contenedor {
+	-fx-background-color: #333;
+}
+
+.columna-titulo {
+	-fx-background-color: #333;
+	-fx-min-height: 40;
+	-fx-alignment: center;
+	-fx-border-color: #999;
+}
+
+.columna-titulo .text{
+	-fx-fill: white;
+	-fx-font-family: "Arial";
+  	-fx-font-size: 16;
+}
+
+.tarjeta {
+	-fx-pref-width: 160;
+	-fx-pref-height: 60;
+	-fx-border-color: #999;
+	-fx-background-color: blue;
+	-fx-background-radius: 15px;
+	-fx-border-color: white; 
+    -fx-border-radius: 15px;
+	-fx-cursor: hand;
+	-fx-alignment: center;
+}
+
+.tarjeta Label {
+	-fx-text-fill: white;
+	-fx-font-family: "Arial";
+  	-fx-font-size: 16;
+}
