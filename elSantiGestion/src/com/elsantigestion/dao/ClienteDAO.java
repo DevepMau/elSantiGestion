@@ -14,7 +14,7 @@ public class ClienteDAO {
 
     // Insertar un cliente
     public void agregarCliente(Cliente cliente) {
-        String sql = "INSERT INTO clientes(nombre, telefono, email, barrio_privado, barrio_nombre, barrio_lote, localidad, direccion, activo, fecha_creacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO clientes(nombre, telefono, email, barrio_privado, barrio_nombre, barrio_lote, localidad, direccion, color, activo, fecha_creacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -27,8 +27,9 @@ public class ClienteDAO {
             pstmt.setInt(6, cliente.getBarrioLote());
             pstmt.setString(7, cliente.getLocalidad());
             pstmt.setString(8, cliente.getDireccion());
-            pstmt.setBoolean(9, cliente.isActivo());
-            pstmt.setDate(10, java.sql.Date.valueOf(cliente.getFechaCreacion()));
+            pstmt.setString(9, cliente.getColor());
+            pstmt.setBoolean(10, cliente.isActivo());
+            pstmt.setDate(11, java.sql.Date.valueOf(cliente.getFechaCreacion()));
 
             pstmt.executeUpdate();
 
@@ -79,6 +80,7 @@ public class ClienteDAO {
                         rs.getInt("barrio_lote"),
                         rs.getString("localidad"),
                         rs.getString("direccion"),
+                        rs.getString("color"),
                         rs.getBoolean("activo"),
                         rs.getDate("fecha_creacion").toLocalDate()
                 );
@@ -94,7 +96,7 @@ public class ClienteDAO {
     
     // Actualizar un cliente existente
     public void actualizarCliente(Cliente cliente) {
-        String sql = "UPDATE clientes SET nombre = ?, telefono = ?, email = ?, barrio_privado = ?, barrio_nombre = ?, barrio_lote = ?, localidad = ?, direccion = ?, activo = ?, fecha_creacion = ? WHERE id = ?";
+        String sql = "UPDATE clientes SET nombre = ?, telefono = ?, email = ?, barrio_privado = ?, barrio_nombre = ?, barrio_lote = ?, localidad = ?, direccion = ?, color = ?, activo = ?, fecha_creacion = ? WHERE id = ?";
 
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -107,9 +109,10 @@ public class ClienteDAO {
             pstmt.setInt(6, cliente.getBarrioLote());
             pstmt.setString(7, cliente.getLocalidad());
             pstmt.setString(8, cliente.getDireccion());
-            pstmt.setBoolean(9, cliente.isActivo());
-            pstmt.setDate(10, java.sql.Date.valueOf(cliente.getFechaCreacion()));
-            pstmt.setInt(11, cliente.getId());
+            pstmt.setString(9, cliente.getColor());
+            pstmt.setBoolean(10, cliente.isActivo());
+            pstmt.setDate(11, java.sql.Date.valueOf(cliente.getFechaCreacion()));
+            pstmt.setInt(12, cliente.getId());
 
             pstmt.executeUpdate();
 
@@ -168,6 +171,7 @@ public class ClienteDAO {
                             rs.getInt("barrio_lote"),
                             rs.getString("localidad"),
                             rs.getString("direccion"),
+                            rs.getString("color"),
                             rs.getBoolean("activo"),
                             rs.getDate("fecha_creacion").toLocalDate()
                     );
@@ -221,6 +225,7 @@ public class ClienteDAO {
                             rs.getInt("barrio_lote"),
                             rs.getString("localidad"),
                             rs.getString("direccion"),
+                            rs.getString("color"),
                             rs.getBoolean("activo"),
                             rs.getDate("fecha_creacion").toLocalDate()
                     );

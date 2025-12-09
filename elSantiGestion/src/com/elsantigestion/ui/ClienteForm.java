@@ -10,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -17,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -26,11 +28,14 @@ public class ClienteForm extends Stage {
 	
     private Label titulo;
     private Cliente cliente;
+    private String hexColor;
     private double xOffset = 0;
     private double yOffset = 0;
 	
 	public ClienteForm(Cliente clienteExistente) {
 	    this.initStyle(StageStyle.UNDECORATED);
+	    
+	    this.hexColor = "#FFFFFF";
 
 	    TextField txtNombre = new TextField();
 	    TextField txtTelefono = new TextField();
@@ -40,6 +45,8 @@ public class ClienteForm extends Stage {
 	    TextField txtBarrioLote = new TextField();
 	    TextField txtLocalidad = new TextField();
 	    TextField txtDireccion = new TextField();
+	    
+	    ColorPicker colorPicker = new ColorPicker();
 	    
 	    txtNombre.setPromptText("Ingrese nombre...");	    
 	    txtTelefono.setPromptText("Ingrese telefono...");
@@ -72,6 +79,7 @@ public class ClienteForm extends Stage {
 	        txtBarrioLote.setText(String.valueOf(clienteExistente.getBarrioLote()));
 	        txtLocalidad.setText(clienteExistente.getLocalidad());
 	        txtDireccion.setText(clienteExistente.getDireccion());
+	        colorPicker.setValue(Color.web(clienteExistente.getColor()));
 	    } else {
 	    	titulo = new Label("Agregar cliente");
 	    	chkBarrioPrivado.setSelected(false);
@@ -114,6 +122,17 @@ public class ClienteForm extends Stage {
 		    	txtBarrioLote.setText("");
 		    }
 	    });
+	    
+	    colorPicker.setOnAction(e -> {
+	    	Color color = colorPicker.getValue();
+	    	hexColor = (color != null) 
+	    	    ? String.format("#%02X%02X%02X",
+	    	        (int)(color.getRed() * 255),
+	    	        (int)(color.getGreen() * 255),
+	    	        (int)(color.getBlue() * 255))
+	    	    : "#FFFFFF";
+	    	System.out.println("color: "+hexColor);
+	    });
 
 	    Button btnGuardar = new Button("Guardar");
 	    btnGuardar.getStyleClass().add("boton");
@@ -139,7 +158,7 @@ public class ClienteForm extends Stage {
     		
     		if(txtBarrioLote.getText().equals("")) {
     			txtBarrioLote.setText("0");
-    		}
+    		}	
 	    	
 	        if (clienteExistente == null) {
 	            Cliente nuevo = new Cliente(
@@ -152,6 +171,7 @@ public class ClienteForm extends Stage {
 	                Integer.parseInt(txtBarrioLote.getText()),
 	                txtLocalidad.getText(),
 	                txtDireccion.getText(),
+	                hexColor,
 	                true,
 	                LocalDate.now()
 	            );
@@ -167,6 +187,7 @@ public class ClienteForm extends Stage {
 	            clienteExistente.setBarrioLote(Integer.parseInt(txtBarrioLote.getText()));
 	            clienteExistente.setLocalidad(txtLocalidad.getText());
 	            clienteExistente.setDireccion(txtDireccion.getText());
+	            clienteExistente.setColor(hexColor);
 	            
 	            setCliente(clienteExistente);
 	        }
@@ -240,7 +261,8 @@ public class ClienteForm extends Stage {
 	    grid.addRow(6, txtLocalidad);
 	    grid.addRow(7, boxBarrioPrivado);
 	    grid.addRow(8, txtDireccion);
-	    grid.add(btnGuardar, 0, 9);
+	    grid.addRow(9, colorPicker);
+	    grid.add(btnGuardar, 0, 10);
 	    
 	    GridPane.setMargin(msgNombre, new Insets(20, 20, 0, 20));
 	    GridPane.setMargin(txtNombre, new Insets(0, 20, 0, 20));
@@ -253,7 +275,7 @@ public class ClienteForm extends Stage {
 	    GridPane.setMargin(boxBarrioPrivado, new Insets(20, 20, 0, 20));
 	    GridPane.setMargin(txtDireccion, new Insets(20, 20, 20, 20));
 
-	    Scene scene = new Scene(grid, 400, 550);
+	    Scene scene = new Scene(grid, 400, 600);
 	    setScene(scene);
 	    initModality(Modality.APPLICATION_MODAL);
 	    

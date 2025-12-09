@@ -17,6 +17,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
@@ -119,6 +120,7 @@ public class ClienteView extends VBox {
         TableColumn<Cliente, Boolean> colBarrioPrivado = new TableColumn<>("Barrio\nPrivado");
         TableColumn<Cliente, String> colBarrioNombre = new TableColumn<>("Nombre del Barrio");
         TableColumn<Cliente, Number> colBarrioLote = new TableColumn<>("N°.\nLote");
+        TableColumn<Cliente, String> colColor = new TableColumn<>("Color");
         
         colFechaCreacion.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getFechaCreacion()));
         colNombre.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNombre()));
@@ -129,6 +131,7 @@ public class ClienteView extends VBox {
         colBarrioPrivado.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().isBarrioPrivado()));
         colBarrioNombre.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBarrioNombre()));
         colBarrioLote.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getBarrioLote()));
+        colColor.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getColor()));
         
         colFechaCreacion.getStyleClass().add("columna-especial");
         colNombre.getStyleClass().add("columna-texto");
@@ -139,6 +142,31 @@ public class ClienteView extends VBox {
         colBarrioPrivado.getStyleClass().add("columna-especial");
         colBarrioNombre.getStyleClass().add("columna-texto");
         colBarrioLote.getStyleClass().add("columna-especial");
+        colColor.getStyleClass().add("columna-especial");
+        
+        colColor.setCellFactory(column -> new TableCell<Cliente, String>() {
+            private final Pane colorPane = new Pane();
+
+            {
+                colorPane.setPrefSize(20, 20);
+                colorPane.setStyle("-fx-border-color: grey;");
+            }
+
+            @Override
+            protected void updateItem(String colorHex, boolean empty) {
+                super.updateItem(colorHex, empty);
+
+                if (empty || colorHex == null) {
+                    setGraphic(null);
+                } else {
+                    colorPane.setStyle(
+                        "-fx-background-color: " + colorHex + ";" +
+                        "-fx-border-color: grey;"
+                    );
+                    setGraphic(colorPane);
+                }
+            }
+        });
 
         colBarrioPrivado.setCellFactory(col -> new TableCell<Cliente, Boolean>() {
             protected void updateItem(Boolean item, boolean empty) {
@@ -168,6 +196,7 @@ public class ClienteView extends VBox {
         tabla.getColumns().add(colDireccion);  
         tabla.getColumns().add(colBarrioNombre); 
         tabla.getColumns().add(colBarrioLote);
+        tabla.getColumns().add(colColor);
     	tabla.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	tabla.setPrefWidth(Double.MAX_VALUE);
     	VBox.setVgrow(tabla, Priority.ALWAYS);
@@ -186,6 +215,7 @@ public class ClienteView extends VBox {
         colBarrioNombre.setMinWidth(150);
         colBarrioLote.setMinWidth(60);
         colBarrioPrivado.setMinWidth(60);
+        colColor.setMinWidth(60);
 
     }
     

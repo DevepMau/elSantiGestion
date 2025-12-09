@@ -13,10 +13,11 @@ public class Cliente {
 	private int barrioLote;
 	private String localidad;
 	private String direccion;
+	private String color;
 	private boolean activo;
 	private LocalDate fechaCreacion;
 	
-	public Cliente(int id, String nombre, String telefono, String email, boolean barrioPrivado, String barrioNombre, int barrioLote, String localidad, String direccion, boolean activo, LocalDate fechaCreacion) {
+	public Cliente(int id, String nombre, String telefono, String email, boolean barrioPrivado, String barrioNombre, int barrioLote, String localidad, String direccion, String color, boolean activo, LocalDate fechaCreacion) {
 		
 		this.id = id;
 		this.nombre = nombre;
@@ -27,6 +28,7 @@ public class Cliente {
 		this.barrioLote = barrioLote;
 		this.localidad = localidad;
 		this.direccion = direccion;
+		this.color = color;
 		this.activo = activo;
 		this.fechaCreacion = fechaCreacion;
 		
@@ -47,6 +49,10 @@ public class Cliente {
 
         if (localidad == null || localidad.trim().isEmpty()) {
             throw new IllegalStateException("Debe especificar la localidad del cliente.");
+        }
+        
+        if (color == null || color.trim().isEmpty()) {
+            throw new IllegalStateException("Debe especificar el color del cliente.");
         }
     }
 	
@@ -122,6 +128,14 @@ public class Cliente {
 
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
+	}
+	
+	public String getColor() {
+	    return color;
+	}
+
+	public void setColor(String color) {
+	    this.color = color;
 	}
 
 	public boolean isActivo() {
