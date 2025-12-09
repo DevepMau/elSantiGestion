@@ -19,6 +19,7 @@ public class DatabaseSetup {
         		    "barrio_lote INTEGER," +
         		    "localidad TEXT," +
         		    "direccion TEXT," +
+        		    "color TEXT NOT NULL,"+
         		    "activo INTEGER DEFAULT 1," +
         		    "fecha_creacion DATE NOT NULL" +
         		    ");";
@@ -45,23 +46,24 @@ public class DatabaseSetup {
             	    "precio REAL NOT NULL DEFAULT 0," +
             	    "gastos REAL NOT NULL DEFAULT 0," +
             	    "monto_final REAL NOT NULL DEFAULT 0," +
+            	    "color TEXT NOT NULL,"+
             	    "estado TEXT," +
             	    "FOREIGN KEY (cliente_id) REFERENCES clientes(id)" +
             	    ");";
             
             stmt.execute(sqlServicios);
             
-            String sqlServicioTrabajos = "CREATE TABLE IF NOT EXISTS servicio_trabajos (" +
+            String sqlServicioDetalles = "CREATE TABLE IF NOT EXISTS servicio_detalles (" +
             	    "servicio_id INT NOT NULL," +
             	    "trabajo_id INT NOT NULL," +
             	    "cantidad INT NOT NULL DEFAULT 1," +
-            	    "activo INTEGER NOT NULL DEFAULT 1," +
+            	    "estado TEXT NOT NULL," +
             	    "PRIMARY KEY (servicio_id, trabajo_id)," +
             	    "FOREIGN KEY (servicio_id) REFERENCES servicios(id)," +
             	    "FOREIGN KEY (trabajo_id) REFERENCES trabajos(id)" +
             	    ");";
             
-            stmt.execute(sqlServicioTrabajos);
+            stmt.execute(sqlServicioDetalles);
 
         } catch (Exception e) {
             e.printStackTrace();
