@@ -2,27 +2,30 @@ package com.elsantigestion.ui;
 
 import java.util.ArrayList;
 
-import com.elsantigestion.model.Tarea;
+import com.elsantigestion.model.TareaProvisorio;
 
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 
-public class KanbanTablero extends HBox {
+public class KanbanView extends HBox {
 	
 	private KanbanColumna colPorHacer;
 	private KanbanColumna colEnProgreso;
 	private KanbanColumna colCompletado;
 	private KanbanColumna colArchivado;
 	
-	private Tarea task1 = new Tarea("Laura", "Canteros", 3, false, false);
-	private TareaTarjeta card1 = new TareaTarjeta(task1);
-	private Tarea task2 = new Tarea("Maria", "Corte", 1, false, false);
-	private TareaTarjeta card2 = new TareaTarjeta(task2);
-	private Tarea task3 = new Tarea("Silvia", "Piscina", 1, false, false);
-	private TareaTarjeta card3 = new TareaTarjeta(task3);
+	private TareaProvisorio task1 = new TareaProvisorio("Laura", "Canteros", 3, false, false);
+	private KanbanTarjeta card1 = new KanbanTarjeta(task1);
+	private TareaProvisorio task2 = new TareaProvisorio("Maria", "Corte", 1, false, false);
+	private KanbanTarjeta card2 = new KanbanTarjeta(task2);
+	private TareaProvisorio task3 = new TareaProvisorio("Silvia", "Piscina", 1, false, false);
+	private KanbanTarjeta card3 = new KanbanTarjeta(task3);
 	
-	private ArrayList<TareaTarjeta> listaCard = new ArrayList<>();
+	private ArrayList<KanbanTarjeta> listaCard = new ArrayList<>();
 	
-	public KanbanTablero() {
+	public KanbanView() {
 		
 		this.colPorHacer = new KanbanColumna("Por Hacer");
 		this.colEnProgreso = new KanbanColumna("En Progreso");
@@ -34,7 +37,20 @@ public class KanbanTablero extends HBox {
 		listaCard.add(card3);
 		
 		
-		for(TareaTarjeta card : listaCard) {
+		for(KanbanTarjeta card : listaCard) {
+			card.setOnDragDetected(event -> {
+	            Dragboard db = card.startDragAndDrop(TransferMode.MOVE);
+
+	            ClipboardContent content = new ClipboardContent();
+	            content.putString(card.getTitulo()+card.getDescripcion());
+	            System.out.println(content);
+	            db.setContent(content);
+	            
+	            db.setDragView(card.snapshot(null, null));
+
+	            event.consume();
+	        });
+			
 			colPorHacer.añadirTarjeta(card);
 		}
 		
