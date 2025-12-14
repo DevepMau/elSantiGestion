@@ -1,6 +1,7 @@
 package com.elsantigestion;
 
 import com.elsantigestion.controller.ClienteController;
+import com.elsantigestion.controller.KanbanController;
 import com.elsantigestion.controller.ServicioController;
 import com.elsantigestion.controller.TrabajoController;
 import com.elsantigestion.dao.ClienteDAO;
@@ -10,7 +11,7 @@ import com.elsantigestion.dao.ServicioTrabajoDAO;
 import com.elsantigestion.dao.TrabajoDAO;
 import com.elsantigestion.ui.ClienteView;
 import com.elsantigestion.ui.GestorDeTareas;
-import com.elsantigestion.ui.KanbanTablero;
+import com.elsantigestion.ui.KanbanView;
 import com.elsantigestion.ui.ServicioView;
 import com.elsantigestion.ui.TrabajoView;
 
@@ -120,7 +121,8 @@ public class MainApp extends Application {
         ServicioTrabajoDAO serTraDao = new ServicioTrabajoDAO();
         ServicioController servicios = new ServicioController(servicioView, servicioDao, serTraDao, clienteDao.obtenerClientes(), trabajoDao.obtenerTrabajos());
         
-        KanbanTablero kanbanBoard = new KanbanTablero();
+        KanbanView kanbanView = new KanbanView();
+        KanbanController kanban = new KanbanController(kanbanView);
 
         // Función para manejar selección de botón
         for (Button btn : botones) {
@@ -137,7 +139,7 @@ public class MainApp extends Application {
                 else if (btn == btnGastos) root.setCenter(new javafx.scene.control.Label("Vista de Gastos"));
                 else if (btn == btnCronograma) root.setCenter(new javafx.scene.control.Label("Vista de Cronograma"));
                 else if (btn == btnReportes) root.setCenter(new javafx.scene.control.Label("Vista de Reportes"));
-                else if (btn == btnKanban) root.setCenter(kanbanBoard);
+                else if (btn == btnKanban) root.setCenter(kanban.getView());
             });
         }
 
