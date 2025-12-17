@@ -1,18 +1,18 @@
 package com.elsantigestion.model;
 
-public class ServicioTrabajo {
+public class ServicioDetalles {
 	
 	private int servicioId;
 	private int trabajoId;
 	private int cantidad;
-	private boolean activo;
+	private String estado;
 	
-	public ServicioTrabajo(int servicioId, int trabajoId, int cantidad, boolean activo) {
+	public ServicioDetalles(int servicioId, int trabajoId, int cantidad, String estado) {
 		
 		this.servicioId = servicioId;
 		this.trabajoId = trabajoId;
 		this.cantidad = cantidad;
-		this.activo = activo;
+		this.estado = estado;
 		
 	}
 
@@ -40,12 +40,12 @@ public class ServicioTrabajo {
 		this.cantidad = cantidad;
 	}
 
-	public boolean isActivo() {
-		return activo;
+	public String getEstado() {
+		return estado;
 	}
 
-	public void setActivo(boolean activo) {
-		this.activo = activo;
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
 	
 

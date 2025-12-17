@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.elsantigestion.dao.ServicioDAO;
-import com.elsantigestion.dao.ServicioTrabajoDAO;
+import com.elsantigestion.dao.ServicioDetallesDAO;
 import com.elsantigestion.model.Cliente;
 import com.elsantigestion.model.Servicio;
-import com.elsantigestion.model.ServicioTrabajo;
+import com.elsantigestion.model.ServicioDetalles;
 import com.elsantigestion.model.Trabajo;
 import com.elsantigestion.ui.Alerta;
 import com.elsantigestion.ui.ServicioForm;
@@ -23,12 +23,12 @@ public class ServicioController {
 	
 	private ServicioView view;
 	private ServicioDAO dao;
-	private ServicioTrabajoDAO stDao;
+	private ServicioDetallesDAO stDao;
 	private List<Cliente> listaClientes;
 	private List<Trabajo> listaTrabajos;
 	private boolean soloEventuales;
 	
-	public ServicioController(ServicioView view, ServicioDAO dao, ServicioTrabajoDAO stDao, List<Cliente> listaClientes, List<Trabajo> listaTrabajos) {
+	public ServicioController(ServicioView view, ServicioDAO dao, ServicioDetallesDAO stDao, List<Cliente> listaClientes, List<Trabajo> listaTrabajos) {
 		this.view = view;
 		this.dao = dao;
 		this.stDao = stDao;
@@ -47,7 +47,7 @@ public class ServicioController {
 	        servicio.validar();
 	        int idGenerado = dao.agregarServicio(servicio);
 	        for(var trabajo : listaTrabajos.entrySet()) {
-	        	ServicioTrabajo st = new ServicioTrabajo(idGenerado, trabajo.getKey(), trabajo.getValue(), true);
+	        	ServicioDetalles st = new ServicioDetalles(idGenerado, trabajo.getKey(), trabajo.getValue(), "Para Hacer");
 	        	stDao.agregar(st);
 	        }
 	        
@@ -64,7 +64,7 @@ public class ServicioController {
 	        servicio.validar();
 	        stDao.eliminarPorServicio(servicio.getId());
 	        for(var trabajo : listaTrabajos.entrySet()) {
-	        	ServicioTrabajo st = new ServicioTrabajo(servicio.getId(), trabajo.getKey(), trabajo.getValue(), true);
+	        	ServicioDetalles st = new ServicioDetalles(servicio.getId(), trabajo.getKey(), trabajo.getValue(), "Para Hacer");
 	        	stDao.agregar(st);
 	        }
 	        
