@@ -115,11 +115,10 @@ public class ClienteView extends VBox {
         TableColumn<Cliente, String> colNombre = new TableColumn<>("Nombre");
         TableColumn<Cliente, String> colTelefono = new TableColumn<>("Teléfono");
         TableColumn<Cliente, String> colLocalidad = new TableColumn<>("Localidad");
-        TableColumn<Cliente, String> colDireccion = new TableColumn<>("Direccion");
+        TableColumn<Cliente, String> colDireccion = new TableColumn<>("Direccion\n/Barrio");
         TableColumn<Cliente, String> colEmail = new TableColumn<>("Email");
         TableColumn<Cliente, Boolean> colBarrioPrivado = new TableColumn<>("Barrio\nPrivado");
-        TableColumn<Cliente, String> colBarrioNombre = new TableColumn<>("Nombre del Barrio");
-        TableColumn<Cliente, Number> colBarrioLote = new TableColumn<>("N°.\nLote");
+        TableColumn<Cliente, Number> colNumeroLote = new TableColumn<>("Altura\n/Lote");
         TableColumn<Cliente, String> colColor = new TableColumn<>("Color");
         
         colFechaCreacion.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getFechaCreacion()));
@@ -129,8 +128,7 @@ public class ClienteView extends VBox {
         colDireccion.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDireccion()));
         colEmail.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEmail()));
         colBarrioPrivado.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().isBarrioPrivado()));
-        colBarrioNombre.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBarrioNombre()));
-        colBarrioLote.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getBarrioLote()));
+        colNumeroLote.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getNumeroLote()));
         colColor.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getColor()));
         
         colFechaCreacion.getStyleClass().add("columna-especial");
@@ -140,8 +138,7 @@ public class ClienteView extends VBox {
         colDireccion.getStyleClass().add("columna-texto");
         colEmail.getStyleClass().add("columna-texto");
         colBarrioPrivado.getStyleClass().add("columna-especial");
-        colBarrioNombre.getStyleClass().add("columna-texto");
-        colBarrioLote.getStyleClass().add("columna-especial");
+        colNumeroLote.getStyleClass().add("columna-especial");
         colColor.getStyleClass().add("columna-especial");
         
         colColor.setCellFactory(column -> new TableCell<Cliente, String>() {
@@ -194,8 +191,7 @@ public class ClienteView extends VBox {
         tabla.getColumns().add(colBarrioPrivado);
         tabla.getColumns().add(colLocalidad); 
         tabla.getColumns().add(colDireccion);  
-        tabla.getColumns().add(colBarrioNombre); 
-        tabla.getColumns().add(colBarrioLote);
+        tabla.getColumns().add(colNumeroLote);
         tabla.getColumns().add(colColor);
     	tabla.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	tabla.setPrefWidth(Double.MAX_VALUE);
@@ -207,13 +203,12 @@ public class ClienteView extends VBox {
     	    );
 
 		colFechaCreacion.setMinWidth(100);
-        colNombre.setMinWidth(150);
-        colTelefono.setMinWidth(100);
+        colNombre.setMinWidth(130);
+        colTelefono.setMinWidth(90);
         colLocalidad.setMinWidth(100);
         colDireccion.setMinWidth(150);
         colEmail.setMinWidth(120); 
-        colBarrioNombre.setMinWidth(150);
-        colBarrioLote.setMinWidth(60);
+        colNumeroLote.setMinWidth(60);
         colBarrioPrivado.setMinWidth(60);
         colColor.setMinWidth(60);
 

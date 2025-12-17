@@ -9,23 +9,21 @@ public class Cliente {
 	private String telefono;
 	private String email;
 	private boolean barrioPrivado;
-	private String barrioNombre;
-	private int barrioLote;
+	private int numeroLote;
 	private String localidad;
 	private String direccion;
 	private String color;
 	private boolean activo;
 	private LocalDate fechaCreacion;
 	
-	public Cliente(int id, String nombre, String telefono, String email, boolean barrioPrivado, String barrioNombre, int barrioLote, String localidad, String direccion, String color, boolean activo, LocalDate fechaCreacion) {
+	public Cliente(int id, String nombre, String telefono, String email, boolean barrioPrivado, int numeroLote, String localidad, String direccion, String color, boolean activo, LocalDate fechaCreacion) {
 		
 		this.id = id;
 		this.nombre = nombre;
 		this.telefono = telefono;
 		this.email = email;
 		this.barrioPrivado = barrioPrivado;
-		this.barrioNombre = barrioNombre;
-		this.barrioLote = barrioLote;
+		this.numeroLote = numeroLote;
 		this.localidad = localidad;
 		this.direccion = direccion;
 		this.color = color;
@@ -98,20 +96,12 @@ public class Cliente {
 		this.barrioPrivado = barriPrivado;
 	}
 
-	public String getBarrioNombre() {
-		return barrioNombre;
+	public int getNumeroLote() {
+		return numeroLote;
 	}
 
-	public void setBarrioNombre(String barrioNombre) {
-		this.barrioNombre = barrioNombre;
-	}
-
-	public int getBarrioLote() {
-		return barrioLote;
-	}
-
-	public void setBarrioLote(int barrioLote) {
-		this.barrioLote = barrioLote;
+	public void setNumeroLote(int barrioLote) {
+		this.numeroLote = barrioLote;
 	}
 
 	public String getLocalidad() {

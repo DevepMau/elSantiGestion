@@ -45,6 +45,7 @@ public class ClienteForm extends Stage {
 	    TextField txtBarrioLote = new TextField();
 	    TextField txtLocalidad = new TextField();
 	    TextField txtDireccion = new TextField();
+	    TextField txtNumero = new TextField();
 	    
 	    ColorPicker colorPicker = new ColorPicker();
 	    
@@ -55,9 +56,12 @@ public class ClienteForm extends Stage {
 	    txtEmail.setPromptText("Ingrese Email...");
 	    txtBarrioNombre.setPromptText("Ingrese barrio...");
 	    txtBarrioLote.setPromptText("Lote...");
+	    txtNumero.setPromptText("N°...");
 	    
     	txtBarrioLote.setMinWidth(70);
     	txtBarrioLote.setMaxWidth(70);
+    	txtNumero.setMinWidth(70);
+    	txtNumero.setMaxWidth(70);
 	    
 	    Label msgNombre = new Label("");
 	    Label msgTelefono = new Label("");
@@ -75,11 +79,21 @@ public class ClienteForm extends Stage {
 	        txtTelefono.setText(clienteExistente.getTelefono());
 	        txtEmail.setText(clienteExistente.getEmail());
 	        chkBarrioPrivado.setSelected(clienteExistente.isBarrioPrivado());
-	        txtBarrioNombre.setText(clienteExistente.getBarrioNombre());
-	        txtBarrioLote.setText(String.valueOf(clienteExistente.getBarrioLote()));
 	        txtLocalidad.setText(clienteExistente.getLocalidad());
-	        txtDireccion.setText(clienteExistente.getDireccion());
+	        if(clienteExistente.isBarrioPrivado()) {
+	        	txtBarrioNombre.setText(clienteExistente.getDireccion());
+	        	txtBarrioLote.setText(String.valueOf(clienteExistente.getNumeroLote()));
+	        	txtDireccion.setText("");
+	        	txtNumero.setText("");
+	        }
+	        else {
+	        	txtBarrioNombre.setText("");
+	        	txtBarrioLote.setText("");
+	        	txtDireccion.setText(clienteExistente.getDireccion());
+	        	txtNumero.setText(String.valueOf(clienteExistente.getNumeroLote()));
+	        }
 	        colorPicker.setValue(Color.web(clienteExistente.getColor()));
+	        hexColor = clienteExistente.getColor();
 	    } else {
 	    	titulo = new Label("Agregar cliente");
 	    	chkBarrioPrivado.setSelected(false);
@@ -113,9 +127,11 @@ public class ClienteForm extends Stage {
 	    	txtBarrioNombre.setDisable(!boo);
 	    	txtBarrioLote.setDisable(!boo);
 	    	txtDireccion.setDisable(boo);
+	    	txtNumero.setDisable(boo);
 	    	
 	    	if(boo) {
 		    	txtDireccion.setText("");
+		    	txtNumero.setText("");
 		    }
 		    else {
 		    	txtBarrioNombre.setText("");
@@ -131,7 +147,6 @@ public class ClienteForm extends Stage {
 	    	        (int)(color.getGreen() * 255),
 	    	        (int)(color.getBlue() * 255))
 	    	    : "#FFFFFF";
-	    	System.out.println("color: "+hexColor);
 	    });
 
 	    Button btnGuardar = new Button("Guardar");
@@ -148,17 +163,21 @@ public class ClienteForm extends Stage {
     			txtEmail.setText("-");
     		}
     		
-    		if(txtBarrioNombre.getText().equals("")) {
-    			txtBarrioNombre.setText("-");
+    		String direccion = "";
+    		String numero = "";
+    		
+    		if(chkBarrioPrivado.isSelected()) {
+    			direccion = txtBarrioNombre.getText();
+    			numero = txtBarrioLote.getText();
+    		}
+    		else {
+    			direccion = txtDireccion.getText();
+    			numero = txtNumero.getText();
     		}
     		
-    		if(txtDireccion.getText().equals("")) {
-    			txtDireccion.setText("-");
+    		if(numero.equals("")) {
+    			numero = "0";
     		}
-    		
-    		if(txtBarrioLote.getText().equals("")) {
-    			txtBarrioLote.setText("0");
-    		}	
 	    	
 	        if (clienteExistente == null) {
 	            Cliente nuevo = new Cliente(
@@ -167,10 +186,9 @@ public class ClienteForm extends Stage {
 	                txtTelefono.getText(),
 	                txtEmail.getText(),
 	                chkBarrioPrivado.isSelected(),
-	                txtBarrioNombre.getText(),
-	                Integer.parseInt(txtBarrioLote.getText()),
+	                Integer.parseInt(numero),
 	                txtLocalidad.getText(),
-	                txtDireccion.getText(),
+	                direccion,
 	                hexColor,
 	                true,
 	                LocalDate.now()
@@ -183,10 +201,15 @@ public class ClienteForm extends Stage {
 	            clienteExistente.setTelefono(txtTelefono.getText());
 	            clienteExistente.setEmail(txtEmail.getText());
 	            clienteExistente.setBarrioPrivado(chkBarrioPrivado.isSelected());
-	            clienteExistente.setBarrioNombre(txtBarrioNombre.getText());
-	            clienteExistente.setBarrioLote(Integer.parseInt(txtBarrioLote.getText()));
+	            if(chkBarrioPrivado.isSelected()) {
+	            	clienteExistente.setDireccion(txtBarrioNombre.getText());
+	            	clienteExistente.setNumeroLote(Integer.parseInt(txtBarrioLote.getText()));
+	            }
+	            else {
+	            	clienteExistente.setDireccion(txtDireccion.getText());
+	            	clienteExistente.setNumeroLote(Integer.parseInt(txtNumero.getText()));
+	            }
 	            clienteExistente.setLocalidad(txtLocalidad.getText());
-	            clienteExistente.setDireccion(txtDireccion.getText());
 	            clienteExistente.setColor(hexColor);
 	            
 	            setCliente(clienteExistente);
@@ -239,6 +262,16 @@ public class ClienteForm extends Stage {
 	    boxBarrioChk.setSpacing(20);
 	    chkBarrioPrivado.getStyleClass().add("check-box");
 	    
+	    HBox boxNombreInfo = new HBox();
+	    boxNombreInfo.setAlignment(Pos.CENTER);
+	    boxNombreInfo.getChildren().addAll(txtNombre, colorPicker);
+	    boxNombreInfo.setSpacing(10);
+	    
+	    HBox boxDireccionInfo = new HBox();
+	    boxDireccionInfo.setAlignment(Pos.CENTER);
+	    boxDireccionInfo.getChildren().addAll(txtDireccion, txtNumero);
+	    boxDireccionInfo.setSpacing(10);
+	    
 	    HBox boxBarrioInfo = new HBox();
 	    boxBarrioInfo.setAlignment(Pos.CENTER);
 	    boxBarrioInfo.getChildren().addAll(txtBarrioNombre, txtBarrioLote);
@@ -254,18 +287,17 @@ public class ClienteForm extends Stage {
 	    grid.setPadding(new Insets(10));
 	    grid.add(topBar, 0, 0);
 	    grid.addRow(1, msgNombre);
-	    grid.addRow(2, txtNombre);
+	    grid.addRow(2, boxNombreInfo);
 	    grid.addRow(3, msgTelefono);
 	    grid.addRow(4, boxContactos);
 	    grid.addRow(5, msgLocalidad);
 	    grid.addRow(6, txtLocalidad);
 	    grid.addRow(7, boxBarrioPrivado);
-	    grid.addRow(8, txtDireccion);
-	    grid.addRow(9, colorPicker);
-	    grid.add(btnGuardar, 0, 10);
+	    grid.addRow(8, boxDireccionInfo);
+	    grid.add(btnGuardar, 0, 9);
 	    
 	    GridPane.setMargin(msgNombre, new Insets(20, 20, 0, 20));
-	    GridPane.setMargin(txtNombre, new Insets(0, 20, 0, 20));
+	    GridPane.setMargin(boxNombreInfo, new Insets(0, 20, 0, 20));
 	    GridPane.setMargin(msgTelefono, new Insets(0, 20, 0, 20));
 	    GridPane.setMargin(boxContactos, new Insets(0, 20, 0, 20));
 	    GridPane.setMargin(msgEmail, new Insets(0, 20, 0, 20));
@@ -273,9 +305,9 @@ public class ClienteForm extends Stage {
 	    GridPane.setMargin(msgLocalidad, new Insets(0, 20, 0, 20));
 	    GridPane.setMargin(txtLocalidad, new Insets(0, 20, 0, 20));
 	    GridPane.setMargin(boxBarrioPrivado, new Insets(20, 20, 0, 20));
-	    GridPane.setMargin(txtDireccion, new Insets(20, 20, 20, 20));
+	    GridPane.setMargin(boxDireccionInfo, new Insets(20, 20, 20, 20));
 
-	    Scene scene = new Scene(grid, 400, 600);
+	    Scene scene = new Scene(grid, 400, 550);
 	    setScene(scene);
 	    initModality(Modality.APPLICATION_MODAL);
 	    
@@ -293,6 +325,14 @@ public class ClienteForm extends Stage {
 
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
+	}
+	
+	public String getHexColor() {
+		return hexColor;
+	}
+	
+	public void setHexColor(String color) {
+		this.hexColor = color;
 	}
 
 

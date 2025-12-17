@@ -14,7 +14,7 @@ public class ClienteDAO {
 
     // Insertar un cliente
     public void agregarCliente(Cliente cliente) {
-        String sql = "INSERT INTO clientes(nombre, telefono, email, barrio_privado, barrio_nombre, barrio_lote, localidad, direccion, color, activo, fecha_creacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO clientes(nombre, telefono, email, barrio_privado, numero_lote, localidad, direccion, color, activo, fecha_creacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -23,13 +23,12 @@ public class ClienteDAO {
             pstmt.setString(2, cliente.getTelefono());
             pstmt.setString(3, cliente.getEmail());
             pstmt.setBoolean(4, cliente.isBarrioPrivado());
-            pstmt.setString(5, cliente.getBarrioNombre());
-            pstmt.setInt(6, cliente.getBarrioLote());
-            pstmt.setString(7, cliente.getLocalidad());
-            pstmt.setString(8, cliente.getDireccion());
-            pstmt.setString(9, cliente.getColor());
-            pstmt.setBoolean(10, cliente.isActivo());
-            pstmt.setDate(11, java.sql.Date.valueOf(cliente.getFechaCreacion()));
+            pstmt.setInt(5, cliente.getNumeroLote());
+            pstmt.setString(6, cliente.getLocalidad());
+            pstmt.setString(7, cliente.getDireccion());
+            pstmt.setString(8, cliente.getColor());
+            pstmt.setBoolean(9, cliente.isActivo());
+            pstmt.setDate(10, java.sql.Date.valueOf(cliente.getFechaCreacion()));
 
             pstmt.executeUpdate();
 
@@ -76,8 +75,7 @@ public class ClienteDAO {
                         rs.getString("telefono"),
                         rs.getString("email"),
                         rs.getBoolean("barrio_privado"),
-                        rs.getString("barrio_nombre"),
-                        rs.getInt("barrio_lote"),
+                        rs.getInt("numero_lote"),
                         rs.getString("localidad"),
                         rs.getString("direccion"),
                         rs.getString("color"),
@@ -96,7 +94,7 @@ public class ClienteDAO {
     
     // Actualizar un cliente existente
     public void actualizarCliente(Cliente cliente) {
-        String sql = "UPDATE clientes SET nombre = ?, telefono = ?, email = ?, barrio_privado = ?, barrio_nombre = ?, barrio_lote = ?, localidad = ?, direccion = ?, color = ?, activo = ?, fecha_creacion = ? WHERE id = ?";
+        String sql = "UPDATE clientes SET nombre = ?, telefono = ?, email = ?, barrio_privado = ?, numero_lote = ?, localidad = ?, direccion = ?, color = ?, activo = ?, fecha_creacion = ? WHERE id = ?";
 
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -105,14 +103,13 @@ public class ClienteDAO {
             pstmt.setString(2, cliente.getTelefono());
             pstmt.setString(3, cliente.getEmail());
             pstmt.setBoolean(4, cliente.isBarrioPrivado());
-            pstmt.setString(5, cliente.getBarrioNombre());
-            pstmt.setInt(6, cliente.getBarrioLote());
-            pstmt.setString(7, cliente.getLocalidad());
-            pstmt.setString(8, cliente.getDireccion());
-            pstmt.setString(9, cliente.getColor());
-            pstmt.setBoolean(10, cliente.isActivo());
-            pstmt.setDate(11, java.sql.Date.valueOf(cliente.getFechaCreacion()));
-            pstmt.setInt(12, cliente.getId());
+            pstmt.setInt(5, cliente.getNumeroLote());
+            pstmt.setString(6, cliente.getLocalidad());
+            pstmt.setString(7, cliente.getDireccion());
+            pstmt.setString(8, cliente.getColor());
+            pstmt.setBoolean(9, cliente.isActivo());
+            pstmt.setDate(10, java.sql.Date.valueOf(cliente.getFechaCreacion()));
+            pstmt.setInt(11, cliente.getId());
 
             pstmt.executeUpdate();
 
@@ -167,8 +164,7 @@ public class ClienteDAO {
                             rs.getString("telefono"),
                             rs.getString("email"),
                             rs.getBoolean("barrio_privado"),
-                            rs.getString("barrio_nombre"),
-                            rs.getInt("barrio_lote"),
+                            rs.getInt("numero_lote"),
                             rs.getString("localidad"),
                             rs.getString("direccion"),
                             rs.getString("color"),
@@ -221,8 +217,7 @@ public class ClienteDAO {
                             rs.getString("telefono"),
                             rs.getString("email"),
                             rs.getBoolean("barrio_privado"),
-                            rs.getString("barrio_nombre"),
-                            rs.getInt("barrio_lote"),
+                            rs.getInt("numero_lote"),
                             rs.getString("localidad"),
                             rs.getString("direccion"),
                             rs.getString("color"),
