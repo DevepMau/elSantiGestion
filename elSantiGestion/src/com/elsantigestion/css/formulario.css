@@ -201,3 +201,17 @@
     -fx-text-fill: white;
     -fx-font-size: 18px;
 }
+
+.color-picker {
+    -fx-background-color: #333;
+    -fx-background-radius: 5;
+    -fx-border-color: #888;
+    -fx-border-radius: 5;
+    -fx-border-width: 1.5;
+    -fx-pref-height: 40;
+	-fx-min-width: 70;
+	-fx-pref-width: 70;
+	-fx-max-width: 70;
+	-fx-color-rect-width: 30px;
+    -fx-color-rect-height: 23px;
+}
