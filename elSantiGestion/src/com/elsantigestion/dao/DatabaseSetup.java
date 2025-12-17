@@ -15,8 +15,7 @@ public class DatabaseSetup {
         		    "telefono TEXT," +
         		    "email TEXT," +
         		    "barrio_privado INTEGER DEFAULT 0," +
-        		    "barrio_nombre TEXT," +
-        		    "barrio_lote INTEGER," +
+        		    "numero_lote INTEGER," +
         		    "localidad TEXT," +
         		    "direccion TEXT," +
         		    "color TEXT NOT NULL,"+
