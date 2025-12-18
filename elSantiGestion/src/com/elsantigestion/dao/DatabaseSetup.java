@@ -45,7 +45,6 @@ public class DatabaseSetup {
             	    "precio REAL NOT NULL DEFAULT 0," +
             	    "gastos REAL NOT NULL DEFAULT 0," +
             	    "monto_final REAL NOT NULL DEFAULT 0," +
-            	    "color TEXT NOT NULL,"+
             	    "estado TEXT," +
             	    "FOREIGN KEY (cliente_id) REFERENCES clientes(id)" +
             	    ");";
