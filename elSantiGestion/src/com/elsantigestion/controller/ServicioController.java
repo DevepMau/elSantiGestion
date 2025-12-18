@@ -28,17 +28,19 @@ public class ServicioController {
 	private List<Trabajo> listaTrabajos;
 	private boolean soloEventuales;
 	
-	public ServicioController(ServicioView view, ServicioDAO dao, ServicioDetallesDAO stDao, List<Cliente> listaClientes, List<Trabajo> listaTrabajos) {
+	public ServicioController(ServicioView view, ServicioDAO dao, ServicioDetallesDAO stDao) {
 		this.view = view;
 		this.dao = dao;
 		this.stDao = stDao;
-		this.listaClientes = listaClientes;
-		this.listaTrabajos = listaTrabajos;
+		this.listaClientes = null;
+		this.listaTrabajos = null;
 		this.soloEventuales = true;
 		inicializar();	
 	}
 	
-	public ServicioView getView() {
+	public ServicioView getView(List<Cliente> listaClientes, List<Trabajo> listaTrabajos) {
+		this.listaClientes = listaClientes;
+		this.listaTrabajos = listaTrabajos;
 		return this.view;
 	}
 	
@@ -63,6 +65,7 @@ public class ServicioController {
 		try {
 	        servicio.validar();
 	        stDao.eliminarPorServicio(servicio.getId());
+	        dao.actualizarServicio(servicio);
 	        for(var trabajo : listaTrabajos.entrySet()) {
 	        	ServicioDetalles st = new ServicioDetalles(servicio.getId(), trabajo.getKey(), trabajo.getValue(), "Para Hacer");
 	        	stDao.agregar(st);
