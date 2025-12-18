@@ -7,7 +7,7 @@ import com.elsantigestion.controller.TrabajoController;
 import com.elsantigestion.dao.ClienteDAO;
 import com.elsantigestion.dao.DatabaseSetup;
 import com.elsantigestion.dao.ServicioDAO;
-import com.elsantigestion.dao.ServicioTrabajoDAO;
+import com.elsantigestion.dao.ServicioDetallesDAO;
 import com.elsantigestion.dao.TrabajoDAO;
 import com.elsantigestion.ui.ClienteView;
 import com.elsantigestion.ui.GestorDeTareas;
@@ -118,8 +118,8 @@ public class MainApp extends Application {
         
         ServicioView servicioView = new ServicioView(gestorDeTareas);
         ServicioDAO servicioDao = new ServicioDAO();
-        ServicioTrabajoDAO serTraDao = new ServicioTrabajoDAO();
-        ServicioController servicios = new ServicioController(servicioView, servicioDao, serTraDao, clienteDao.obtenerClientes(), trabajoDao.obtenerTrabajos());
+        ServicioDetallesDAO serTraDao = new ServicioDetallesDAO();
+        ServicioController servicios = new ServicioController(servicioView, servicioDao, serTraDao);
         
         KanbanView kanbanView = new KanbanView();
         KanbanController kanban = new KanbanController(kanbanView);
@@ -135,7 +135,7 @@ public class MainApp extends Application {
                 // Cambiar el contenido central
                 if (btn == btnClientes) root.setCenter(clientes.getView());
                 else if (btn == btnTrabajos) root.setCenter(trabajos.getView());
-                else if (btn == btnServicios) root.setCenter(servicios.getView());
+                else if (btn == btnServicios) root.setCenter(servicios.getView(clienteDao.obtenerClientes(), trabajoDao.obtenerTrabajosPorEstado(true)));
                 else if (btn == btnGastos) root.setCenter(new javafx.scene.control.Label("Vista de Gastos"));
                 else if (btn == btnCronograma) root.setCenter(new javafx.scene.control.Label("Vista de Cronograma"));
                 else if (btn == btnReportes) root.setCenter(new javafx.scene.control.Label("Vista de Reportes"));
