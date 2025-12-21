@@ -20,6 +20,11 @@ public class Trabajo {
 		
 	}
 	
+	public Trabajo(int id, String nombre) {
+	    this.id = id;
+	    this.nombre = nombre;
+	}
+	
 	public void validar() {
 		if (nombre == null || nombre.trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre no puede estar vacío.");
