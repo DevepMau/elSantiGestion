@@ -20,6 +20,7 @@ public class ServicioController {
 	
 	private final String SERVICIO_MENSUAL = "Mensual";
 	private final String SERVICIO_EVENTUAL = "Eventual";
+	private final String POR_HACER = "Para Hacer";
 	
 	private ServicioView view;
 	private ServicioDAO dao;
@@ -44,12 +45,12 @@ public class ServicioController {
 		return this.view;
 	}
 	
-	public void guardarServicio(Servicio servicio, HashMap<Integer, Integer> listaTrabajos) {
+	public void guardarServicio(Servicio servicio, HashMap<Trabajo, Integer> listaTrabajos) {
 		try {
 	        servicio.validar();
-	        int idGenerado = dao.agregarServicio(servicio);
+	        dao.agregarServicio(servicio);
 	        for(var trabajo : listaTrabajos.entrySet()) {
-	        	ServicioDetalles st = new ServicioDetalles(idGenerado, trabajo.getKey(), trabajo.getValue(), "Para Hacer");
+	        	ServicioDetalles st = new ServicioDetalles(servicio, trabajo.getKey(), trabajo.getValue(), POR_HACER);
 	        	stDao.agregar(st);
 	        }
 	        
@@ -61,13 +62,13 @@ public class ServicioController {
 	    }
 	}
 	
-	public void modificarServicio(Servicio servicio, HashMap<Integer, Integer> listaTrabajos) {
+	public void modificarServicio(Servicio servicio, HashMap<Trabajo, Integer> listaTrabajos) {
 		try {
 	        servicio.validar();
 	        stDao.eliminarPorServicio(servicio.getId());
 	        dao.actualizarServicio(servicio);
 	        for(var trabajo : listaTrabajos.entrySet()) {
-	        	ServicioDetalles st = new ServicioDetalles(servicio.getId(), trabajo.getKey(), trabajo.getValue(), "Para Hacer");
+	        	ServicioDetalles st = new ServicioDetalles(servicio, trabajo.getKey(), trabajo.getValue(), POR_HACER);
 	        	stDao.agregar(st);
 	        }
 	        
@@ -131,7 +132,7 @@ public class ServicioController {
 		
 		Servicio servicio = form.getServicioCreado();
 		if (servicio != null) {
-			HashMap<Integer, Integer> listaTrabajos = form.getListaTrabajos();
+			HashMap<Trabajo, Integer> listaTrabajos = form.getListaTrabajos();
 	        guardarServicio(servicio, listaTrabajos);
 	        refrescarTabla();
 	    }
@@ -153,7 +154,7 @@ public class ServicioController {
 	        
 	        Servicio servicio = form.getServicioCreado();
 	        if (servicio != null) {
-				HashMap<Integer, Integer> listaTrabajos = form.getListaTrabajos();
+				HashMap<Trabajo, Integer> listaTrabajos = form.getListaTrabajos();
 		        modificarServicio(servicio, listaTrabajos);
 		        refrescarTabla();
 		    }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.elsantigestion.model.Cliente;
 import com.elsantigestion.model.Servicio;
+import com.elsantigestion.model.Trabajo;
 import com.elsantigestion.utils.ValidadorCampos;
 
 import javafx.geometry.Insets;
@@ -369,7 +370,7 @@ public class ServicioForm extends Stage {
 		this.servicioCreado = servicio;
 	}
 	
-	public HashMap<Integer, Integer> getListaTrabajos(){
+	public HashMap<Trabajo, Integer> getListaTrabajos(){
 		return this.tChecker.obtenerTrabajosAAgregar();
 	}
 
