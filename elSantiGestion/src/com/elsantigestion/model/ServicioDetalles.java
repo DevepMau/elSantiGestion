@@ -1,52 +1,48 @@
 package com.elsantigestion.model;
 
 public class ServicioDetalles {
-	
-	private int servicioId;
-	private int trabajoId;
-	private int cantidad;
-	private String estado;
-	
-	public ServicioDetalles(int servicioId, int trabajoId, int cantidad, String estado) {
-		
-		this.servicioId = servicioId;
-		this.trabajoId = trabajoId;
-		this.cantidad = cantidad;
-		this.estado = estado;
-		
-	}
 
-	public int getServicioId() {
-		return servicioId;
-	}
+    private Servicio servicio;
+    private Trabajo trabajo;
+    private int cantidad;
+    private String estado;
 
-	public void setServicioId(int servicioEventualId) {
-		this.servicioId = servicioEventualId;
-	}
+    public ServicioDetalles(Servicio servicio, Trabajo trabajo, int cantidad, String estado) {
+        this.servicio = servicio;
+        this.trabajo = trabajo;
+        this.cantidad = cantidad;
+        this.estado = estado;
+    }
 
-	public int getTrabajoId() {
-		return trabajoId;
-	}
+    public Servicio getServicio() {
+        return servicio;
+    }
 
-	public void setTrabajoId(int trabajoId) {
-		this.trabajoId = trabajoId;
-	}
+    public Trabajo getTrabajo() {
+        return trabajo;
+    }
 
-	public int getCantidad() {
-		return cantidad;
-	}
+    public int getCantidad() {
+        return cantidad;
+    }
 
-	public void setCantidad(int cantidad) {
-		this.cantidad = cantidad;
-	}
+    public String getEstado() {
+        return estado;
+    }
 
-	public String getEstado() {
-		return estado;
-	}
+    public void setServicio(Servicio servicio) {
+        this.servicio = servicio;
+    }
 
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-	
+    public void setTrabajo(Trabajo trabajo) {
+        this.trabajo = trabajo;
+    }
 
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 }
