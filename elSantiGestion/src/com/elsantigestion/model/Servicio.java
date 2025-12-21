@@ -28,6 +28,11 @@ public class Servicio {
 		
 	}
 	
+	public Servicio(int id, int clienteId) {
+	    this.id = id;
+	    this.clienteId = clienteId;
+	}
+	
 	public void validar() {
         if (clienteId <= 0) {
             throw new IllegalStateException("El ID del cliente no puede ser negativo o cero.");
