@@ -8,82 +8,139 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.elsantigestion.model.Servicio;
 import com.elsantigestion.model.ServicioDetalles;
+import com.elsantigestion.model.Trabajo;
 
 public class ServicioDetallesDAO {
     
     // Insertar relación
-    public void agregar(ServicioDetalles set) {
-        String sql = "INSERT INTO servicio_detalles (servicio_id, trabajo_id, cantidad, estado) VALUES (?, ?, ?, ?)";
-        
-        try (Connection conn = Database.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setInt(1, set.getServicioId());
-            pstmt.setInt(2, set.getTrabajoId());
-            pstmt.setInt(3, set.getCantidad());
-            pstmt.setString(4, set.getEstado());
-            
-            pstmt.executeUpdate();
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+	public void agregar(ServicioDetalles detalle) {
+	    String sql = "INSERT INTO servicio_detalles (servicio_id, trabajo_id, cantidad, estado) VALUES (?, ?, ?, ?)";
+
+	    try (Connection conn = Database.connect();
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+	        pstmt.setInt(1, detalle.getServicio().getId());
+	        pstmt.setInt(2, detalle.getTrabajo().getId());
+	        pstmt.setInt(3, detalle.getCantidad());
+	        pstmt.setString(4, detalle.getEstado());
+
+	        pstmt.executeUpdate();
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
     
     // Obtener todos los registros
-    public List<ServicioDetalles> obtenerTodos() {
-        List<ServicioDetalles> lista = new ArrayList<>();
-        String sql = "SELECT * FROM servicio_detalles";
-        
-        try (Connection conn = Database.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
-            
-            while (rs.next()) {
-                ServicioDetalles set = new ServicioDetalles(
-                        rs.getInt("servicio_id"),
-                        rs.getInt("trabajo_id"),
-                        rs.getInt("cantidad"),
-                        rs.getString("estado")
-                );
-                lista.add(set);
-            }
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        
-        return lista;
-    }
+	public List<ServicioDetalles> obtenerTodos() {
+	    List<ServicioDetalles> lista = new ArrayList<>();
+
+	    String sql = """
+	        SELECT 
+	            sd.cantidad,
+	            sd.estado,
+
+	            s.id AS s_id,
+	            s.cliente_id AS s_cliente_id,
+
+	            t.id AS t_id,
+	            t.nombre AS t_nombre
+
+	        FROM servicio_detalles sd
+	        JOIN servicios s ON sd.servicio_id = s.id
+	        JOIN trabajos t ON sd.trabajo_id = t.id
+	    """;
+
+	    try (Connection conn = Database.connect();
+	         PreparedStatement pstmt = conn.prepareStatement(sql);
+	         ResultSet rs = pstmt.executeQuery()) {
+
+	        while (rs.next()) {
+
+	            Servicio servicio = new Servicio(
+	                rs.getInt("s_id"),
+	                rs.getInt("s_cliente_id")
+	            );
+
+	            Trabajo trabajo = new Trabajo(
+	                rs.getInt("t_id"),
+	                rs.getString("t_nombre")
+	            );
+
+	            ServicioDetalles detalle = new ServicioDetalles(
+	                servicio,
+	                trabajo,
+	                rs.getInt("cantidad"),
+	                rs.getString("estado")
+	            );
+
+	            lista.add(detalle);
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return lista;
+	}
     
     // Obtener todos los trabajos de un servicio eventual
-    public List<ServicioDetalles> obtenerPorServicio(int servicioId) {
-        List<ServicioDetalles> lista = new ArrayList<>();
-        String sql = "SELECT * FROM servicio_detalles WHERE servicio_id = ?";
-        
-        try (Connection conn = Database.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setInt(1, servicioId);
-            ResultSet rs = pstmt.executeQuery();
-            
-            while (rs.next()) {
-                ServicioDetalles set = new ServicioDetalles(
-                        rs.getInt("servicio_id"),
-                        rs.getInt("trabajo_id"),
-                        rs.getInt("cantidad"),
-                        rs.getString("estado")
-                );
-                lista.add(set);
-            }
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        
-        return lista;
-    }
+	public List<ServicioDetalles> obtenerPorServicio(int servicioId) {
+	    List<ServicioDetalles> lista = new ArrayList<>();
+
+	    String sql = """
+	        SELECT 
+	            sd.cantidad,
+	            sd.estado,
+
+	            s.id AS s_id,
+	            s.cliente_id AS s_cliente_id,
+
+	            t.id AS t_id,
+	            t.nombre AS t_nombre
+
+	        FROM servicio_detalles sd
+	        JOIN servicios s ON sd.servicio_id = s.id
+	        JOIN trabajos t ON sd.trabajo_id = t.id
+	        WHERE s.id = ?
+	    """;
+
+	    try (Connection conn = Database.connect();
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+	        pstmt.setInt(1, servicioId);
+	        ResultSet rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+
+	            Servicio servicio = new Servicio(
+	                rs.getInt("s_id"),
+	                rs.getInt("s_cliente_id")
+	            );
+
+	            Trabajo trabajo = new Trabajo(
+	                rs.getInt("t_id"),
+	                rs.getString("t_nombre")
+	            );
+
+	            ServicioDetalles detalle = new ServicioDetalles(
+	                servicio,
+	                trabajo,
+	                rs.getInt("cantidad"),
+	                rs.getString("estado")
+	            );
+
+	            lista.add(detalle);
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return lista;
+	}
     
     // Obtener todos los ID de los trabajos de un servicio
     public HashMap<Integer, Integer> obtenerTrabajosPorServicio(int servicioId) {
@@ -107,63 +164,56 @@ public class ServicioDetallesDAO {
         return mapIds;
     }
     
-    // Obtener un registro específico (por PK compuesta)
-    public ServicioDetalles obtenerPorIds(int servicioId, int trabajoId) {
-        String sql = "SELECT * FROM servicio_detalles WHERE servicio_id = ? AND trabajo_id = ?";
-        
-        try (Connection conn = Database.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setInt(1, servicioId);
-            pstmt.setInt(2, trabajoId);
-            ResultSet rs = pstmt.executeQuery();
-            
-            if (rs.next()) {
-                return new ServicioDetalles(
-                        rs.getInt("servicio_id"),
-                        rs.getInt("trabajo_id"),
-                        rs.getInt("cantidad"),
-                        rs.getString("estado")
-                );
-            }
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        
-        return null;
-    }
     
     // Actualizar cantidad de un registro
-    public void actualizarCantidad(ServicioDetalles set) {
-        String sql = "UPDATE servicio_detalles SET cantidad = ? WHERE servicio_id = ? AND trabajo_id = ?";
-        
+    public void actualizarCantidad(ServicioDetalles detalle) {
+        String sql = "UPDATE servicio_detalles SET cantidad = ?, estado = ? WHERE servicio_id = ? AND trabajo_id = ?";
+
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setInt(1, set.getCantidad());
-            pstmt.setInt(2, set.getServicioId());
-            pstmt.setInt(3, set.getTrabajoId());
-            pstmt.setString(4, set.getEstado());
-            
+
+            pstmt.setInt(1, detalle.getCantidad());
+            pstmt.setString(2, detalle.getEstado());
+            pstmt.setInt(3, detalle.getServicio().getId());
+            pstmt.setInt(4, detalle.getTrabajo().getId());
+
             pstmt.executeUpdate();
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    
+    // Actualizar estado de un registro
+    public void actualizarEstado(ServicioDetalles detalle) {
+    	String sql = "UPDATE servicio_detalles SET estado = ? WHERE servicio_id = ? AND trabajo_id = ?";
+    	
+    	try (Connection conn = Database.connect();
+    		 PreparedStatement pstmt = conn.prepareStatement(sql)){
+    		
+    		pstmt.setString(1, detalle.getEstado());
+    		pstmt.setInt(2, detalle.getServicio().getId());
+    		pstmt.setInt(3, detalle.getTrabajo().getId());
+    		
+    		pstmt.executeUpdate();
+    		
+    	} catch(SQLException e) {
+    		e.printStackTrace();
+    	}
     }
     
     // Eliminar relación
-    public void eliminar(int servicioId, int trabajoId) {
+    public void eliminar(ServicioDetalles detalle) {
         String sql = "DELETE FROM servicio_detalles WHERE servicio_id = ? AND trabajo_id = ?";
-        
+
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setInt(1, servicioId);
-            pstmt.setInt(2, trabajoId);
+
+            pstmt.setInt(1, detalle.getServicio().getId());
+            pstmt.setInt(2, detalle.getTrabajo().getId());
+
             pstmt.executeUpdate();
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
