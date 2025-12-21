@@ -171,8 +171,16 @@ public class TrabajoChecker extends HBox {
 		
 	}
 	
-	public HashMap<Integer, Integer> obtenerTrabajosAAgregar() {
-        return this.marcados;
+	public HashMap<Trabajo, Integer> obtenerTrabajosAAgregar() {
+		HashMap<Trabajo, Integer> map = new HashMap<>();;
+		
+		for(Trabajo trabajo : this.iniciales) {
+			if(this.marcados.containsKey(trabajo.getId())) {
+				map.put(trabajo, this.marcados.get(trabajo.getId()));
+			}
+		}
+		
+        return map;
     }
 	
 	public void cargarTrabajosPrevios(HashMap<Integer, Integer> map) {
