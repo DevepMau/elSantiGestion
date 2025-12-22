@@ -121,8 +121,8 @@ public class MainApp extends Application {
         ServicioDetallesDAO serTraDao = new ServicioDetallesDAO();
         ServicioController servicios = new ServicioController(servicioView, servicioDao, serTraDao);
         
-        KanbanView kanbanView = new KanbanView();
-        KanbanController kanban = new KanbanController(kanbanView);
+        KanbanView kanbanView = new KanbanView(serTraDao.obtenerTodos());
+        KanbanController kanban = new KanbanController(kanbanView, serTraDao, clienteDao);
 
         // Función para manejar selección de botón
         for (Button btn : botones) {
@@ -139,7 +139,7 @@ public class MainApp extends Application {
                 else if (btn == btnGastos) root.setCenter(new javafx.scene.control.Label("Vista de Gastos"));
                 else if (btn == btnCronograma) root.setCenter(new javafx.scene.control.Label("Vista de Cronograma"));
                 else if (btn == btnReportes) root.setCenter(new javafx.scene.control.Label("Vista de Reportes"));
-                else if (btn == btnKanban) root.setCenter(kanban.getView());
+                else if (btn == btnKanban) root.setCenter(kanban.getView(serTraDao.obtenerTodos()));
             });
         }
 
