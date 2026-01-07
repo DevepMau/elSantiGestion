@@ -17,7 +17,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
@@ -119,7 +118,6 @@ public class ClienteView extends VBox {
         TableColumn<Cliente, String> colEmail = new TableColumn<>("Email");
         TableColumn<Cliente, Boolean> colBarrioPrivado = new TableColumn<>("Barrio\nPrivado");
         TableColumn<Cliente, Number> colNumeroLote = new TableColumn<>("Altura\n/Lote");
-        TableColumn<Cliente, String> colColor = new TableColumn<>("Color");
         
         colFechaCreacion.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getFechaCreacion()));
         colNombre.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNombre()));
@@ -129,7 +127,6 @@ public class ClienteView extends VBox {
         colEmail.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEmail()));
         colBarrioPrivado.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().isBarrioPrivado()));
         colNumeroLote.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getNumeroLote()));
-        colColor.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getColor()));
         
         colFechaCreacion.getStyleClass().add("columna-especial");
         colNombre.getStyleClass().add("columna-texto");
@@ -139,9 +136,30 @@ public class ClienteView extends VBox {
         colEmail.getStyleClass().add("columna-texto");
         colBarrioPrivado.getStyleClass().add("columna-especial");
         colNumeroLote.getStyleClass().add("columna-especial");
-        colColor.getStyleClass().add("columna-especial");
         
-        colColor.setCellFactory(column -> new TableCell<Cliente, String>() {
+        colFechaCreacion.setCellFactory(column -> new TableCell<Cliente, LocalDate>() {
+        	@Override
+            protected void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+
+                if (empty || date == null) {
+                	setText("");
+                	setStyle("");
+                } else {
+                	 Cliente cliente = getTableRow().getItem();
+                	 if(cliente != null) {
+                		 String color = cliente.getColor();
+                		 setText(date.toString());
+                		 setStyle(
+                                 "-fx-background-color: linear-gradient(to right, "+color+" 10%, transparent 80%);"+
+                		         "-fx-text-fill: black;"
+                             );
+                	 } 
+                }
+            }
+        });
+        
+        /*colColor.setCellFactory(column -> new TableCell<Cliente, String>() {
             private final Pane colorPane = new Pane();
 
             {
@@ -163,7 +181,7 @@ public class ClienteView extends VBox {
                     setGraphic(colorPane);
                 }
             }
-        });
+        });*/
 
         colBarrioPrivado.setCellFactory(col -> new TableCell<Cliente, Boolean>() {
             protected void updateItem(Boolean item, boolean empty) {
@@ -174,7 +192,7 @@ public class ClienteView extends VBox {
                 } else {
                     if (item) {
                         setText("Si");
-                        setStyle("-fx-text-fill: green; -fx-padding: 0 0 -1 0;");
+                        setStyle("-fx-text-fill: #00ff00; -fx-padding: 0 0 -1 0;");
                     } else {
                         setText("No");
                         setStyle("-fx-text-fill: red; -fx-padding: 0 0 -1 0;");
@@ -192,7 +210,6 @@ public class ClienteView extends VBox {
         tabla.getColumns().add(colLocalidad); 
         tabla.getColumns().add(colDireccion);  
         tabla.getColumns().add(colNumeroLote);
-        tabla.getColumns().add(colColor);
     	tabla.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     	tabla.setPrefWidth(Double.MAX_VALUE);
     	VBox.setVgrow(tabla, Priority.ALWAYS);
@@ -210,7 +227,6 @@ public class ClienteView extends VBox {
         colEmail.setMinWidth(120); 
         colNumeroLote.setMinWidth(60);
         colBarrioPrivado.setMinWidth(60);
-        colColor.setMinWidth(60);
 
     }
     
