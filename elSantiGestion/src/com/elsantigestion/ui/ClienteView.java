@@ -142,8 +142,8 @@ public class ClienteView extends VBox {
             protected void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
 
-                if (empty || date == null) {
-                	setText("");
+                if (empty || date == null || getTableRow().getItem() == null) {
+                	setText(null);
                 	setStyle("");
                 } else {
                 	 Cliente cliente = getTableRow().getItem();
